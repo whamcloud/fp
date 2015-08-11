@@ -1,5 +1,5 @@
 {
-  "name": "fp",
+  "name": "@intel-js/fp",
   "version": "1.0.0",
   "description": "A Functional Programming Lib.",
   "main": "index.js",
