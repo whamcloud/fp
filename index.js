@@ -328,6 +328,21 @@
   });
   fp.invokeMethod = invokeMethod;
 
+  var zipObject = fp.curry(2, function zipObject (keys, vals) {
+    var keysType = _type(keys);
+    var valsType = _type(vals);
+    if (keysType !== 'Array')
+      throw new TypeError('zipObject keys must be an Array. Got: ' + keysType);
+    if (valsType !== 'Array')
+      throw new TypeError('zipObject values must be an Array. Got: ' + valsType);
+
+    return keys.reduce(function reduceToObject (obj, val, index) {
+      obj[val] = vals[index];
+      return obj;
+    }, {});
+  });
+  fp.zipObject = zipObject;
+
   /* global angular */
 
   if (typeof module !== 'undefined')

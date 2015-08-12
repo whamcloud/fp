@@ -760,4 +760,50 @@ describe('the fp module', function () {
       expect(indexOfB('abc')).toBe(1);
     });
   });
+
+  describe('zipObject', function () {
+    it('should exist on fp', function () {
+      expect(fp.zipObject).toEqual(jasmine.any(Function));
+    });
+
+    it('should be curried', function () {
+      expect(fp.zipObject(['name', 'age'])).toEqual(jasmine.any(Function));
+    });
+
+    it('should zip two arrays into a single object', function () {
+      expect(fp.zipObject(['name', 'age'], ['foo', 27])).toEqual({
+        name: 'foo',
+        age: 27
+      });
+    });
+
+    it('should ignore extra items on the second array', function () {
+      expect(fp.zipObject('abc'.split(''), 'defghi'.split(''))).toEqual({
+        a: 'd',
+        b: 'e',
+        c: 'f'
+      });
+    });
+
+    it('should set missing values to undefined', function () {
+      expect(fp.zipObject('abcdef'.split(''), 'ghi'.split(''))).toEqual({
+        a: 'g',
+        b: 'h',
+        c: 'i',
+        d: undefined,
+        e: undefined,
+        f: undefined
+      });
+    });
+
+    it('should throw an error if the keys are not an Array', function () {
+      expect(function () { fp.zipObject({key: 'val'}, 'test'.split('')); })
+        .toThrowError(TypeError, 'zipObject keys must be an Array. Got: Object');
+    });
+
+    it('should throw an error if the values are not an Array', function () {
+      expect(function () { fp.zipObject('abc'.split(''), {key: 'val'}); })
+        .toThrowError(TypeError, 'zipObject values must be an Array. Got: Object');
+    });
+  });
 });
