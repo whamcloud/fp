@@ -1,18 +1,32 @@
 {
   "name": "@intel-js/fp",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A Functional Programming Lib.",
   "main": "index.js",
   "scripts": {
     "test": "JASMINE_CONFIG_PATH=jasmine.json NODE_ENV=test jasmine",
+    "jshint": "jshint --c ./.jshintrc --exclude-path ./.jshintignore .",
+    "jscs": "jscs .",
     "ziplock": "../../node/ziplocker/bin/ziplocker --overrides.ziplockDir='../../../../chroma-externals/'",
     "zipdev": "../../node/ziplocker/bin/zip-install-dev --overrides.ziplockDir='../../../../chroma-externals/'"
+  },
+  "pre-commit": [
+    "jscs",
+    "jshint",
+    "test"
+  ],
+  "repository" : {
+    "type" : "git",
+    "url" : "https://github.com/intel-js/fp.git"
   },
   "author": "IML Team",
   "license": "MIT",
   "devDependencies": {
     "jasmine": "2.3.1",
+    "jasmine-n-matchers": "2.0.2",
+    "jscs": "2.1.0",
+    "jshint": "2.8.0",
     "krusty-jasmine-reporter": "1.0.0",
-    "jasmine-n-matchers": "2.0.2"
+    "pre-commit": "1.1.1"
   }
 }
