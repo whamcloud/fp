@@ -351,6 +351,14 @@
   });
   fp.some = some;
 
+  var every = curry(2, function every (fn, xs) {
+    if (xs && typeof xs.every === 'function')
+      return xs.every(fp.curry(1, fn));
+    else
+      return !!fn(xs);
+  });
+  fp.every = every;
+
   /* global angular */
 
   if (typeof module !== 'undefined')

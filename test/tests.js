@@ -829,4 +829,27 @@ describe('the fp module', function () {
       expect(gt15(16)).toEqual(true);
     });
   });
+
+  describe('has an every method', function () {
+    it('should exist on fp', function () {
+      expect(fp.every).toEqual(jasmine.any(Function));
+    });
+
+    it('should tell if every failed', function () {
+      var res = fp.every(fp.eq(1), [1, 2, 3]);
+
+      expect(res).toBe(false);
+    });
+
+    it('should tell if every passed', function () {
+      var res = fp.some(fp.eq(2), [2, 2, 2]);
+
+      expect(res).toBe(true);
+    });
+
+    it('should work with a non-array', function () {
+      var gt15 = fp.every(function isGreaterThan15 (x) { return x > 15; });
+      expect(gt15(16)).toEqual(true);
+    });
+  });
 });
