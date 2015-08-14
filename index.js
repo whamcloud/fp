@@ -343,6 +343,14 @@
   });
   fp.zipObject = zipObject;
 
+  var some = curry(2, function some (fn, xs) {
+    if (xs && typeof xs.some === 'function')
+      return xs.some(fp.curry(1, fn));
+    else
+      return !!fn(xs);
+  });
+  fp.some = some;
+
   /* global angular */
 
   if (typeof module !== 'undefined')

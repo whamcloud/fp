@@ -1,14 +1,12 @@
 {
   "name": "@intel-js/fp",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "A Functional Programming Lib.",
   "main": "index.js",
   "scripts": {
     "test": "JASMINE_CONFIG_PATH=jasmine.json NODE_ENV=test jasmine",
     "jshint": "jshint --c ./.jshintrc --exclude-path ./.jshintignore .",
-    "jscs": "jscs .",
-    "ziplock": "../../node/ziplocker/bin/ziplocker --overrides.ziplockDir='../../../../chroma-externals/'",
-    "zipdev": "../../node/ziplocker/bin/zip-install-dev --overrides.ziplockDir='../../../../chroma-externals/'"
+    "jscs": "jscs ."
   },
   "pre-commit": [
     "jscs",

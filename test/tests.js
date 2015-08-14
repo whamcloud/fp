@@ -806,4 +806,27 @@ describe('the fp module', function () {
         .toThrowError(TypeError, 'zipObject values must be an Array. Got: Object');
     });
   });
+
+  describe('has a some method', function () {
+    it('should exist on fp', function () {
+      expect(fp.some).toEqual(jasmine.any(Function));
+    });
+
+    it('should tell if some passed', function () {
+      var res = fp.some(fp.eq(1), [1, 2, 3]);
+
+      expect(res).toBe(true);
+    });
+
+    it('should tell if all failed', function () {
+      var res = fp.some(fp.eq(4), [1, 2, 3]);
+
+      expect(res).toBe(false);
+    });
+
+    it('should work with a non-array', function () {
+      var gt15 = fp.some(function isGreaterThan15 (x) { return x > 15; });
+      expect(gt15(16)).toEqual(true);
+    });
+  });
 });
