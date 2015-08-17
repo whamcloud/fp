@@ -852,4 +852,22 @@ describe('the fp module', function () {
       expect(gt15(16)).toEqual(true);
     });
   });
+
+  describe('has an unwrap method', function () {
+    it('should exist on fp', function () {
+      expect(fp.unwrap).toEqual(jasmine.any(Function));
+    });
+
+    it('should unwrap a nested array', function () {
+      expect(fp.unwrap([['a'], ['b'], ['c']])).toEqual(['a', 'b', 'c']);
+    });
+
+    it('should not unwrap deeply nested values', function () {
+      expect(fp.unwrap(['a', ['b'], [['c']]])).toEqual(['a', 'b', ['c']]);
+    });
+
+    it('should unwrap a single value', function () {
+      expect(fp.unwrap([['a']])).toEqual(['a']);
+    });
+  });
 });
