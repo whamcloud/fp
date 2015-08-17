@@ -359,6 +359,13 @@
   });
   fp.every = every;
 
+  function unwrap (xs) {
+    return xs.reduce(function reducer (arr, x) {
+      return arr.concat(x);
+    }, []);
+  }
+  fp.unwrap = unwrap;
+
   /* global angular */
 
   if (typeof module !== 'undefined')
