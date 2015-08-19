@@ -80,11 +80,11 @@
   });
   fp.map = map;
 
-  var filter = curry(2, function filter (f, x) {
-    if (Array.isArray(x))
-      return x.filter(curry(1, f));
-
-    throw new Error('fp.filter only works on arrays.');
+  var filter = curry(2, function filter (f, xs) {
+    if (xs && typeof xs.filter === 'function')
+      return xs.filter(fp.curry(1, f));
+    else
+      return f(xs);
   });
   fp.filter = filter;
 
@@ -305,16 +305,16 @@
   fp.noop = noop;
 
   var and = fp.curry(2, function and (predicates, val) {
-      return predicates.reduce(function reducer (curr, predicate) {
-        return curr && predicate(val);
-      }, true);
+    return predicates.reduce(function reducer (curr, predicate) {
+      return curr && predicate(val);
+    }, true);
   });
   fp.and = and;
 
   var or = fp.curry(2, function or (predicates, val) {
-      return predicates.reduce(function reducer (curr, predicate) {
-        return curr || predicate(val);
-      }, false);
+    return predicates.reduce(function reducer (curr, predicate) {
+      return curr || predicate(val);
+    }, false);
   });
   fp.or = or;
 
