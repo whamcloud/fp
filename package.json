@@ -1,6 +1,6 @@
 {
   "name": "@intel-js/fp",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "A Functional Programming Lib.",
   "main": "index.js",
   "scripts": {
@@ -26,5 +26,6 @@
     "jshint": "2.8.0",
     "krusty-jasmine-reporter": "1.0.0",
     "pre-commit": "1.1.1"
-  }
+  },
+  "whitelist": ["jasmine", "jasmine-n-matchers", "krusty-jasmine-reporter"]
 }
