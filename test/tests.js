@@ -870,4 +870,120 @@ describe('the fp module', function () {
       expect(fp.unwrap([['a']])).toEqual(['a']);
     });
   });
+
+  describe('has a head method', function () {
+    it('should exist on fp', function () {
+      expect(fp.head).toEqual(jasmine.any(Function));
+    });
+
+    it('should pull the first value off an array', function () {
+      expect(fp.head([1, 2, 3])).toBe(1);
+    });
+
+    it('should return undefined if array is empty', function () {
+      expect(fp.head([])).toBe(undefined);
+    });
+
+    it('should work with a string', function () {
+      expect(fp.head('foo')).toBe('f');
+    });
+
+    it('should return undefined when called with an empty string', function () {
+      expect(fp.head('')).toBe(undefined);
+    });
+  });
+
+  describe('has an arrayWrap method', function () {
+    it('should exist on fp', function () {
+      expect(fp.arrayWrap).toEqual(jasmine.any(Function));
+    });
+
+    it('should wrap a value in an array', function () {
+      expect(fp.arrayWrap('foo')).toEqual(['foo']);
+    });
+  });
+
+  describe('has an either method', function () {
+    it('should exist on fp', function () {
+      expect(fp.either).toEqual(jasmine.any(Function));
+    });
+
+    it('should be curried', function () {
+      expect(fp.either(fp.__, 'bar')).toEqual(jasmine.any(Function));
+    });
+
+    describe('chaining', function () {
+      var spy1, spy2, chain;
+
+      beforeEach(function () {
+        spy1 = jasmine.createSpy('spy1').and.callFake(fp.identity);
+        spy2 = jasmine.createSpy('spy2').and.callFake(fp.identity);
+        chain = fp.flow.apply(null, fp.map(fp.either, [spy1, spy2]));
+      });
+
+      it('should pass errors', function () {
+        expect(chain(new Error('boom!'))).toEqual(new Error('boom!'));
+      });
+
+      it('should not call spy1', function () {
+        chain(new Error('boom!'));
+        expect(spy1).not.toHaveBeenCalled();
+      });
+
+      it('should not call spy2', function () {
+        chain(new Error('boom!'));
+        expect(spy2).not.toHaveBeenCalled();
+      });
+
+      it('should pass values', function () {
+        expect(chain('bar')).toBe('bar');
+      });
+
+      it('should call spy1', function () {
+        chain('bar');
+        expect(spy1).toHaveBeenCalledOnceWith('bar');
+      });
+
+      it('should call spy2', function () {
+        chain('bar');
+        expect(spy2).toHaveBeenCalledOnceWith('bar');
+      });
+    });
+
+    describe('error handling', function () {
+      var spy, result;
+
+      beforeEach(function () {
+        spy = jasmine.createSpy('spy');
+
+        result = fp.either(spy, new Error('boom!'));
+      });
+
+      it('should treat an error instance as a left', function () {
+        expect(result).toEqual(new Error ('boom!'));
+      });
+
+      it('should not call fn', function () {
+        expect(spy).not.toHaveBeenCalled();
+      });
+    });
+
+    describe('non-error handling', function () {
+      var spy, result;
+
+      beforeEach(function () {
+        spy = jasmine.createSpy('spy').and.callFake(fp.identity);
+
+        result = fp.either(spy, 'foo');
+      });
+
+      it('should treat non-errors as a right', function () {
+        expect(result).toEqual('foo');
+      });
+
+      it('should call fn', function () {
+        expect(spy).toHaveBeenCalledOnceWith('foo');
+      });
+    });
+  });
 });

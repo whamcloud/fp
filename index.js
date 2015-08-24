@@ -1,7 +1,7 @@
 //
 // INTEL CONFIDENTIAL
 //
-// Copyright 2013-2014 Intel Corporation All Rights Reserved.
+// Copyright 2013-2015 Intel Corporation All Rights Reserved.
 //
 // The source code contained or described herein and all documents related
 // to the source code ("Material") are owned by Intel Corporation or its
@@ -365,6 +365,25 @@
     }, []);
   }
   fp.unwrap = unwrap;
+
+  function head (xs) {
+    return xs[0];
+  }
+  fp.head = head;
+
+
+  function arrayWrap (x) {
+    return [x];
+  }
+  fp.arrayWrap = arrayWrap;
+
+  var either = fp.curry(2, function either (fn, x) {
+    if (x instanceof Error)
+      return x;
+
+    return fn(x);
+  });
+  fp.either = either;
 
   /* global angular */
 
