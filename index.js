@@ -377,6 +377,20 @@
   }
   fp.arrayWrap = arrayWrap;
 
+  function once (fn) {
+    var called = false;
+
+    return function innerOnce () {
+      if (called)
+        return;
+
+      called = true;
+
+      fn.apply(null, arguments);
+    };
+  }
+  fp.once = once;
+
   var either = fp.curry(2, function either (fn, x) {
     if (x instanceof Error)
       return x;

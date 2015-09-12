@@ -903,6 +903,45 @@ describe('the fp module', function () {
     });
   });
 
+  describe('has a once method', function () {
+    var spy;
+
+    beforeEach(function () {
+      spy = jasmine.createSpy('spy');
+    });
+
+    it('should exist on fp', function () {
+      expect(fp.once).toEqual(jasmine.any(Function));
+    });
+
+    it('should return a function', function () {
+      expect(fp.once(spy)).toEqual(jasmine.any(Function));
+    });
+
+    it('should not invoke the function passed in initially', function () {
+      fp.once(spy);
+      expect(spy).not.toHaveBeenCalled();
+    });
+
+    describe('invoking', function () {
+      var once;
+
+      beforeEach(function () {
+        once = fp.once(spy);
+        once('a', 'b', 'c');
+        once('d', 'e', 'f');
+      });
+
+      it('should call one time with expected args', function () {
+        expect(spy).toHaveBeenCalledOnceWith('a', 'b', 'c');
+      });
+
+      it('should call one time', function () {
+        expect(spy).toHaveBeenCalledOnce();
+      });
+    });
+  });
+
   describe('has an either method', function () {
     it('should exist on fp', function () {
       expect(fp.either).toEqual(jasmine.any(Function));
