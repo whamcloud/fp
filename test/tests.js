@@ -173,6 +173,40 @@ describe('the fp module', function () {
     });
   });
 
+  describe('has a reduce method', function () {
+    it('should exist on fp', function () {
+      expect(fp.reduce).toEqual(jasmine.any(Function));
+    });
+
+    it('should be curried', function () {
+      expect(fp.reduce(fp.__, fp.__)).toEqual(jasmine.any(Function));
+    });
+
+    it('should reduce a list', function () {
+      expect(fp.reduce(0, function add (x, y) {
+        return x + y;
+      }, [1, 2, 3]))
+        .toEqual(6);
+    });
+
+    it('should delegate to a reduce method', function () {
+      var obj = {
+        reduce: jasmine.createSpy('reducer')
+      };
+
+      fp.reduce(0, fp.noop, obj);
+
+      expect(obj.reduce).toHaveBeenCalledOnceWith(0, jasmine.any(Function));
+    });
+
+    it('should reduce a singular value', function () {
+      expect(fp.reduce(2, function mult (x, y) {
+        return x * y;
+      }, 3))
+        .toEqual(6);
+    });
+  });
+
   describe('has a find method', function () {
     it('should exist on fp', function () {
       expect(fp.find).toEqual(jasmine.any(Function));

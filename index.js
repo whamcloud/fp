@@ -88,6 +88,16 @@
   });
   fp.filter = filter;
 
+  var reduce = fp.curry(3, function reducer (accum, f, xs) {
+    if (Array.isArray(xs))
+      return xs.reduce(fp.curry(2, f), accum);
+    if (xs && typeof xs.reduce === 'function')
+      return xs.reduce(accum, fp.curry(2, f));
+    else
+      return f(accum, xs);
+  });
+  fp.reduce = reduce;
+
   var find = curry(2, function find (f, xs) {
     return filter(f, xs)[0];
   });
