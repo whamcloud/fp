@@ -416,6 +416,11 @@
   });
   fp.tap = tap;
 
+  var mapFn = function mapFn (fns, args) {
+    return fp.map(fp.invoke(__, args), fns);
+  };
+  fp.mapFn = mapFn;
+
   /* global angular */
 
   if (typeof module !== 'undefined')

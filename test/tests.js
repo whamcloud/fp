@@ -1102,4 +1102,32 @@ describe('the fp module', function () {
       expect(result).toEqual(['1','2','3']);
     });
   });
+
+  describe('has an mapFn method', function () {
+    var spy1, spy2, spy3, args;
+
+    beforeEach(function () {
+      args = ['a', 1, false];
+      spy1 = jasmine.createSpy('spy1');
+      spy2 = jasmine.createSpy('spy2');
+      spy3 = jasmine.createSpy('spy3');
+      fp.mapFn([spy1, spy2, spy3], args);
+    });
+
+    it('should exist on fp', function () {
+      expect(fp.mapFn).toEqual(jasmine.any(Function));
+    });
+
+    it('should invoke spy1 with (a, 1, false).', function () {
+      expect(spy1).toHaveBeenCalledOnceWith('a', 1, false);
+    });
+
+    it('should invoke spy2 with (a, 1, false).', function () {
+      expect(spy2).toHaveBeenCalledOnceWith('a', 1, false);
+    });
+
+    it('should invoke spy3 with (a, 1, false).', function () {
+      expect(spy3).toHaveBeenCalledOnceWith('a', 1, false);
+    });
+  });
 });
