@@ -1,6 +1,6 @@
 {
   "name": "@intel-js/fp",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "A Functional Programming Lib.",
   "main": "index.js",
   "scripts": {
