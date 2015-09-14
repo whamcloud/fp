@@ -98,6 +98,53 @@
   });
   fp.reduce = reduce;
 
+  var deepEq = fp.curry(2, function deepEqFactory (a, b) {
+    return (function deepEq (a, b, visitedA, visitedB) {
+
+      var aType = _type(a);
+      var bType = _type(b);
+
+      if (isColl(aType) && isColl(bType) && (aType === bType)) { // Collection check.
+
+        // Cycle checks.
+        throwForCycle(visitedA, a);
+        throwForCycle(visitedB, b);
+
+        var aKeys = Object.keys(a);
+        var bKeys = Object.keys(b);
+
+        if (aKeys.length !== bKeys.length) // Length check.
+          return false;
+
+        var keysInBoth = aKeys.every(function aInB (x) {
+          return x in b;
+        });
+
+        if (!keysInBoth)
+          return false;
+
+        return aKeys.every(function recurse (x) { // Recursive check.
+          return deepEq(a[x], b[x], visitedA, visitedB);
+        });
+      } else {
+        return eq(a, b); // Strict check.
+      }
+
+      function isColl (t) {
+        return t === 'Array' || t === 'Object';
+      }
+
+      function throwForCycle (visited, xs) {
+        if (visited.indexOf(xs) !== -1)
+          throw new Error('Cycle detected, cannot determine equality.');
+
+        visited.push(xs);
+      }
+
+    }(a, b, [], []));
+  });
+  fp.deepEq = deepEq;
+
   var find = curry(2, function find (f, xs) {
     return filter(f, xs)[0];
   });

@@ -1142,4 +1142,196 @@ describe('the fp module', function () {
       expect(result).toEqual([1,2,3]);
     });
   });
+
+  describe('has an deepEq method', function () {
+
+    it('should exist on fp', function () {
+      expect(fp.deepEq).toEqual(jasmine.any(Function));
+    });
+
+    it('should be curried', function () {
+      expect(fp.deepEq(fp.__, 'bar')).toEqual(jasmine.any(Function));
+    });
+
+    describe('when invoked with non-cyclical structures', function () {
+
+      it('should return true if two objects have the same keys and values', function () {
+        expect(fp.deepEq({ name: 'Wayne' }, { name: 'Wayne' })).toBe(true);
+      });
+
+      it('should return false if two arrays have different lengths', function () {
+        expect(fp.deepEq([], [1])).toBe(false);
+      });
+
+      it('should return false if two objects have different lengths', function () {
+        expect(fp.deepEq({}, { hello: 'world' })).toBe(false);
+      });
+
+      it('should return false if two objects have same keys and different values', function () {
+        expect(fp.deepEq({name: 'Wayne'}, {name: 'Will'})).toBe(false);
+      });
+
+      it('should return true if two arrays have the same values', function () {
+        expect(fp.deepEq([1, 2, 3], [1, 2, 3])).toBe(true);
+      });
+
+      it('should return false if two arrays have different values', function () {
+        expect(fp.deepEq([1, 2, 3], [1, 2, 'a'])).toBe(false);
+      });
+
+      it('should return true if two nested objects have the same keys and values', function () {
+        expect(
+          fp.deepEq(
+            {name: 'Wayne', otherObj: { name: 'Joe' }},
+            {name: 'Wayne', otherObj: { name: 'Joe' }}
+          )
+        ).toBe(true);
+      });
+
+      it('should return false if two nested objects have different values', function () {
+        expect(fp.deepEq(
+            {name: 'Wayne', otherObj: {name: 'Joe'}},
+            {name: 'Wayne', otherObj: {name: 'Sunshine'}})
+        ).toBe(false);
+      });
+
+      it('should return false for different types', function () {
+        expect(fp.deepEq({}, [])).toBe(false);
+      });
+
+      it('should not throw if there are no cycles', function () {
+        var a = {};
+        a.a = {
+          bar: 'bap',
+          baz: {
+            qux: [1,2,3]
+          }
+        };
+
+        var b = {};
+        b.a = {
+          bar: 'bap',
+          baz: {
+            qux: [1,2,3]
+          }
+        };
+
+        expect(fp.deepEq(a, b)).toBe(true);
+      });
+    });
+
+    describe('when invoked with cyclical structures', function () {
+      it('should throw if cycles are detected on the left hand side', function () {
+        var f = function () {
+          var a = {};
+          a.a = a;
+
+          var b = {};
+          b.a = {};
+
+          fp.deepEq(a, b);
+        };
+
+        expect(f).toThrowError(Error, 'Cycle detected, cannot determine equality.');
+      });
+
+      it('should throw if cycles are detected on the right hand side', function () {
+        var f = function () {
+          var a = {};
+          a.a = {};
+
+          var b = {};
+          b.a = b;
+
+          fp.deepEq(a, b);
+        };
+
+        expect(f).toThrowError(Error, 'Cycle detected, cannot determine equality.');
+      });
+
+      describe('that are deep', function () {
+
+        it('should still throw if cycles are detected deep in the structure on the left hand side', function () {
+          var f = function () {
+            var a = {};
+            a.x = {
+              bar: 'bap',
+              baz: {
+                qux: [1, 2, 3]
+              },
+              quark: {
+                bazzer: {
+                  bapper: [{
+                    byzantine: 'deadly'
+                  }, 'a', 'b', 'c']
+                }
+              }
+            };
+            a.x.quark.bazzer.bapper.push(a);
+
+            var b = {};
+            b.x = {
+              bar: 'bap',
+              baz: {
+                qux: [1, 2, 3]
+              },
+              quark: {
+                bazzer: {
+                  bapper: [{
+                    byzantine: 'deadly'
+                  }, 'a', 'b', 'c']
+                }
+              }
+            };
+            b.x.quark.bazzer.bapper.push({});
+
+            fp.deepEq(a, b);
+          };
+
+          expect(f).toThrowError(Error, 'Cycle detected, cannot determine equality.');
+        });
+
+        it('should still throw if cycles are detected deep in the structure on the right hand side', function () {
+          var f = function () {
+            var a = {};
+            a.x = {
+              bar: 'bap',
+              baz: {
+                qux: [1, 2, 3]
+              },
+              quark: {
+                bazzer: {
+                  bapper: [{
+                    byzantine: 'deadly'
+                  }, 'a', 'b', 'c']
+                }
+              }
+            };
+            a.x.quark.bazzer.bapper.push({});
+
+
+            var b = {};
+            b.x = {
+              bar: 'bap',
+              baz: {
+                qux: [1, 2, 3]
+              },
+              quark: {
+                bazzer: {
+                  bapper: [{
+                    byzantine: 'deadly'
+                  }, 'a', 'b', 'c']
+                }
+              }
+            };
+            b.x.quark.bazzer.bapper.push(b);
+
+            fp.deepEq(a, b);
+          };
+
+          expect(f).toThrowError(Error, 'Cycle detected, cannot determine equality.');
+        });
+      });
+    });
+  });
 });
