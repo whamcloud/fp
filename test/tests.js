@@ -1059,4 +1059,24 @@ describe('the fp module', function () {
       });
     });
   });
+
+  describe('has an tap method', function () {
+    var spy, result;
+    beforeEach(function () {
+      spy = jasmine.createSpy('spy');
+      result = fp.flow(fp.tap(spy), fp.invokeMethod('split', [',']))('1,2,3');
+    });
+
+    it('should exist on fp', function () {
+      expect(fp.tap).toEqual(jasmine.any(Function));
+    });
+
+    it('should invoke the specified function with specified args', function () {
+      expect(spy).toHaveBeenCalledOnceWith('1,2,3');
+    });
+
+    it('should carry the input through the tap', function () {
+      expect(result).toEqual(['1','2','3']);
+    });
+  });
 });

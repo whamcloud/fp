@@ -409,6 +409,12 @@
   });
   fp.either = either;
 
+  var tap = fp.curry(2, function tap (fn, xs) {
+    fn(xs);
+    return xs;
+  });
+  fp.tap = tap;
+
   /* global angular */
 
   if (typeof module !== 'undefined')
