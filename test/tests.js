@@ -1058,6 +1058,29 @@ describe('the fp module', function () {
         expect(spy).toHaveBeenCalledOnceWith('foo');
       });
     });
+
+    describe('has an tail method', function () {
+      it('should exist on fp', function () {
+        expect(fp.tail).toEqual(jasmine.any(Function));
+      });
+
+      it('should pull the last item from a list', function () {
+        var items = [1,2,3];
+        expect(fp.tail(items)).toEqual(3);
+      });
+
+      it('should return undefined if array is empty', function () {
+        expect(fp.tail([])).toBe(undefined);
+      });
+
+      it('should work with a string', function () {
+        expect(fp.tail('foo')).toBe('o');
+      });
+
+      it('should return undefined when called with an empty string', function () {
+        expect(fp.tail('')).toBe(undefined);
+      });
+    });
   });
 
   describe('has an tap method', function () {

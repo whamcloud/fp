@@ -380,6 +380,7 @@
     return xs[0];
   }
   fp.head = head;
+  fp.tail = fp.flow(fp.invokeMethod('slice', [-1]), fp.head);
 
 
   function arrayWrap (x) {
