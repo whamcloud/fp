@@ -416,9 +416,9 @@
   });
   fp.tap = tap;
 
-  var mapFn = function mapFn (fns, args) {
+  var mapFn = fp.curry(2, function mapFn (fns, args) {
     return fp.map(fp.invoke(__, args), fns);
-  };
+  });
   fp.mapFn = mapFn;
 
   /* global angular */

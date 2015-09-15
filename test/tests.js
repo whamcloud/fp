@@ -1094,6 +1094,10 @@ describe('the fp module', function () {
       expect(fp.tap).toEqual(jasmine.any(Function));
     });
 
+    it('should be curried', function () {
+      expect(fp.tap(fp.__, spy)).toEqual(jasmine.any(Function));
+    });
+
     it('should invoke the specified function with specified args', function () {
       expect(spy).toHaveBeenCalledOnceWith('1,2,3');
     });
@@ -1104,18 +1108,22 @@ describe('the fp module', function () {
   });
 
   describe('has an mapFn method', function () {
-    var spy1, spy2, spy3, args;
+    var spy1, spy2, spy3, args, result;
 
     beforeEach(function () {
       args = ['a', 1, false];
-      spy1 = jasmine.createSpy('spy1');
-      spy2 = jasmine.createSpy('spy2');
-      spy3 = jasmine.createSpy('spy3');
-      fp.mapFn([spy1, spy2, spy3], args);
+      spy1 = jasmine.createSpy('spy1').and.returnValue(1);
+      spy2 = jasmine.createSpy('spy2').and.returnValue(2);
+      spy3 = jasmine.createSpy('spy3').and.returnValue(3);
+      result = fp.mapFn([spy1, spy2, spy3], args);
     });
 
     it('should exist on fp', function () {
       expect(fp.mapFn).toEqual(jasmine.any(Function));
+    });
+
+    it('should be curried', function () {
+      expect(fp.mapFn(fp.__, [spy1])).toEqual(jasmine.any(Function));
     });
 
     it('should invoke spy1 with (a, 1, false).', function () {
@@ -1128,6 +1136,10 @@ describe('the fp module', function () {
 
     it('should invoke spy3 with (a, 1, false).', function () {
       expect(spy3).toHaveBeenCalledOnceWith('a', 1, false);
+    });
+
+    it('should return an array of mapped invoked values', function () {
+      expect(result).toEqual([1,2,3]);
     });
   });
 });
