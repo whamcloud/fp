@@ -205,6 +205,13 @@ describe('the fp module', function () {
       }, 3))
         .toEqual(6);
     });
+
+    it('should take an accumulator function', function () {
+      expect(fp.reduce(fp.always(5), function add (x, y) {
+        return x + y;
+      }, 6))
+        .toEqual(11);
+    });
   });
 
   describe('has a find method', function () {

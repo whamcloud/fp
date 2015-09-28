@@ -89,6 +89,9 @@
   fp.filter = filter;
 
   var reduce = fp.curry(3, function reducer (accum, f, xs) {
+    if (typeof accum === 'function')
+      accum = accum();
+
     if (Array.isArray(xs))
       return xs.reduce(fp.curry(2, f), accum);
     if (xs && typeof xs.reduce === 'function')
