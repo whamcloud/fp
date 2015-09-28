@@ -1341,4 +1341,33 @@ describe('the fp module', function () {
       });
     });
   });
+
+  describe('has a chainL method', function () {
+    var adder;
+    beforeEach(function () {
+      adder = fp.chainL(function (a, b) {
+        return a + b;
+      });
+    });
+
+    it('should exist on fp', function () {
+      expect(fp.chainL).toEqual(jasmine.any(Function));
+    });
+
+    it('should be curried', function () {
+      expect(fp.chainL(_)).toEqual(jasmine.any(Function));
+    });
+
+    it('should reduce two values', function () {
+      expect(adder([1, 2])).toBe(3);
+    });
+
+    it('should reduce 3 values', function () {
+      expect(adder([1, 2, 3])).toBe(6);
+    });
+
+    it('should reduce 4 values', function () {
+      expect(adder([1, 2, 3, 4])).toBe(10);
+    });
+  });
 });
