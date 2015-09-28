@@ -471,6 +471,11 @@
   });
   fp.mapFn = mapFn;
 
+  var chainL = fp.curry(2, function chainL (fn, args) {
+    return args.reduce(fp.curry(2, fn));
+  });
+  fp.chainL = chainL;
+
   /* global angular */
 
   if (typeof module !== 'undefined')
