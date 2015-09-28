@@ -476,6 +476,13 @@
   });
   fp.chainL = chainL;
 
+  var wrapArgs = function wrapArgs (fn) {
+    return function innerWrapArgs () {
+      return fn.call(null, [].slice.call(arguments));
+    };
+  };
+  fp.wrapArgs = wrapArgs;
+
   /* global angular */
 
   if (typeof module !== 'undefined')

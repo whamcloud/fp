@@ -1370,4 +1370,16 @@ describe('the fp module', function () {
       expect(adder([1, 2, 3, 4])).toBe(10);
     });
   });
+
+  describe('has a wrapArgs method', function () {
+    it('should exist on fp', function () {
+      expect(fp.wrapArgs).toEqual(jasmine.any(Function));
+    });
+
+    it('should invoke spy with an array of all arguments that were passed to the flow', function () {
+      var spy = jasmine.createSpy('spy');
+      fp.wrapArgs(fp.flow(spy))(1, 2, 3);
+      expect(spy).toHaveBeenCalledWith([1, 2, 3]);
+    });
+  });
 });
