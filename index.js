@@ -460,6 +460,14 @@
   });
   fp.either = either;
 
+  var unsafe = fp.curry(2, function unsafe (fn, x) {
+    if (!(x instanceof Error))
+      return x;
+
+    return fn(x);
+  });
+  fp.unsafe = unsafe;
+
   var tap = fp.curry(2, function tap (fn, xs) {
     fn(xs);
     return xs;

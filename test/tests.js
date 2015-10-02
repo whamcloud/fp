@@ -989,7 +989,7 @@ describe('the fp module', function () {
     });
 
     it('should be curried', function () {
-      expect(fp.either(fp.__, 'bar')).toEqual(jasmine.any(Function));
+      expect(fp.either(fp.__)).toEqual(jasmine.any(Function));
     });
 
     describe('chaining', function () {
@@ -1065,32 +1065,84 @@ describe('the fp module', function () {
         expect(spy).toHaveBeenCalledOnceWith('foo');
       });
     });
+  });
 
-    describe('has an tail method', function () {
-      it('should exist on fp', function () {
-        expect(fp.tail).toEqual(jasmine.any(Function));
+  describe('has an unsafe method', function () {
+    it('should exist on fp', function () {
+      expect(fp.unsafe).toEqual(jasmine.any(Function));
+    });
+
+    it('should be curried', function () {
+      expect(fp.unsafe(fp.__)).toEqual(jasmine.any(Function));
+    });
+
+    describe('error handling', function () {
+      var spy1, spy2, chain;
+
+      beforeEach(function () {
+        spy1 = jasmine.createSpy('spy1').and.callFake(fp.identity);
+        spy2 = jasmine.createSpy('spy2').and.callFake(fp.identity);
+        chain = fp.flow.apply(null, fp.map(fp.unsafe, [spy1, spy2]));
       });
 
-      it('should pull the last item from a list', function () {
-        var items = [1,2,3];
-        expect(fp.tail(items)).toEqual(3);
+      it('should call spy1', function () {
+        chain(new Error('boom!'));
+        expect(spy1).toHaveBeenCalledOnceWith(new Error('boom!'));
       });
 
-      it('should return undefined if array is empty', function () {
-        expect(fp.tail([])).toBe(undefined);
+      it('should call spy2', function () {
+        chain(new Error('boom!'));
+        expect(spy2).toHaveBeenCalledOnceWith(new Error('boom!'));
       });
 
-      it('should work with a string', function () {
-        expect(fp.tail('foo')).toBe('o');
+      it('should pass errors', function () {
+        expect(chain(new Error('boom!'))).toEqual(new Error('boom!'));
+      });
+    });
+
+    describe('non-error handling', function () {
+      var spy, result;
+
+      beforeEach(function () {
+        spy = jasmine.createSpy('spy').and.callFake(fp.identity);
+
+        result = fp.unsafe(spy, 'foo');
       });
 
-      it('should return undefined when called with an empty string', function () {
-        expect(fp.tail('')).toBe(undefined);
+      it('should treat non-errors as a right', function () {
+        expect(result).toBe('foo');
+      });
+
+      it('should not call fn', function () {
+        expect(spy).not.toHaveBeenCalled();
       });
     });
   });
 
-  describe('has an tap method', function () {
+  describe('has an tail method', function () {
+    it('should exist on fp', function () {
+      expect(fp.tail).toEqual(jasmine.any(Function));
+    });
+
+    it('should pull the last item from a list', function () {
+      var items = [1,2,3];
+      expect(fp.tail(items)).toEqual(3);
+    });
+
+    it('should return undefined if array is empty', function () {
+      expect(fp.tail([])).toBe(undefined);
+    });
+
+    it('should work with a string', function () {
+      expect(fp.tail('foo')).toBe('o');
+    });
+
+    it('should return undefined when called with an empty string', function () {
+      expect(fp.tail('')).toBe(undefined);
+    });
+  });
+
+  describe('has a tap method', function () {
     var spy, result;
     beforeEach(function () {
       spy = jasmine.createSpy('spy');
