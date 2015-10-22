@@ -15,7 +15,7 @@
   ],
   "repository" : {
     "type" : "git",
-    "url" : "https://github.com/intel-js/fp.git"
+    "url" : "https://github.intel.com/IML/fp.git"
   },
   "author": "IML Team",
   "license": "MIT",

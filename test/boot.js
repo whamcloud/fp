@@ -7,7 +7,7 @@ if (process.env.RUNNER === 'CI') {
   var junitReporter = new krustyJasmineReporter.KrustyJasmineJUnitReporter({
     specTimer: new jasmine.Timer(),
     JUnitReportSavePath: process.env.SAVE_PATH || './',
-    JUnitReportFilePrefix: process.env.FILE_PREFIX || 'fp-results',
+    JUnitReportFilePrefix: process.env.FILE_PREFIX || 'fp-results-' +  process.version,
     JUnitReportSuiteName: 'FP Reports',
     JUnitReportPackageName: 'FP Reports'
   });
