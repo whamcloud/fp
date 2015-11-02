@@ -187,6 +187,14 @@
   }
   fp.flow = flow;
 
+  var flowN = fp.curry(2, function flowN (n, fns) {
+    fns = fp.lensProp('0').map(fp.invoke, fns);
+    var flow = fp.wrapArgs(fp.flow.apply(null, fns));
+
+    return fp.curry(n, flow);
+  });
+  fp.flowN = flowN;
+
   var difference = fp.curry(2, function difference (xs, ys) {
     return xs.reduce(function reduceDiffs (arr, x) {
       if (ys.indexOf(x) === -1)

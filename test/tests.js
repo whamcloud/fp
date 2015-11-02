@@ -314,6 +314,38 @@ describe('the fp module', function () {
     });
   });
 
+  describe('has a flowN method', function () {
+    var flown, adder, times2;
+    beforeEach(function () {
+      adder = function (x, y) { return x + y; };
+      times2 = function (x) { return x * 2; };
+
+      flown = fp.flowN(2);
+    });
+    it('should exist on fp', function () {
+      expect(fp.flowN).toEqual(jasmine.any(Function));
+    });
+
+    it('should be curried', function () {
+      var curriedFlowN = fp.flowN(fp.__, [adder, times2]);
+      expect(curriedFlowN(2)(3, 4)).toEqual(14);
+    });
+
+    it('should provide a function with a forced arity', function () {
+      expect(fp.flowN(2, [adder, times2])(3)).toEqual(jasmine.any(Function));
+    });
+
+    it('should invoke a function with a forced arity when the arity is satisfied', function () {
+      function bang (x) { return x + '!'; }
+      expect(fp.flowN(2, [adder, times2, bang])(3, 4)).toEqual('14!');
+    });
+
+    it('should support gaps', function () {
+      var gappedFlown = fp.flowN(2, [adder, times2])(fp.__, 4);
+      expect(gappedFlown(3)).toEqual(14);
+    });
+  });
+
   describe('has a difference method', function () {
     it('should exist on fp', function () {
       expect(fp.difference).toEqual(jasmine.any(Function));
