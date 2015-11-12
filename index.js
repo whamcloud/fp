@@ -499,6 +499,19 @@
   };
   fp.wrapArgs = wrapArgs;
 
+  var flip = fp.curry(2, function flip (arity, fn) {
+    return fp.curry(arity, function flipper () {
+      var args = new Array(arguments.length);
+
+      for (var i = 0, l = arguments.length; i < l; i++) {
+        args[i] = arguments[i];
+      }
+      args.reverse();
+      return fn.apply(null, args);
+    });
+  });
+  fp.flip = flip;
+
   /* global angular */
 
   if (typeof module !== 'undefined')

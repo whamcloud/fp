@@ -1466,4 +1466,31 @@ describe('the fp module', function () {
       expect(spy).toHaveBeenCalledWith([1, 2, 3]);
     });
   });
+
+  describe('flip', function () {
+    it('should exist on fp', function () {
+      expect(fp.flip).toEqual(jasmine.any(Function));
+    });
+
+    it('should be curried', function () {
+      expect(fp.flip(fp.__, fp.__)).toEqual(jasmine.any(Function));
+    });
+
+    it('should return a function', function () {
+      expect(fp.flip(2, fp.identity)).toEqual(jasmine.any(Function));
+    });
+
+    it('should curry the returned function', function () {
+      var flipper = fp.flip(2, fp.identity);
+      expect(flipper(fp.__, fp.__))
+        .toEqual(jasmine.any(Function));
+    });
+
+    it('should reverse args', function () {
+      var spy = jasmine.createSpy('spy');
+      fp.flip(4, spy)('d', 'c', 'b', 'a')
+
+      expect(spy).toHaveBeenCalledOnceWith('a', 'b', 'c', 'd');
+    });
+  });
 });
