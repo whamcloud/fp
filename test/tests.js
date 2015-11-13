@@ -1493,4 +1493,32 @@ describe('the fp module', function () {
       expect(spy).toHaveBeenCalledOnceWith('a', 'b', 'c', 'd');
     });
   });
+
+  describe('anyPass', function () {
+    var passes;
+
+    beforeEach(function () {
+      var gt = fp.curry(2, function gt (x, y) {
+        return y > x;
+      });
+
+      passes = fp.anyPass([gt(9), gt(4), gt(5)]);
+    });
+
+    it('should exist on fp', function () {
+      expect(fp.anyPass).toEqual(jasmine.any(Function));
+    });
+
+    it('should be curried', function () {
+      expect(fp.anyPass(fp.__, fp.__)).toEqual(jasmine.any(Function));
+    });
+
+    it('should return false if none pass', function () {
+      expect(passes(3)).toBe(false);
+    });
+
+    it('should return true if any pass', function () {
+      expect(passes(7)).toBe(true);
+    });
+  });
 });

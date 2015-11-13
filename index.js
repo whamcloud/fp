@@ -512,6 +512,11 @@
   });
   fp.flip = flip;
 
+  var anyPass = curry(2, function anyPass (fns, x) {
+    return some(fp.invoke(fp.__, [x]), fns);
+  });
+  fp.anyPass = anyPass;
+
   /* global angular */
 
   if (typeof module !== 'undefined')
