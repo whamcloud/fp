@@ -1488,7 +1488,7 @@ describe('the fp module', function () {
 
     it('should reverse args', function () {
       var spy = jasmine.createSpy('spy');
-      fp.flip(4, spy)('d', 'c', 'b', 'a')
+      fp.flip(4, spy)('d', 'c', 'b', 'a');
 
       expect(spy).toHaveBeenCalledOnceWith('a', 'b', 'c', 'd');
     });

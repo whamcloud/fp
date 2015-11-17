@@ -1,6 +1,6 @@
 {
   "name": "intel-fp",
-  "version": "1.0.14",
+  "version": "1.0.15",
   "description": "A Functional Programming Lib.",
   "main": "index.js",
   "scripts": {
@@ -23,12 +23,11 @@
   "author": "IML Team",
   "license": "MIT",
   "devDependencies": {
-    "jasmine": "2.3.1",
+    "jasmine": "2.3.2",
     "jasmine-n-matchers": "2.0.2",
-    "jscs": "2.1.0",
+    "jscs": "2.5.1",
     "jshint": "2.8.0",
     "krusty-jasmine-reporter": "1.0.0",
-    "pre-commit": "1.1.1"
-  },
-  "whitelist": ["jasmine", "jasmine-n-matchers", "krusty-jasmine-reporter"]
+    "pre-commit": "1.1.2"
+  }
 }
