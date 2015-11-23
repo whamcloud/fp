@@ -1,16 +1,32 @@
+#!/usr/bin/env node
+
 'use strict';
 
-require('jasmine-n-matchers');
+var Jasmine = require('jasmine');
+var jasmine = new Jasmine();
+require('intel-jasmine-n-matchers');
+
 if (process.env.RUNNER === 'CI') {
   var krustyJasmineReporter = require('krusty-jasmine-reporter');
 
   var junitReporter = new krustyJasmineReporter.KrustyJasmineJUnitReporter({
-    specTimer: new jasmine.Timer(),
+    specTimer: new jasmine.jasmine.Timer(),
     JUnitReportSavePath: process.env.SAVE_PATH || './',
     JUnitReportFilePrefix: process.env.FILE_PREFIX || 'fp-results-' +  process.version,
     JUnitReportSuiteName: 'FP Reports',
     JUnitReportPackageName: 'FP Reports'
   });
 
-  jasmine.getEnv().addReporter(junitReporter);
+  jasmine.jasmine.getEnv().addReporter(junitReporter);
 }
+
+require('babel-register');
+
+jasmine.loadConfig({
+  spec_dir: 'test',
+  spec_files: [
+    '**/*.js'
+  ]
+});
+
+jasmine.execute();

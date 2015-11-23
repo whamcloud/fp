@@ -1,4 +1,5 @@
 {
+  "esnext": true,
   "requireCurlyBraces": [
     "for",
     "while",
@@ -91,6 +92,7 @@
     "requireParamTypes": true
   },
   "excludeFiles": [
-    "node_modules/**"
+    "node_modules/**",
+    "dist/**"
   ]
 }
