@@ -5,18 +5,14 @@ var fs = require('fs');
 var mkdirp = require('mkdirp');
 var babel = require('babel-core');
 
-var index = require.resolve('../index');
+var index = require.resolve('../');
 var opts = {
-  "presets": [
-    "es2015"
-  ],
-  "plugins": [
-    "syntax-flow",
-    "transform-flow-strip-types",
-    "transform-es2015-modules-umd",
-    "transform-strict-mode"
-  ],
-  auxiliaryCommentBefore: '\n\
+  plugins: [
+    'transform-es2015-modules-umd'
+  ]
+};
+
+var licenseStatement = '/*\n\
 INTEL CONFIDENTIAL\n\
 \n\
 Copyright 2013-2015 Intel Corporation All Rights Reserved.\
@@ -35,8 +31,8 @@ No license under any patent, copyright, trade secret or other intellectual\n\
 property right is granted to or conferred upon you by disclosure or delivery\n\
 of the Materials, either expressly, by implication, inducement, estoppel or\n\
 otherwise. Any license under such intellectual property rights must be\n\
-express and approved by Intel in writing.\n'
-};
+express and approved by Intel in writing.\n*/\n\n';
+
 babel.transformFile(index, opts, function cb (err, result) {
   if (err)
     throw err;
@@ -44,5 +40,5 @@ babel.transformFile(index, opts, function cb (err, result) {
   var dest = path.join(path.dirname(__dirname), 'dist');
 
   mkdirp.sync(dest);
-  fs.writeFileSync(path.join(dest, 'fp.js'), result.code);
+  fs.writeFileSync(path.join(dest, 'fp.js'), licenseStatement + result.code);
 });

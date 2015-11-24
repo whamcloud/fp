@@ -1,4 +1,4 @@
-import * as fp from '../index';
+import * as fp from '../fp';
 
 describe('the fp module', () => {
   var _;

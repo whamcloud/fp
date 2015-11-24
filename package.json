@@ -1,8 +1,8 @@
 {
   "name": "intel-fp",
-  "version": "2.0.1",
+  "version": "3.0.0",
   "description": "A Functional Programming Lib.",
-  "main": "index.js",
+  "main": "fp.js",
   "scripts": {
     "test": "NODE_ENV=test ./test.js",
     "cover": "NODE_ENV=test istanbul cover --report cobertura --include-all-sources ./test",
