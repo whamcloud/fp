@@ -1518,6 +1518,17 @@ describe('the fp module', () => {
     });
   });
 
+  describe('xProd', () => {
+    it('should exist on fp', () => {
+      expect(fp.xProd).toEqual(jasmine.any(Function));
+    });
+
+    it('should return the cross product of two arrays', () => {
+      expect(fp.xProd([1, 2], [3, 4]))
+        .toEqual([[1, 3], [1, 4], [2, 3], [2, 4]]);
+    });
+  });
+
   describe('flip', () => {
     it('should exist on fp', () => {
       expect(fp.flip).toEqual(jasmine.any(Function));

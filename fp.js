@@ -419,6 +419,18 @@ export const wrapArgs = function wrapArgs (fn: Function): Function {
   };
 };
 
+export const xProd = curry(2, function xprod (a: any, b: any): Array<Array<any>> {
+  const result = [];
+
+  a.forEach(function (a) {
+    b.forEach(function (b) {
+      result.push([a, b]);
+    });
+  });
+
+  return result;
+});
+
 export const flip = curry(2, function flip (arity, fn) {
   return curry(arity, function flipper () {
     var args = new Array(arguments.length);
