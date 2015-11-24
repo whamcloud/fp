@@ -1583,4 +1583,72 @@ describe('the fp module', () => {
       expect(passes(7)).toBe(true);
     });
   });
+
+  describe('zipBy', () => {
+    var spy1, spy2, spy3, result;
+    describe('matching functions with single args', function () {
+
+
+      beforeEach(function () {
+        spy1 = jasmine.createSpy('spy1').and.callFake(fp.identity);
+        spy2 = jasmine.createSpy('spy2').and.callFake(fp.identity);
+        spy3 = jasmine.createSpy('spy3').and.callFake(fp.identity);
+        result = fp.zipBy((a, b) => a(b), [spy1, spy2, spy3], ['dee', 'doo', 'da']);
+      });
+
+      it('should exist on fp', () => {
+        expect(fp.zipBy).toEqual(jasmine.any(Function));
+      });
+
+      it('should be curried', () => {
+        expect(fp.zipBy(fp.__, fp.__, fp.__)).toEqual(jasmine.any(Function));
+      });
+
+      it('should invoke spy1 with dee', () => {
+        expect(spy1).toHaveBeenCalledWith('dee');
+      });
+
+      it('should invoke spy2 with doo', () => {
+        expect(spy2).toHaveBeenCalledWith('doo');
+      });
+
+      it('should invoke spy3 with da', () => {
+        expect(spy3).toHaveBeenCalledWith('da');
+      });
+
+      it('should return the result of each call as an array', () => {
+        expect(result).toEqual(['dee', 'doo', 'da']);
+      });
+
+      describe('with fewer left than right', () => {
+        beforeEach(() => {
+          result = fp.zipBy((a, b) => a(b), [spy1, spy2], ['dee', 'doo', 'da']);
+        });
+
+        it('should return the result of the first two', () => {
+          expect(result).toEqual(['dee', 'doo']);
+        });
+      });
+
+      describe('with fewer right than left', () => {
+        beforeEach(() => {
+          result = fp.zipBy((a, b) => a(b), [spy1, spy2, spy3], ['dee', 'doo']);
+        });
+
+        it('should return the result of the first two', () => {
+          expect(result).toEqual(['dee', 'doo']);
+        });
+      });
+    });
+
+    describe('concatenating strings', () => {
+      beforeEach(() => {
+        result = fp.zipBy((a, b) => a + b, ['cat', 'space', 'thunder'], ['amaran', ' balls', ' storm']);
+      });
+
+      it('should concat the results into a single array', () => {
+        expect(result).toEqual(['catamaran', 'space balls', 'thunder storm']);
+      });
+    });
+  });
 });

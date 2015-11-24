@@ -446,3 +446,13 @@ export const flip = curry(2, function flip (arity, fn) {
 export const anyPass = curry(2, function anyPass (fns, x) {
   return some(invoke(__, [x]), fns);
 });
+
+export const zipBy = curry(3, (fn:Function, left:Array<any>, right:Array<any>) => {
+  var min = Math.min(left.length, right.length);
+  left.length = min;
+  right.length = min;
+
+  return left.reduce((prev:Array<any>, cur:any, idx:number) => {
+    return prev.concat(fn(cur, right[idx]));
+  }, []);
+});
