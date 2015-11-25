@@ -1,6 +1,6 @@
 {
   "name": "intel-fp",
-  "version": "3.2.0",
+  "version": "3.2.1",
   "description": "A Functional Programming Lib.",
   "main": "fp.js",
   "scripts": {
@@ -26,7 +26,7 @@
   "license": "MIT",
   "devDependencies": {
     "babel-core": "6.2.1",
-    "babel-eslint": "4.1.5",
+    "babel-eslint": "4.1.6",
     "babel-plugin-syntax-flow": "6.1.18",
     "babel-plugin-transform-es2015-modules-umd": "6.1.18",
     "babel-plugin-transform-flow-strip-types": "6.1.18",

@@ -1,2 +1,8 @@
 node_modules
 .idea
+.babelrc
+.eslintignore
+.editorconfig
+.eslintrc.js
+.jscsrc
+.flowconfig
