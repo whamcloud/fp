@@ -1135,6 +1135,37 @@ describe('the fp module', () => {
     });
   });
 
+  describe('has a maybe method', () => {
+    it('should exist on fp', () => {
+      expect(fp.maybe).toEqual(jasmine.any(Function));
+    });
+
+    it('should be curried', () => {
+      expect(fp.maybe(fp.__, fp.__)).toEqual(jasmine.any(Function));
+    });
+
+    describe('null handling', () => {
+      var spy;
+
+      beforeEach(() => {
+        spy = jasmine.createSpy('spy').and.callFake(x => x + 1);
+      });
+
+      it('should not invoke with a null token', () => {
+        fp.maybe(spy, null);
+
+        expect(spy).not.toHaveBeenCalled();
+      });
+
+      it('should return the result of the the invocation', () => {
+        const result = [1, 2, null]
+          .map(fp.maybe(spy));
+
+        expect(result).toEqual([2, 3, null]);
+      });
+    });
+  });
+
   describe('has an unsafe method', () => {
     it('should exist on fp', () => {
       expect(fp.unsafe).toEqual(jasmine.any(Function));

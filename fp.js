@@ -393,6 +393,13 @@ export const either = curry(2, function either (fn, x) {
   return fn(x);
 });
 
+export const maybe = curry(2, function maybe (fn:Function, x:any) {
+  if (x === null)
+    return x;
+
+  return fn(x);
+});
+
 export const unsafe = curry(2, function unsafe (fn, x) {
   if (!(x instanceof Error))
     return x;
