@@ -133,6 +133,7 @@ export const identity = (x: any): any => x;
 export const always = (x: any): Function => () => x;
 
 export const True = always(true);
+export const False = always(false);
 
 export const difference = curry(2, function difference (xs, ys) {
   return xs.reduce(function reduceDiffs (arr, x) {

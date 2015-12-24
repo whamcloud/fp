@@ -26,7 +26,11 @@ jasmine.loadConfig({
   spec_dir: 'test',
   spec_files: [
     '**/*.js'
-  ]
+  ],
+  random: true
 });
+
+exports.jasmine = jasmine.jasmine;
+exports.env = jasmine.jasmine.getEnv();
 
 jasmine.execute();

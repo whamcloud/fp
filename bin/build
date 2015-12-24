@@ -6,11 +6,6 @@ var mkdirp = require('mkdirp');
 var babel = require('babel-core');
 
 var index = require.resolve('../');
-var opts = {
-  plugins: [
-    'transform-es2015-modules-umd'
-  ]
-};
 
 var licenseStatement = '/*\n\
 INTEL CONFIDENTIAL\n\
@@ -33,7 +28,7 @@ of the Materials, either expressly, by implication, inducement, estoppel or\n\
 otherwise. Any license under such intellectual property rights must be\n\
 express and approved by Intel in writing.\n*/\n\n';
 
-babel.transformFile(index, opts, function cb (err, result) {
+babel.transformFile(index, function cb (err, result) {
   if (err)
     throw err;
 

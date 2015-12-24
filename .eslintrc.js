@@ -7,19 +7,7 @@ module.exports = {
     indent: [2, 2]
   },
   globals: {
-    window: false,
-    describe: false,
-    beforeEach: false,
-    afterEach: false,
-    jasmine: true,
-    spyOn: false,
-    it: false,
-    pit: false,
-    console: false,
-    expect: false,
-    waits: false,
-    waitsFor: false,
-    runs: false
+    console: false
   },
   ecmaFeatures: {
     modules: true

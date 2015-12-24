@@ -1,12 +1,9 @@
 import * as fp from '../fp';
+import {env, jasmine} from '../test';
+const {describe, beforeEach, it, expect} = env;
+const _ = fp.__;
 
 describe('the fp module', () => {
-  var _;
-
-  beforeEach(() => {
-    _ = fp.__;
-  });
-
   describe('has a curry method', () => {
     var toArray;
 
@@ -284,7 +281,17 @@ describe('the fp module', () => {
     });
 
     it('should always return true', () => {
-      expect(fp.True()).toEqual(true);
+      expect(fp.True()).toBe(true);
+    });
+  });
+
+  describe('has a False method', () => {
+    it('should exist on fp', () => {
+      expect(fp.False).toEqual(jasmine.any(Function));
+    });
+
+    it('should always return false', () => {
+      expect(fp.False()).toBe(false);
     });
   });
 
@@ -1618,7 +1625,6 @@ describe('the fp module', () => {
   describe('zipBy', () => {
     var spy1, spy2, spy3, result;
     describe('matching functions with single args', function () {
-
 
       beforeEach(function () {
         spy1 = jasmine.createSpy('spy1').and.callFake(fp.identity);
