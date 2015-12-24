@@ -1,8 +1,10 @@
 /* @flow */
 
+import Immutable from 'immutable';
+
 export const __ = {};
 
-function _type (val) {
+function _type (val): string {
   if (val === null)
     return 'Null';
   else if (val === undefined)
@@ -13,7 +15,7 @@ function _type (val) {
       .slice(8, -1);
 }
 
-export function curry (n: number, fn: Function ) : Function {
+export function curry (n: number, fn: Function ): Function {
   return function innerCurry () {
     var args = new Array(arguments.length);
     for (var i = 0, l = arguments.length; i < l; i++) {
@@ -46,14 +48,14 @@ export function curry (n: number, fn: Function ) : Function {
   };
 }
 
-export const map = curry(2, function m (f : Function, x : any) : any {
+export const map = curry(2, function m (f: Function, x: any): any {
   if (x && typeof x.map === 'function')
     return x.map(curry(1, f));
   else
     return f(x);
 });
 
-export const filter = curry(2, function filter (f, xs) {
+export const filter = curry(2, function filter (f: Function, xs) {
   if (xs && typeof xs.filter === 'function')
     return xs.filter(curry(1, f));
   else
@@ -70,52 +72,6 @@ export const reduce = curry(3, function reducer (accum, f, xs) {
     return xs.reduce(accum, curry(2, f));
   else
     return f(accum, xs);
-});
-
-export const deepEq = curry(2, function deepEqFactory (a, b) {
-  return (function deepEq (a, b, visitedA, visitedB) {
-
-    var aType = _type(a);
-    var bType = _type(b);
-
-    if (isColl(aType) && isColl(bType) && (aType === bType)) { // Collection check.
-
-      // Cycle checks.
-      throwForCycle(visitedA, a);
-      throwForCycle(visitedB, b);
-
-      var aKeys = Object.keys(a);
-      var bKeys = Object.keys(b);
-
-      if (aKeys.length !== bKeys.length) // Length check.
-        return false;
-
-      var keysInBoth = aKeys.every(function aInB (x) {
-        return x in b;
-      });
-
-      if (!keysInBoth)
-        return false;
-
-      return aKeys.every(function recurse (x) { // Recursive check.
-        return deepEq(a[x], b[x], visitedA, visitedB);
-      });
-    } else {
-      return eq(a, b); // Strict check.
-    }
-
-    function isColl (t) {
-      return t === 'Array' || t === 'Object';
-    }
-
-    function throwForCycle (visited, xs) {
-      if (visited.indexOf(xs) !== -1)
-        throw new Error('Cycle detected, cannot determine equality.');
-
-      visited.push(xs);
-    }
-
-  }(a, b, [], []));
 });
 
 export const find = curry(2, function find (f, xs) {
@@ -144,7 +100,7 @@ export const difference = curry(2, function difference (xs, ys) {
   }, []);
 });
 
-export const lens = curry(2, function lens (get, set) {
+export const lens = curry(2, function lens (get: Function, set: Function): Function {
   set = curry(2, set);
   innerLens.set = set;
 
@@ -159,15 +115,21 @@ export const lens = curry(2, function lens (get, set) {
   return innerLens;
 });
 
-export const lensProp = function lensProp (prop: string): Function {
+export const lensProp = function lensProp (prop: string|number): Function {
   return lens(
     function get (x) {
-      return x[prop];
+      return typeof x.get === 'function' ? x.get(prop) : x[prop];
     },
     function set (val, x) {
-      x[prop] = val;
+      if (typeof x.set === 'function') {
+        if (Immutable.Iterable.isIterable(x))
+          val = Immutable.fromJS(val);
 
-      return x;
+        return x.set(prop, val);
+      } else {
+        x[prop] = val;
+        return x;
+      }
     }
   );
 };
@@ -215,11 +177,7 @@ export function flowLens (): Function {
   );
 }
 
-export function pathLens (path: Array<string>): Function {
-  var pathType = _type(path);
-  if (pathType !== 'Array')
-    throw new TypeError('pathLens must receive the path in the form of an array. Got: ' + pathType);
-
+export function pathLens (path: Array<string|number>): Function {
   var lenses = map(lensProp, path);
 
   return lens(
@@ -281,7 +239,8 @@ export function shallowClone (xs: any): any {
 
 export const not = (x:any):boolean => !x;
 
-export const eq = curry(2, (a, b) => a === b);
+export const eq = curry(2,
+  (a, b) => _type(a) === 'Object' && typeof a.equals === 'function' ? a.equals(b) : a === b);
 
 export const eqLens = curry(3, function eqLens (l, a, b) {
   return eq(l(a), l(b));
@@ -369,7 +328,7 @@ export function unwrap (xs:Array<any>):Array<any> {
   }, []);
 }
 
-export const head = (xs:Array<any>):Array<any> => xs[0];
+export const head = lensProp(0);
 export const tail = flow(invokeMethod('slice', [-1]), head);
 
 export const arrayWrap = (x: any): any => [x];
@@ -408,8 +367,12 @@ export const unsafe = curry(2, function unsafe (fn, x) {
   return fn(x);
 });
 
-export const tap = curry(2, function tap (fn, xs) {
-  fn(xs);
+export const tap = curry(2, function tap (fn: Function, xs: any): any {
+  if (xs && typeof xs.tap === 'function')
+    xs.tap(curry(1, fn));
+  else
+    fn(xs);
+
   return xs;
 });
 

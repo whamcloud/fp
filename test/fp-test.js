@@ -1,7 +1,12 @@
-import * as fp from '../fp';
+/* @flow */
+
 import {env, jasmine} from '../test';
 const {describe, beforeEach, it, expect} = env;
+
+import * as fp from '../fp';
 const _ = fp.__;
+
+import {Map} from 'immutable';
 
 describe('the fp module', () => {
   describe('has a curry method', () => {
@@ -433,7 +438,7 @@ describe('the fp module', () => {
     });
 
     it('should retrieve a value', () => {
-      expect(getX({ x: 10 })).toEqual(10);
+      expect(getX({ x: 10 })).toBe(10);
     });
 
     it('should set a new value', () => {
@@ -441,9 +446,30 @@ describe('the fp module', () => {
     });
 
     it('should provide a mapper', () => {
-      expect(getX.map(function add10 (x) {
-        return x + 10;
-      }, { x: 10 })).toEqual({ x: 20 });
+      expect(getX.map((x) => x + 10, { x: 10 }))
+        .toEqual({ x: 20 });
+    });
+
+    describe('with Immutable.Map', () => {
+      var map;
+
+      beforeEach(() => {
+        map = Map({ x: 10 });
+      });
+
+      it('should retrieve a value', () => {
+        expect(getX(map)).toBe(10);
+      });
+
+      it('should set a new value', () => {
+        expect(getX.set('mu', map).toJS())
+          .toEqual({ x: 'mu' });
+      });
+
+      it('should provide a mapper', () => {
+        expect(getX.map((x) => x + 10, map).toJS())
+          .toEqual({ x: 20 });
+      });
     });
   });
 
@@ -497,13 +523,6 @@ describe('the fp module', () => {
       };
 
       expect(pl(obj)).toEqual(7);
-    });
-
-    it('should throw an error if the path is not an array', () => {
-      expect(() => {
-        fp.pathLens('foo')({ foo: 'bar' });
-      }).toThrow(
-        new TypeError('pathLens must receive the path in the form of an array. Got: String'));
     });
 
     it('should not error when path does not exist', () => {
@@ -619,6 +638,14 @@ describe('the fp module', () => {
 
     it('should check by reference', () => {
       expect(fp.eq({}, {})).toBe(false);
+    });
+
+    it('should tell if two immutable values are the same', () => {
+      expect(fp.eq(Map({ '1': 2 }), Map({ '1': 2 }))).toBe(true);
+    });
+
+    it('should work with undefined', () => {
+      expect(fp.eq(undefined, undefined)).toBe(true);
     });
   });
 
@@ -1225,7 +1252,7 @@ describe('the fp module', () => {
     });
   });
 
-  describe('has an tail method', () => {
+  describe('has a tail method', () => {
     it('should exist on fp', () => {
       expect(fp.tail).toEqual(jasmine.any(Function));
     });
@@ -1305,213 +1332,6 @@ describe('the fp module', () => {
 
     it('should return an array of mapped invoked values', () => {
       expect(result).toEqual([1, 2, 3]);
-    });
-  });
-
-  describe('has an deepEq method', () => {
-
-    it('should exist on fp', () => {
-      expect(fp.deepEq).toEqual(jasmine.any(Function));
-    });
-
-    it('should be curried', () => {
-      expect(fp.deepEq(fp.__, 'bar')).toEqual(jasmine.any(Function));
-    });
-
-    describe('when invoked with non-cyclical structures', () => {
-
-      it('should return true if two objects have the same keys and values', () => {
-        expect(fp.deepEq({ name: 'Wayne' }, { name: 'Wayne' })).toBe(true);
-      });
-
-      it('should return false if two arrays have different lengths', () => {
-        expect(fp.deepEq([], [1])).toBe(false);
-      });
-
-      it('should return false if two objects have different lengths', () => {
-        expect(fp.deepEq({}, { hello: 'world' })).toBe(false);
-      });
-
-      it('should return false if two objects have same keys and different values', () => {
-        expect(fp.deepEq({ name: 'Wayne' }, { name: 'Will' })).toBe(false);
-      });
-
-      it('should return true if two arrays have the same values', () => {
-        expect(fp.deepEq([1, 2, 3], [1, 2, 3])).toBe(true);
-      });
-
-      it('should return false if two arrays have different values', () => {
-        expect(fp.deepEq([1, 2, 3], [1, 2, 'a'])).toBe(false);
-      });
-
-      it('should return true if two nested objects have the same keys and values', () => {
-        expect(
-          fp.deepEq(
-            {
-              name: 'Wayne',
-              otherObj: { name: 'Joe' }
-            },
-            {
-              name: 'Wayne',
-              otherObj: { name: 'Joe' }
-            }
-          )
-        ).toBe(true);
-      });
-
-      it('should return false if two nested objects have different values', () => {
-        expect(fp.deepEq(
-          {
-            name: 'Wayne',
-            otherObj: { name: 'Joe' }
-          },
-          {
-            name: 'Wayne',
-            otherObj: { name: 'Sunshine' }
-          })
-        ).toBe(false);
-      });
-
-      it('should return false for different types', () => {
-        expect(fp.deepEq({}, [])).toBe(false);
-      });
-
-      it('should not throw if there are no cycles', () => {
-        var a = {};
-        a.a = {
-          bar: 'bap',
-          baz: {
-            qux: [1, 2, 3]
-          }
-        };
-
-        var b = {};
-        b.a = {
-          bar: 'bap',
-          baz: {
-            qux: [1, 2, 3]
-          }
-        };
-
-        expect(fp.deepEq(a, b)).toBe(true);
-      });
-    });
-
-    describe('when invoked with cyclical structures', () => {
-      it('should throw if cycles are detected on the left hand side', () => {
-        var f = () => {
-          var a = {};
-          a.a = a;
-
-          var b = {};
-          b.a = {};
-
-          fp.deepEq(a, b);
-        };
-
-        expect(f).toThrowError(Error, 'Cycle detected, cannot determine equality.');
-      });
-
-      it('should throw if cycles are detected on the right hand side', () => {
-        var f = () => {
-          var a = {};
-          a.a = {};
-
-          var b = {};
-          b.a = b;
-
-          fp.deepEq(a, b);
-        };
-
-        expect(f).toThrowError(Error, 'Cycle detected, cannot determine equality.');
-      });
-
-      describe('that are deep', () => {
-
-        it('should still throw if cycles are detected deep in the structure on the left hand side', () => {
-          var f = () => {
-            var a = {};
-            a.x = {
-              bar: 'bap',
-              baz: {
-                qux: [1, 2, 3]
-              },
-              quark: {
-                bazzer: {
-                  bapper: [{
-                    byzantine: 'deadly'
-                  }, 'a', 'b', 'c'
-                  ]
-                }
-              }
-            };
-            a.x.quark.bazzer.bapper.push(a);
-
-            var b = {};
-            b.x = {
-              bar: 'bap',
-              baz: {
-                qux: [1, 2, 3]
-              },
-              quark: {
-                bazzer: {
-                  bapper: [{
-                    byzantine: 'deadly'
-                  }, 'a', 'b', 'c'
-                  ]
-                }
-              }
-            };
-            b.x.quark.bazzer.bapper.push({});
-
-            fp.deepEq(a, b);
-          };
-
-          expect(f).toThrowError(Error, 'Cycle detected, cannot determine equality.');
-        });
-
-        it('should still throw if cycles are detected deep in the structure on the right hand side', () => {
-          var f = () => {
-            var a = {};
-            a.x = {
-              bar: 'bap',
-              baz: {
-                qux: [1, 2, 3]
-              },
-              quark: {
-                bazzer: {
-                  bapper: [{
-                    byzantine: 'deadly'
-                  }, 'a', 'b', 'c'
-                  ]
-                }
-              }
-            };
-            a.x.quark.bazzer.bapper.push({});
-
-            var b = {};
-            b.x = {
-              bar: 'bap',
-              baz: {
-                qux: [1, 2, 3]
-              },
-              quark: {
-                bazzer: {
-                  bapper: [{
-                    byzantine: 'deadly'
-                  }, 'a', 'b', 'c'
-                  ]
-                }
-              }
-            };
-            b.x.quark.bazzer.bapper.push(b);
-
-            fp.deepEq(a, b);
-          };
-
-          expect(f).toThrowError(Error, 'Cycle detected, cannot determine equality.');
-        });
-      });
     });
   });
 
