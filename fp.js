@@ -4,6 +4,8 @@ import Immutable from 'immutable';
 
 export const __ = {};
 
+type Container = Array<any>|Object|Function;
+
 function _type (val): string {
   if (val === null)
     return 'Null';
@@ -15,7 +17,7 @@ function _type (val): string {
       .slice(8, -1);
 }
 
-export function curry (n: number, fn: Function ): Function {
+export function curry (n: number, fn: Function): Function {
   return function innerCurry () {
     var args = new Array(arguments.length);
     for (var i = 0, l = arguments.length; i < l; i++) {
@@ -48,21 +50,21 @@ export function curry (n: number, fn: Function ): Function {
   };
 }
 
-export const map = curry(2, function m (f: Function, x: any): any {
+export const map = curry(2, function m (f: Function, x:Container):any {
   if (x && typeof x.map === 'function')
     return x.map(curry(1, f));
   else
     return f(x);
 });
 
-export const filter = curry(2, function filter (f: Function, xs) {
+export const filter = curry(2, function filter (f: Function, xs:Container):any {
   if (xs && typeof xs.filter === 'function')
     return xs.filter(curry(1, f));
   else
     return f(xs);
 });
 
-export const reduce = curry(3, function reducer (accum, f, xs) {
+export const reduce = curry(3, function reducer (accum:any, f:Function, xs:Container):any {
   if (typeof accum === 'function')
     accum = accum();
 
@@ -74,7 +76,7 @@ export const reduce = curry(3, function reducer (accum, f, xs) {
     return f(accum, xs);
 });
 
-export const find = curry(2, function find (f, xs) {
+export const find = curry(2, function find (f:Function, xs:Container):any {
   return filter(f, xs)[0];
 });
 
@@ -84,9 +86,9 @@ export const pluck = curry(2, function pluck (key, xs) {
   }, xs);
 });
 
-export const identity = (x: any): any => x;
+export const identity = (x:any):any => x;
 
-export const always = (x: any): Function => () => x;
+export const always = (x:any):Function => () => x;
 
 export const True = always(true);
 export const False = always(false);
@@ -292,6 +294,12 @@ export const bindMethod = curry(2, function bindMethod (meth, obj) {
 
 export const invokeMethod = curry(3, function invokeMethod (meth, args, obj) {
   return flow(bindMethod(meth), invoke(__, args))(obj);
+});
+
+export const invokeMethodN = curry(3, function invokeMethodN (arity:number, meth:string, obj:any):Function {
+  return curry(arity, function ():any {
+    return obj[meth].apply(obj, arguments);
+  });
 });
 
 export const zipObject = curry(2, function zipObject (keys, vals) {

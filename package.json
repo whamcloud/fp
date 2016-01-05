@@ -39,9 +39,9 @@
     "babel-register": "6.3.13",
     "eslint": "1.10.3",
     "intel-jasmine-n-matchers": "2.1.1",
-    "istanbul": "0.4.0",
+    "istanbul": "0.4.1",
     "jasmine": "2.4.1",
-    "jscs": "2.7.0",
+    "jscs": "2.8.0",
     "krusty-jasmine-reporter": "1.0.0",
     "pre-commit": "1.1.2"
   }

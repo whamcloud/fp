@@ -1,4 +1,4 @@
-/* @flow */
+// @flow
 
 import {env, jasmine} from '../test';
 const {describe, beforeEach, it, expect} = env;
@@ -879,9 +879,7 @@ describe('the fp module', () => {
     });
   });
 
-  describe('has a invokeMethod method', () => {
-    var indexOfB;
-
+  describe('has an invokeMethod method', () => {
     it('should exist on fp', () => {
       expect(fp.invokeMethod).toEqual(jasmine.any(Function));
     });
@@ -891,8 +889,46 @@ describe('the fp module', () => {
     });
 
     it('should return a function that is bound and invoke that function', () => {
-      indexOfB = fp.invokeMethod('indexOf', ['b']);
+      const indexOfB = fp.invokeMethod('indexOf', ['b']);
       expect(indexOfB('abc')).toBe(1);
+    });
+  });
+
+  describe('has an invokeMethodN method', () => {
+    it('should exist on fp', () => {
+      expect(fp.invokeMethodN)
+        .toEqual(jasmine.any(Function));
+    });
+
+    it('should be curried', function () {
+      expect(fp.invokeMethodN(_, _, _))
+        .toEqual(jasmine.any(Function));
+    });
+
+    it('should return a function that is bound and invoke that function', () => {
+      const indexOf = fp.invokeMethodN(1, 'indexOf', 'abc');
+      expect(indexOf('b')).toBe(1);
+    });
+
+    it('should compose nicely with flow', () => {
+      const tests = ['', 'routes', 'lib', 'middleware', 'validators']
+        .map(fp.flow(
+          (p) => new RegExp(`${p}/[\\w-_]+\\.js$`),
+          fp.invokeMethodN(1, 'test')
+        ));
+
+      const paths = [
+        'path/foo.elm',
+        'routes/some-route.js',
+        'middleware/middle-ware.js',
+        'bar/baz.coffee'
+      ]
+        .filter(fp.anyPass(tests));
+
+      expect(paths).toEqual([
+        'routes/some-route.js',
+        'middleware/middle-ware.js'
+      ]);
     });
   });
 
