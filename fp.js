@@ -50,6 +50,17 @@ export function curry (n: number, fn: Function): Function {
   };
 }
 
+export const partial = curry(3, function partial (arity:number, fn:Function, initialArgs:Array<any>):Function {
+  return curry(arity, function ():any {
+    var args = new Array(arguments.length);
+    for (var i = 0, l = arguments.length; i < l; i++) {
+      args[i] = arguments[i];
+    }
+
+    return fn.apply(null, initialArgs.concat(args));
+  });
+});
+
 export const map = curry(2, function m (f: Function, x:Container):any {
   if (x && typeof x.map === 'function')
     return x.map(curry(1, f));

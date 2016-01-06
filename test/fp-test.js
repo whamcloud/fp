@@ -22,6 +22,22 @@ describe('the fp module', () => {
       expect(fp.curry).toEqual(jasmine.any(Function));
     });
 
+    describe('with 0 args', () => {
+      var curry0;
+
+      beforeEach(() => {
+        curry0 = fp.curry(0, toArray);
+      });
+
+      it('should return the value', () => {
+        expect(curry0()).toEqual([]);
+      });
+
+      it('should ignore placeholders', () => {
+        expect(curry0(_, _, _)).toEqual([]);
+      });
+    });
+
     describe('with 1 arg', () => {
       var curry1;
 
@@ -111,6 +127,37 @@ describe('the fp module', () => {
 
         expect(curry1(2)).toEqual([1, 2]);
       });
+    });
+  });
+
+  describe('has a partial method', () => {
+    var spy;
+
+    beforeEach(() => {
+      spy = jasmine.createSpy('spy');
+    });
+
+    it('should exist on fp', () => {
+      expect(fp.partial)
+        .toEqual(jasmine.any(Function));
+    });
+
+    it('should be curried', () => {
+      expect(fp.partial(_, _, _)).toEqual(jasmine.any(Function));
+    });
+
+    it('should partially apply a function', function () {
+      fp.partial(2, spy, [1, 2])(3, 4);
+
+      expect(spy)
+        .toHaveBeenCalledOnceWith(1, 2, 3, 4);
+    });
+
+    it('should work as a nullary function', () => {
+      fp.partial(0, spy, [1, 2])(3, 4);
+
+      expect(spy)
+        .toHaveBeenCalledOnceWith(1, 2);
     });
   });
 
