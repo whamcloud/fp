@@ -263,6 +263,10 @@ export const eqFn = curry(4, function eqFn (fnA, fnB, a, b) {
   return eq(fnA(a), fnB(b));
 });
 
+export const eqProp = curry(3, function (prop:string|number, a:any, b:any):boolean {
+  return eqFn(lensProp(prop), identity, a, b);
+});
+
 export const invoke = curry(2, function invoke(fn, args) {
   if (!Array.isArray(args))
     throw new Error('Error in fp.invoke - Cannot call invoke with non-array');

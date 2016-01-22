@@ -823,6 +823,28 @@ describe('the fp module', () => {
     });
   });
 
+  describe('has a eqProp method', () => {
+    it('should be curried', () => {
+      expect(fp.eqProp(_, _, _)).toEqual(jasmine.any(Function));
+    });
+
+    it('should exist on fp', function () {
+      expect(fp.eqProp).toEqual(jasmine.any(Function));
+    });
+
+    it('should return true on equality', () => {
+      expect(fp.eqProp('foo', {foo: 'bar'}, 'bar')).toBe(true);
+    });
+
+    it('should return false on inequality', () => {
+      expect(fp.eqProp('foo', {foo: 'bap'}, 'bar')).toBe(false);
+    });
+
+    it('should work with immutable data types', () => {
+      expect(fp.eqProp('bap', Map({ 'bap': 'bar' }), 'bar')).toBe(true);
+    });
+  });
+
   describe('has a noop method', () => {
     it('should exist on fp', () => {
       expect(fp.noop).toEqual(jasmine.any(Function));

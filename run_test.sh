@@ -4,7 +4,7 @@
 
 NODE_VERSIONS="
 0.10
-0.12
+4
 stable
 "
 
