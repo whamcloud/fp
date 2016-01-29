@@ -1,7 +1,5 @@
 /* @flow */
 
-import Immutable from 'immutable';
-
 export const __ = {};
 
 type Container = Array<any>|Object|Function;
@@ -113,38 +111,55 @@ export const difference = curry(2, function difference (xs, ys) {
   }, []);
 });
 
-export const lens = curry(2, function lens (get: Function, set: Function): Function {
-  set = curry(2, set);
-  innerLens.set = set;
+const getConst = (x:any) => {
+  return {
+    value: x,
+    map () { return this; }
+  };
+};
 
-  innerLens.map = curry(2, function map (fn, xs) {
-    return flow(get, fn, set(__, xs))(xs);
-  });
-
-  function innerLens (x) {
-    return get(x);
-  }
-
-  return innerLens;
+export const view = curry(2, function view (lens, x) {
+  return lens(getConst)(x).value;
 });
 
-export const lensProp = function lensProp (prop: string|number): Function {
-  return lens(
-    function get (x) {
-      return typeof x.get === 'function' ? x.get(prop) : x[prop];
-    },
-    function set (val, x) {
-      if (typeof x.set === 'function') {
-        if (Immutable.Iterable.isIterable(x))
-          val = Immutable.fromJS(val);
-
-        return x.set(prop, val);
-      } else {
-        x[prop] = val;
-        return x;
-      }
+const getIdentity = (x:any) => {
+  return {
+    value: x,
+    map (fn) {
+      return getIdentity(fn(x));
     }
+  };
+};
+
+export const over = curry(3, (lens, fn, xs) => {
+  return lens((ys) => getIdentity(fn(ys)))(xs).value;
+});
+
+
+export const set = curry(3, (lens, value, xs) => {
+  return over(lens, always(value), xs);
+});
+
+export const lens = curry(2, function lens (get: (xs: any) => any, set:<T>(v:any, xs:T) => T) {
+  return (fn:(xs:any) => any) => (xs:any) => map(
+    (v) => set(v, xs),
+    fn(get(xs))
   );
+});
+
+export const lensProp = (prop: string|number): Function => {
+  return lens((xs) => xs[prop], (v, xs) => {
+    const keys = Object.keys(xs);
+    const container = Array.isArray(xs) ? [] : {};
+
+    const out = keys.reduce((container, key) => {
+      container[key] = xs[key];
+      return container;
+    }, container);
+    out[prop] = v;
+
+    return out;
+  });
 };
 
 export function flow (): Function {
@@ -162,59 +177,11 @@ export function flow (): Function {
 }
 
 export const flowN = curry(2, function flowN (n, fns) {
-  fns = lensProp('0').map(invoke, fns);
+  fns = over(lensProp(0), invoke, fns);
   var wrappedFlow = wrapArgs(flow.apply(null, fns));
 
   return curry(n, wrappedFlow);
 });
-
-export function flowLens (): Function {
-  var args = new Array(arguments.length);
-
-  for (var i = 0, l = arguments.length; i < l; i++) {
-    args[i] = arguments[i];
-  }
-
-  return lens(
-    flow.apply(null, args),
-    function set (val, xs) {
-      args.reduce(function reducer (xs, l, index) {
-        if (index === args.length - 1)
-          return l.set(val, xs);
-        else
-          return l(xs);
-      }, xs);
-
-      return xs;
-    }
-  );
-}
-
-export function pathLens (path: Array<string|number>): Function {
-  var lenses = map(lensProp, path);
-
-  return lens(
-    safe(1, flow.apply(null, lenses), undefined),
-    function set (val, xs) {
-      lenses.reduce(function reducer (xs, l, index) {
-        if (index === lenses.length - 1)
-          return l.set(val, xs);
-
-        var x = l(xs);
-
-        if (x != null)
-          return x;
-
-        x = {};
-
-        l.set(x, xs);
-        return x;
-      }, xs);
-
-      return xs;
-    }
-  );
-}
 
 export function cond (): Function {
   var args = new Array(arguments.length);
@@ -255,16 +222,8 @@ export const not = (x:any):boolean => !x;
 export const eq = curry(2,
   (a, b) => _type(a) === 'Object' && typeof a.equals === 'function' ? a.equals(b) : a === b);
 
-export const eqLens = curry(3, function eqLens (l, a, b) {
-  return eq(l(a), l(b));
-});
-
 export const eqFn = curry(4, function eqFn (fnA, fnB, a, b) {
   return eq(fnA(a), fnB(b));
-});
-
-export const eqProp = curry(3, function (prop:string|number, a:any, b:any):boolean {
-  return eqFn(lensProp(prop), identity, a, b);
 });
 
 export const invoke = curry(2, function invoke(fn, args) {
@@ -351,7 +310,7 @@ export function unwrap (xs:Array<any>):Array<any> {
   }, []);
 }
 
-export const head = lensProp(0);
+export const head = view(lensProp(0));
 export const tail = flow(invokeMethod('slice', [-1]), head);
 
 export const arrayWrap = (x: any): any => [x];
