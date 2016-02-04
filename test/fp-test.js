@@ -727,6 +727,50 @@ describe('the fp module', () => {
           });
       });
 
+      describe('mapped', () => {
+        it('should exist on fp', () => {
+          expect(fp.mapped).toEqual(jasmine.any(Function));
+        });
+
+        it('should be curried', () => {
+          expect(fp.mapped(_, _)).toEqual(jasmine.any(Function));
+        });
+
+        it('should map an array', () => {
+          const result = fp.view(fp.compose(fp.mapped, fp.lensProp('name')), [
+            {name: 'foo'},
+            {name: 'bar'}
+          ]);
+
+          expect(result).toEqual(['foo', 'bar']);
+        });
+
+        it('should set array props', () => {
+          const result = fp.set(fp.compose(fp.mapped, fp.lensProp('name')), 'redacted', [
+            {name: 'foo'},
+            {name: 'bar'}
+          ]);
+
+          expect(result).toEqual([
+            {name: 'redacted'},
+            {name: 'redacted'}
+          ]);
+        });
+
+        it('should transform array props', () => {
+          const result = fp.over(fp.compose(fp.mapped, fp.lensProp('name')), (x) => x + 'd', [
+            {name: 'foo'},
+            {name: 'bar'}
+          ]);
+
+          expect(result).toEqual([
+            {name: 'food'},
+            {name: 'bard'}
+          ]);
+        });
+      });
+
+
       describe('lensProp', () => {
         it('should exist on fp', () => {
           expect(fp.lensProp).toEqual(jasmine.any(Function));
