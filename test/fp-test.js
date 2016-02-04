@@ -1,9 +1,9 @@
 // @flow
 
-import {env, jasmine} from '../test';
+import {env, jasmine} from '../bin/test';
 const {describe, beforeEach, it, expect} = env;
 
-import * as fp from '../fp';
+import * as fp from '../source/fp';
 const _ = fp.__;
 
 import {Map, fromJS} from 'immutable';
@@ -353,6 +353,24 @@ describe('the fp module', () => {
       const mult2 = x => x * 2;
 
       expect(fp.flow(add1, mult2)(3)).toEqual(8);
+    });
+  });
+
+  describe('has a compose method', () => {
+    it('should exist on fp', () => {
+      expect(fp.compose).toEqual(jasmine.any(Function));
+    });
+
+    it('should return a function', () => {
+      expect(fp.compose(fp.identity)).toEqual(jasmine.any(Function));
+    });
+
+    it('should compose fns', () => {
+      const add1 = x => x + 1;
+      const mult2 = x => x * 2;
+
+      // mult2(add1(3))
+      expect(fp.compose(mult2, add1)(3)).toEqual(8);
     });
   });
 

@@ -176,6 +176,15 @@ export function flow (): Function {
   };
 }
 
+export function compose (): Function {
+  const args = new Array(arguments.length);
+  for (var i = 0, l = arguments.length; i < l; i++) {
+    args[i] = arguments[i];
+  }
+
+  return flow.apply(null, args.reverse());
+}
+
 export const flowN = curry(2, function flowN (n, fns) {
   fns = over(lensProp(0), invoke, fns);
   var wrappedFlow = wrapArgs(flow.apply(null, fns));

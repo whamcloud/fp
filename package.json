@@ -4,11 +4,11 @@
   "description": "A Functional Programming Lib.",
   "main": "dist/fp.js",
   "scripts": {
-    "test": "NODE_ENV=test ./test.js",
+    "test": "NODE_ENV=test ./bin/test.js",
     "cover": "NODE_ENV=test istanbul cover --report cobertura --include-all-sources ./test",
     "eslint": "eslint ./",
     "jscs": "jscs .",
-    "prepublish": "./bin/build && cp ./fp.js ./dist/fp.js.flow"
+    "prepublish": "cd source && babel -d ../dist fp.js && cd .. && cp source/fp.js dist/fp.js.flow"
   },
   "publishConfig": {
     "registry": "https://ubit-artifactory-or.intel.com/artifactory/api/npm/iml-npm-local"
@@ -28,8 +28,9 @@
     "mkdirp": "0.5.1"
   },
   "devDependencies": {
+    "babel-cli": "6.4.5",
     "babel-core": "6.4.5",
-    "babel-eslint": "5.0.0-beta6",
+    "babel-eslint": "5.0.0-beta9",
     "babel-plugin-syntax-flow": "6.3.13",
     "babel-plugin-transform-es2015-modules-umd": "6.4.3",
     "babel-plugin-transform-flow-strip-types": "6.4.0",
