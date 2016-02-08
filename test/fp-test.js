@@ -1,9 +1,8 @@
 // @flow
 
-import {env, jasmine} from '../bin/test';
-const {describe, beforeEach, it, expect} = env;
+import {describe, beforeEach, it, expect, jasmine} from './jasmine';
 
-import * as fp from '../source/fp';
+import * as fp from '../fp';
 const _ = fp.__;
 
 import {Map, fromJS} from 'immutable';

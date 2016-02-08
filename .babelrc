@@ -3,10 +3,8 @@
     "es2015"
   ],
   "plugins": [
-    "syntax-flow",
     "transform-flow-strip-types",
-    "transform-strict-mode",
-    "transform-es2015-modules-umd"
+    "transform-strict-mode"
   ],
   "sourceMaps": "inline"
 }
