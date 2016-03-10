@@ -874,6 +874,18 @@ describe('the fp module', () => {
     it('should do nothing special at 50', () => {
       expect(cond(50)).toEqual('nothing special happens at 50°C');
     });
+
+    describe('with a successful predicate and empty evaluation', () => {
+      ['', 0, null, undefined, false].forEach((curVal) => {
+        it(`should return ${curVal}`, () => {
+          const identityOrVal = fp.cond(
+            [fp.eq(undefined), fp.always(curVal)],
+            [fp.True, fp.identity]
+          );
+          expect(identityOrVal(undefined)).toEqual(curVal);
+        });
+      });
+    });
   });
 
   describe('has a shallow clone method', () => {
