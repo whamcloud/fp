@@ -231,8 +231,10 @@ export function cond (): Function {
     var result;
 
     args.some(function findTruthy (pair) {
-      if (pair[0](xs))
-        return (result = pair[1](xs));
+      if (pair[0](xs)) {
+        result = pair[1](xs);
+        return true;
+      }
     });
 
     return result;
