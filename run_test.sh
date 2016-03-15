@@ -13,7 +13,7 @@ do
     nvm use $node_version
     rm -rf node_modules
     npm i
-    npm run prepublish
-    npm t
+    npm run cover -- --reporter=cobertura
+    mv ./coverage/cobertura-coverage.xml ../coverage
     mv fp-results*.xml ../results
 done
