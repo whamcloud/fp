@@ -1,14 +1,14 @@
 {
   "name": "intel-fp",
-  "version": "4.1.3",
+  "version": "4.2.0",
   "description": "A Functional Programming Lib.",
   "main": "dist/source/fp.js",
   "scripts": {
     "jscs": "jscs .",
     "eslint": "eslint ./",
-    "test:dev": "npm run prepublish && npm t",
+    "test:dev": "npm run postversion && npm t",
     "test": "NODE_ENV=test ./bin/test.js",
-    "prepublish": "./bin/build.sh",
+    "postversion": "./bin/build.sh",
     "cover:dev": "npm run cover -- --reporter=html",
     "cover": "NODE_ENV=test ./bin/build.sh cover && nyc --reporter=text npm t"
   },
