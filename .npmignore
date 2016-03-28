@@ -9,3 +9,5 @@
 node_modules
 /source
 /test
+/coverage
+/.nyc_output
