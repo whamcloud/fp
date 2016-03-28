@@ -7,5 +7,5 @@
 .jscsrc
 .idea
 node_modules
-test
-fp.js
+/source
+/test

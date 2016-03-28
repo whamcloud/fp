@@ -39,9 +39,8 @@ function _type (val): string {
 export function curry (n: number, fn: Function): Function {
   return function innerCurry () {
     var args = new Array(arguments.length);
-    for (var i = 0, l = arguments.length; i < l; i++) {
+    for (var i = 0, l = arguments.length; i < l; i++)
       args[i] = arguments[i];
-    }
 
     var gaps = n - args.length;
     gaps += args.filter(function findGaps (x) {
@@ -51,9 +50,8 @@ export function curry (n: number, fn: Function): Function {
     if (gaps > 0)
       return curry(gaps, function () {
         var innerArgs = new Array(arguments.length);
-        for (var i = 0, l = arguments.length; i < l; i++) {
+        for (var i = 0, l = arguments.length; i < l; i++)
           innerArgs[i] = arguments[i];
-        }
 
         var filledArgs = args.map(function (x) {
           if (x === __)
@@ -72,9 +70,8 @@ export function curry (n: number, fn: Function): Function {
 export const partial = curry(3, function partial (arity:number, fn:Function, initialArgs:Array<any>):Function {
   return curry(arity, function ():any {
     var args = new Array(arguments.length);
-    for (var i = 0, l = arguments.length; i < l; i++) {
+    for (var i = 0, l = arguments.length; i < l; i++)
       args[i] = arguments[i];
-    }
 
     return fn.apply(null, initialArgs.concat(args));
   });
@@ -162,7 +159,13 @@ export const set = curry(3, (lens, value, xs) => {
   return over(lens, always(value), xs);
 });
 
-export const lens = curry(2, function lens (get: (xs: any) => any, set:<T>(v:any, xs:T) => T) {
+
+//Track https://github.com/babel/babel-eslint/issues/280
+/*eslint-disable no-undef */
+type returnXs = <T>(v:any, xs:T) => T;
+/*eslint-enable no-undef */
+
+export const lens = curry(2, function lens (get: (xs: any) => any, set:returnXs) {
   return (fn:(xs:any) => any) => (xs:any) => map(
     (v) => set(v, xs),
     fn(get(xs))
@@ -193,9 +196,8 @@ export const lensProp = (prop: string|number): Function => {
 export function flow (): Function {
   var args = new Array(arguments.length);
 
-  for (var i = 0, l = arguments.length; i < l; i++) {
+  for (var i = 0, l = arguments.length; i < l; i++)
     args[i] = arguments[i];
-  }
 
   return function flowInner (xs: any): any {
     return args.reduce(function reducer (xs, fn) {
@@ -206,9 +208,8 @@ export function flow (): Function {
 
 export function compose (): Function {
   const args = new Array(arguments.length);
-  for (var i = 0, l = arguments.length; i < l; i++) {
+  for (var i = 0, l = arguments.length; i < l; i++)
     args[i] = arguments[i];
-  }
 
   return flow.apply(null, args.reverse());
 }
@@ -223,9 +224,8 @@ export const flowN = curry(2, function flowN (n, fns) {
 export function cond (): Function {
   var args = new Array(arguments.length);
 
-  for (var i = 0, l = arguments.length; i < l; i++) {
+  for (var i = 0, l = arguments.length; i < l; i++)
     args[i] = arguments[i];
-  }
 
   return function condInner (xs) {
     var result;
@@ -265,7 +265,7 @@ export const eqFn = curry(4, function eqFn (fnA, fnB, a, b) {
   return eq(fnA(a), fnB(b));
 });
 
-export const invoke = curry(2, function invoke(fn, args) {
+export const invoke = curry(2, function invoke (fn, args) {
   if (!Array.isArray(args))
     throw new Error('Error in fp.invoke - Cannot call invoke with non-array');
 
@@ -274,10 +274,9 @@ export const invoke = curry(2, function invoke(fn, args) {
 
 export const safe = curry(3, function safe (arity, fn, def) {
   return curry(arity, function safeCheck () {
-    for (var i = 0, l = arguments.length; i < l; i++) {
+    for (var i = 0, l = arguments.length; i < l; i++)
       if (arguments[i] == null)
         return def;
-    }
 
     try {
       return fn.apply(null, arguments);
@@ -427,9 +426,9 @@ export const flip = curry(2, function flip (arity, fn) {
   return curry(arity, function flipper () {
     var args = new Array(arguments.length);
 
-    for (var i = 0, l = arguments.length; i < l; i++) {
+    for (var i = 0, l = arguments.length; i < l; i++)
       args[i] = arguments[i];
-    }
+
     args.reverse();
     return fn.apply(null, args);
   });
@@ -448,3 +447,35 @@ export const zipBy = curry(3, (fn:Function, left:Array<any>, right:Array<any>) =
     return prev.concat(fn(cur, right[idx]));
   }, []);
 });
+
+export const memoize = (fn:Function):Function => {
+  const cache = [];
+
+  return function memo () {
+    const args = new Array(arguments.length);
+
+    for (var i = 0, l = arguments.length; i < l; i++)
+      args[i] = arguments[i];
+
+    var result;
+
+    const match = cache.some(xs => {
+      const cacheHit = args.length === xs.length - 1 && args.every((x, idx) => x === xs[idx]);
+
+      if (cacheHit) {
+        result = xs.slice(xs.length - 1).pop();
+        return true;
+      } else {
+        return false;
+      }
+    });
+
+    if (match) {
+      return result;
+    } else {
+      const out = fn.apply(null, args);
+      cache.push(args.concat([out]));
+      return out;
+    }
+  };
+};
