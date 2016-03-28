@@ -1816,4 +1816,61 @@ describe('the fp module', () => {
       });
     });
   });
+
+  describe('memoize', () => {
+    it('should exist on fp', () => {
+      expect(fp.memoize).toEqual(jasmine.any(Function));
+    });
+
+    describe('working with cache', () => {
+      var fn;
+
+      beforeEach(() => {
+        var count = 0;
+
+        fn = fp.memoize(() => ++count);
+      });
+
+      it('should return the memoized result', () => {
+        fn(1);
+
+        expect(fn(1)).toBe(1);
+      });
+
+      it('should return new result on cache miss', () => {
+        fn(1);
+        fn(2);
+        fn(3);
+
+        expect(fn(4)).toBe(4);
+      });
+
+      it('should cache hit with multiple args', () => {
+        fn(1, 2);
+
+        expect(fn(1, 2)).toBe(1);
+      });
+
+      it('should cache miss with multiple args', () => {
+        fn(1, 2, 3, 4);
+        fn(1, 2, 3);
+
+        expect(fn(1, 2)).toBe(3);
+      });
+
+      it('should cache miss with multiple args', () => {
+        fn(1, 2, 3, 4);
+        fn(1, 2, 3);
+
+        expect(fn(1, 2)).toBe(3);
+      });
+
+      it('should cache miss with less invocation args', () => {
+        fn(1, 2);
+        fn(1, 2, 3);
+
+        expect(fn(1, 2, 3, 4)).toBe(3);
+      });
+    });
+  });
 });
