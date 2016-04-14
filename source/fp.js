@@ -389,7 +389,7 @@ export const unsafe = curry(2, function unsafe (fn, x) {
 
 export const tap = curry(2, function tap (fn: Function, xs: any): any {
   if (xs && typeof xs.tap === 'function')
-    xs.tap(curry(1, fn));
+    xs = xs.tap(curry(1, fn));
   else
     fn(xs);
 
