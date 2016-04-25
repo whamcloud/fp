@@ -1873,4 +1873,72 @@ describe('the fp module', () => {
       });
     });
   });
+
+  describe('uniqBy', () => {
+    it('should exist on fp', () => {
+      expect(fp.uniqBy).toEqual(jasmine.any(Function));
+    });
+
+    it('should be curried', () => {
+      expect(fp.uniqBy(_, _)).toEqual(jasmine.any(Function));
+    });
+
+    it('should remove dups', () => {
+      expect(fp.uniqBy(x => x.num, [
+        {
+          num: 1
+        },
+        {
+          num: 2
+        },
+        {
+          num: 3
+        },
+        {
+          num: 2
+        },
+        {
+          num: 1
+        }
+      ])).toEqual([
+        {
+          num: 1
+        },
+        {
+          num: 2
+        },
+        {
+          num: 3
+        }
+      ]);
+    });
+
+    it('should work with an empty array', () => {
+      expect(fp.uniqBy(x => x, [])).toEqual([]);
+    });
+
+    it('should work with no dups', () => {
+      expect(fp.uniqBy(x => x.num, [
+        {
+          num: 1
+        },
+        {
+          num: 2
+        },
+        {
+          num: 3
+        }
+      ])).toEqual([
+        {
+          num: 1
+        },
+        {
+          num: 2
+        },
+        {
+          num: 3
+        }
+      ]);
+    });
+  });
 });

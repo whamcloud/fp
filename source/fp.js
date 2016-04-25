@@ -25,7 +25,7 @@ export const __ = {};
 
 type Container = Array<any>|Object|Function;
 
-function _type (val): string {
+function _type (val):string {
   if (val === null)
     return 'Null';
   else if (val === undefined)
@@ -36,7 +36,7 @@ function _type (val): string {
       .slice(8, -1);
 }
 
-export function curry (n: number, fn: Function): Function {
+export function curry (n:number, fn:Function):Function {
   return function innerCurry () {
     var args = new Array(arguments.length);
     for (var i = 0, l = arguments.length; i < l; i++)
@@ -77,14 +77,14 @@ export const partial = curry(3, function partial (arity:number, fn:Function, ini
   });
 });
 
-export const map = curry(2, function m (f: Function, x:Container):any {
+export const map = curry(2, function m (f:Function, x:Container):any {
   if (x && typeof x.map === 'function')
     return x.map(curry(1, f));
   else
     return f(x);
 });
 
-export const filter = curry(2, function filter (f: Function, xs:Container):any {
+export const filter = curry(2, function filter (f:Function, xs:Container):any {
   if (xs && typeof xs.filter === 'function')
     return xs.filter(curry(1, f));
   else
@@ -165,7 +165,7 @@ export const set = curry(3, (lens, value, xs) => {
 type returnXs = <T>(v:any, xs:T) => T;
 /*eslint-enable no-undef */
 
-export const lens = curry(2, function lens (get: (xs: any) => any, set:returnXs) {
+export const lens = curry(2, function lens (get:(xs: any) => any, set:returnXs) {
   return (fn:(xs:any) => any) => (xs:any) => map(
     (v) => set(v, xs),
     fn(get(xs))
@@ -178,7 +178,7 @@ export const mapped = curry(2, function (fn:Function, x:any):Object {
   return getIdentity(map(flow(fn, getValue), x));
 });
 
-export const lensProp = (prop: string|number): Function => {
+export const lensProp = (prop:string|number):Function => {
   return lens((xs) => xs[prop], (v, xs) => {
     const keys = Object.keys(xs);
     const container = Array.isArray(xs) ? [] : {};
@@ -193,20 +193,20 @@ export const lensProp = (prop: string|number): Function => {
   });
 };
 
-export function flow (): Function {
+export function flow ():Function {
   var args = new Array(arguments.length);
 
   for (var i = 0, l = arguments.length; i < l; i++)
     args[i] = arguments[i];
 
-  return function flowInner (xs: any): any {
+  return function flowInner (xs:any):any {
     return args.reduce(function reducer (xs, fn) {
       return fn(xs);
     }, xs);
   };
 }
 
-export function compose (): Function {
+export function compose ():Function {
   const args = new Array(arguments.length);
   for (var i = 0, l = arguments.length; i < l; i++)
     args[i] = arguments[i];
@@ -221,7 +221,7 @@ export const flowN = curry(2, function flowN (n, fns) {
   return curry(n, wrappedFlow);
 });
 
-export function cond (): Function {
+export function cond ():Function {
   var args = new Array(arguments.length);
 
   for (var i = 0, l = arguments.length; i < l; i++)
@@ -241,7 +241,7 @@ export function cond (): Function {
   };
 }
 
-export function shallowClone (xs: any): any {
+export function shallowClone (xs:any):any {
   var type = _type(xs);
 
   if (type === 'Array')
@@ -351,9 +351,9 @@ export function unwrap (xs:Array<any>):Array<any> {
 export const head = view(lensProp(0));
 export const tail = flow(invokeMethod('slice', [-1]), head);
 
-export const arrayWrap = (x: any): any => [x];
+export const arrayWrap = (x:any):any => [x];
 
-export function once (fn: Function): Function {
+export function once (fn:Function):Function {
   var called = false;
 
   return function innerOnce () {
@@ -387,7 +387,7 @@ export const unsafe = curry(2, function unsafe (fn, x) {
   return fn(x);
 });
 
-export const tap = curry(2, function tap (fn: Function, xs: any): any {
+export const tap = curry(2, function tap (fn:Function, xs:any):any {
   if (xs && typeof xs.tap === 'function')
     xs = xs.tap(curry(1, fn));
   else
@@ -404,13 +404,13 @@ export const chainL = curry(2, function chainL (fn, args) {
   return args.reduce(curry(2, fn));
 });
 
-export const wrapArgs = function wrapArgs (fn: Function): Function {
+export const wrapArgs = function wrapArgs (fn:Function):Function {
   return function innerWrapArgs () {
     return fn.call(null, [].slice.call(arguments));
   };
 };
 
-export const xProd = curry(2, function xprod (a: any, b: any): Array<Array<any>> {
+export const xProd = curry(2, function xprod (a:any, b:any):Array<Array<any>> {
   const result = [];
 
   a.forEach(function (a) {
@@ -479,3 +479,19 @@ export const memoize = (fn:Function):Function => {
     }
   };
 };
+
+export const uniqBy = curry(2, function (fn:(xs:any) => boolean, xs:Array<?any>):Array<?any> {
+  const set = [];
+  const out = [];
+
+  xs.forEach(x => {
+    const result = fn(x);
+
+    if (set.indexOf(result) === -1) {
+      set.push(result);
+      out.push(x);
+    }
+  });
+
+  return out;
+});
