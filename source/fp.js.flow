@@ -1,0 +1,343 @@
+// @flow
+
+//
+// INTEL CONFIDENTIAL
+//
+// Copyright 2013-2016 Intel Corporation All Rights Reserved.
+//
+// The source code contained or described herein and all documents related
+// to the source code ("Material") are owned by Intel Corporation or its
+// suppliers or licensors. Title to the Material remains with Intel Corporation
+// or its suppliers and licensors. The Material contains trade secrets and
+// proprietary and confidential information of Intel or its suppliers and
+// licensors. The Material is protected by worldwide copyright and trade secret
+// laws and treaty provisions. No part of the Material may be used, copied,
+// reproduced, modified, published, uploaded, posted, transmitted, distributed,
+// or disclosed in any way without Intel's prior express written permission.
+//
+// No license under any patent, copyright, trade secret or other intellectual
+// property right is granted to or conferred upon you by disclosure or delivery
+// of the Materials, either expressly, by implication, inducement, estoppel or
+// otherwise. Any license under such intellectual property rights must be
+// express and approved by Intel in writing.
+
+type typeToAny<T> = (x:T) => any;
+type typeToReturn<T,R> = (x:T) => R;
+type reducer<T1,T2,R> = (a:T1, b:T2) => R;
+type typeToboolean<T> = (x:T) => boolean;
+type manyToAny = (...rest:Array<any>) => any;
+type anyToAny = (x:any) => any;
+type container = (Array<?any> | Object | Function);
+
+declare class NO_MORE_ARGS {}
+
+
+type placeHolder = {
+  '@@functional/placeholder': boolean
+};
+
+declare export var __:placeHolder;
+
+
+type Curry0<TResult> =
+  ((...rest:Array<any>) => TResult);
+
+type Curry1<T1, TResult> =
+  ((t1:placeHolder, ...rest:Array<NO_MORE_ARGS>) => Curry1<T1, TResult>) &
+  ((t1:T1, ...rest:Array<NO_MORE_ARGS>) => TResult) &
+  ((...rest:Array<NO_MORE_ARGS>) => Curry1<T1, TResult>);
+
+type Curry2<T1, T2, TResult> =
+  ((t1:placeHolder, t2:T2, ...rest:Array<NO_MORE_ARGS>) => Curry1<T1,TResult>) &
+  ((t1:T1, ...rest:Array<NO_MORE_ARGS>) => Curry1<T2, TResult>) &
+  ((t1:T1, t2:T2, ...rest:Array<NO_MORE_ARGS>) => TResult) &
+  ((...rest:Array<NO_MORE_ARGS>) => Curry2<T1, T2, TResult>);
+
+type Curry3<T1, T2, T3, TResult> =
+  ((t1:placeHolder, t2:placeHolder, t3:placeHolder, ...rest:Array<NO_MORE_ARGS>) => Curry3<T1, T2, T3, TResult>) &
+  ((t1:placeHolder, t2:placeHolder, t3:T3, ...rest:Array<NO_MORE_ARGS>) => Curry2<T1, T2, TResult>) &
+  ((t1:placeHolder, t2:T2, t3:placeHolder, ...rest:Array<NO_MORE_ARGS>) => Curry2<T1, T3, TResult>) &
+  ((t1:placeHolder, t2:T2, ...rest:Array<NO_MORE_ARGS>)=> Curry2<T1, T3, TResult>) &
+  ((t1:placeHolder, t2:T2, t3:T3, ...rest:Array<NO_MORE_ARGS>)=> Curry1<T1, TResult>) &
+  ((t1:T1, ...rest:Array<NO_MORE_ARGS>) => Curry2<T2, T3, TResult>) &
+  ((t1:T1, t2:T2, ...rest:Array<NO_MORE_ARGS>) => Curry1<T3, TResult>) &
+  ((t1:T1, t2:T2, t3:T3, ...rest:Array<NO_MORE_ARGS>) => TResult) &
+  ((...rest:Array<NO_MORE_ARGS>) => Curry3<T1, T2, T3, TResult>);
+
+type Curry4<T1, T2, T3, T4, TResult> =
+  ((t1:T1, t2:T2, t3:T3, t4:T4, ...rest:Array<NO_MORE_ARGS>) => TResult) &
+  ((t1:T1, t2:T2, t3:T3, ...rest:Array<NO_MORE_ARGS>) => Curry1<T4, TResult>) &
+  ((t1:T1, t2:T2, ...rest:Array<NO_MORE_ARGS>) => Curry2<T3, T4, TResult>) &
+  ((t1:T1, ...rest:Array<NO_MORE_ARGS>) => Curry3<T2, T3, T4, TResult>) &
+  ((t1:placeHolder, t2:T2, ...rest:Array<NO_MORE_ARGS>)=> Curry3<T1, T3, T4, TResult>) &
+  ((t1:placeHolder, t2:T2, t3:T3, ...rest:Array<NO_MORE_ARGS>)=> Curry2<T1, T4, TResult>) &
+  ((t1:placeHolder, t2:placeHolder, t3:T3, ...rest:Array<NO_MORE_ARGS>) => Curry3<T1, T2, T4, TResult>) &
+  ((t1:T1, t2:T2, t3:placeHolder, t4:T4, ...rest:Array<NO_MORE_ARGS>) => Curry1<T3, TResult>) &
+  ((t1:placeHolder, t2:T2, t3:placeHolder, ...rest:Array<NO_MORE_ARGS>) => Curry3<T1, T3, T4, TResult>) &
+  ((...rest:Array<NO_MORE_ARGS>) => Curry4<T1, T2, T3, T4, TResult>);
+
+declare export function curry0<TResult>(fn:(...rest:Array<any>) => TResult): Curry0<TResult>;
+declare export function curry1<T1, TResult>(fn:(t1:T1) => TResult):Curry1<T1, TResult>;
+declare export function curry2<T1, T2, TResult> (fn:(t1:T1, t2:T2) => TResult):Curry2<T1, T2, TResult>;
+declare export function curry3<T1, T2, T3, TResult> (fn:(t1:T1, t2:T2, t3:T3) => TResult):Curry3<T1, T2, T3, TResult>;
+declare export function curry4<T1, T2, T3, T4, TResult> (fn:(t1:T1, t2:T2, t3:T3, t4:T4) => TResult):Curry4<T1, T2, T3, T4, TResult>;
+
+
+export interface Functor<T> {
+  map<U>(callbackfn: (value: T) => U): Functor<U>;
+}
+
+declare export function map<T,R>(fn:placeHolder, xs:Array<T>, ...rest:Array<NO_MORE_ARGS>):Curry1<typeToReturn<T, R>, Array<R>>;
+declare export function map<T,R>(fn:placeHolder, xs:Functor<T>, ...rest:Array<NO_MORE_ARGS>):Curry1<typeToReturn<T, R>, Functor<R>>;
+declare export function map<T,R>(fn:typeToReturn<T, R>, xs:(Array<T>), ...rest:Array<NO_MORE_ARGS>):(Array<R>);
+declare export function map<T,R>(fn:typeToReturn<T, R>, xs:(Functor<T>), ...rest:Array<NO_MORE_ARGS>):(Functor<R>);
+declare export function map<T,R>(fn:typeToReturn<T, R>, ...rest:Array<NO_MORE_ARGS>):Curry1<*, *>;
+
+
+export interface Tapable<A> {
+  tap(fn:(a:A) => any):Tapable<A>;
+}
+
+declare export function tap<T>(fn:placeHolder, xs:Array<T>):(fn:(x:T) => any, ...rest:Array<NO_MORE_ARGS>) => Array<T>;
+declare export function tap<T>(fn:placeHolder, xs:Tapable<T>):(fn:(x:T) => any, ...rest:Array<NO_MORE_ARGS>) => Tapable<T>;
+declare export function tap<T>(fn:(x:T) => any, xs:Array<T>, ...rest:Array<NO_MORE_ARGS>):Array<T>;
+declare export function tap<T>(fn:(x:T) => any, xs:Tapable<T>, ...rest:Array<NO_MORE_ARGS>):Tapable<T>;
+declare export function tap<T>(fn:(x:T) => any, ...rest:Array<NO_MORE_ARGS>):Curry1<*, *>;
+
+
+declare interface Filterable<T> {
+  filter<T>(fn:typeToboolean<T>):Filterable<T>;
+}
+
+declare export function filter<T>(fn:typeToboolean<T>, xs:Array<T>, ...rest:Array<NO_MORE_ARGS>):Array<T>;
+declare export function filter<T>(fn:typeToboolean<T>, xs:Filterable<T>, ...rest:Array<NO_MORE_ARGS>):Filterable<T>;
+declare export function filter<T>(fn:typeToboolean<T>, ...rest:Array<NO_MORE_ARGS>):(xs:Array<T>, ...rest:Array<NO_MORE_ARGS>) => Array<T>;
+declare export function filter<T>(fn:typeToboolean<T>, ...rest:Array<NO_MORE_ARGS>):(xs:Filterable<T>, ...rest:Array<NO_MORE_ARGS>) => Filterable<T>;
+declare export function filter<T>(fn:placeHolder, xs:Array<T>, ...rest:Array<NO_MORE_ARGS>):(fn:typeToboolean<T>, ...rest:Array<NO_MORE_ARGS>) => Array<T>;
+declare export function filter<T>(fn:placeHolder, xs:Filterable<T>, ...rest:Array<NO_MORE_ARGS>):(fn:typeToboolean<T>, ...rest:Array<NO_MORE_ARGS>) => Filterable<T>;
+
+declare interface Someable<T> {
+  some<T>(fn:typeToboolean<T>):boolean;
+}
+
+declare export function some<T>(fn:typeToboolean<T>, xs:Array<T>, ...rest:Array<NO_MORE_ARGS>):boolean;
+declare export function some<T>(fn:typeToboolean<T>, xs:Someable<T>, ...rest:Array<NO_MORE_ARGS>):boolean;
+declare export function some<T>(fn:typeToboolean<T>, ...rest:Array<NO_MORE_ARGS>):(xs:Array<T>, ...rest:Array<NO_MORE_ARGS>) => boolean;
+declare export function some<T>(fn:typeToboolean<T>, ...rest:Array<NO_MORE_ARGS>):(xs:Someable<T>, ...rest:Array<NO_MORE_ARGS>) => boolean;
+declare export function some<T>(fn:placeHolder, xs:Array<T>, ...rest:Array<NO_MORE_ARGS>):(fn:typeToboolean<T>, ...rest:Array<NO_MORE_ARGS>) => boolean;
+declare export function some<T>(fn:placeHolder, xs:Someable<T>, ...rest:Array<NO_MORE_ARGS>):(fn:typeToboolean<T>, ...rest:Array<NO_MORE_ARGS>) => boolean;
+
+declare export function anyPass<T>(fns:Array<typeToboolean<T>>, xs:Array<T>, ...rest:Array<NO_MORE_ARGS>):boolean;
+declare export function anyPass<T>(fns:Array<typeToboolean<T>>, xs:Someable<T>, ...rest:Array<NO_MORE_ARGS>):boolean;
+declare export function anyPass<T>(fns:Array<typeToboolean<T>>, ...rest:Array<NO_MORE_ARGS>):(xs:Array<T>, ...rest:Array<NO_MORE_ARGS>) => boolean;
+declare export function anyPass<T>(fns:Array<typeToboolean<T>>, ...rest:Array<NO_MORE_ARGS>):(xs:Someable<T>, ...rest:Array<NO_MORE_ARGS>) => boolean;
+declare export function anyPass<T>(fn:placeHolder, xs:Array<T>, ...rest:Array<NO_MORE_ARGS>):(fn:Array<typeToboolean<T>>, ...rest:Array<NO_MORE_ARGS>) => boolean;
+declare export function anyPass<T>(fn:placeHolder, xs:Someable<T>, ...rest:Array<NO_MORE_ARGS>):(fn:Array<typeToboolean<T>>, ...rest:Array<NO_MORE_ARGS>) => boolean;
+
+declare interface Everyable<T> {
+  every<T>(fn:typeToboolean<T>):boolean
+}
+
+declare export function every<T>(fn:typeToboolean<T>, xs:Array<T>, ...rest:Array<NO_MORE_ARGS>):boolean;
+declare export function every<T>(fn:typeToboolean<T>, xs:Everyable<T>, ...rest:Array<NO_MORE_ARGS>):boolean;
+declare export function every<T>(fn:typeToboolean<T>, ...rest:Array<NO_MORE_ARGS>):(xs:Array<T>, ...rest:Array<NO_MORE_ARGS>) => boolean;
+declare export function every<T>(fn:typeToboolean<T>, ...rest:Array<NO_MORE_ARGS>):(xs:Everyable<T>, ...rest:Array<NO_MORE_ARGS>) => boolean;
+declare export function every<T>(fn:placeHolder, xs:Array<T>, ...rest:Array<NO_MORE_ARGS>):(fn:typeToboolean<T>, ...rest:Array<NO_MORE_ARGS>) => boolean;
+declare export function every<T>(fn:placeHolder, xs:Everyable<T>, ...rest:Array<NO_MORE_ARGS>):(fn:typeToboolean<T>, ...rest:Array<NO_MORE_ARGS>) => boolean;
+
+declare interface Reducable<T> {
+  reduce<T,R>(accum:T, fn:(prev:T, current:R) => T):Reducable<T>;
+}
+
+declare export function reduce<T1,T2,R>(accum:T1, f:(prev:T1, current:T2, ...rest:Array<NO_MORE_ARGS>)=>T1, xs:Array<T2>, ...rest:Array<NO_MORE_ARGS>):R;
+declare export function reduce<T1,T2,R>(accum:T1, ...rest:Array<NO_MORE_ARGS>):(f:(prev:T1, current:T2, ...rest:Array<NO_MORE_ARGS>)=>T1, xs:Array<T2>)=>R;
+declare export function reduce<T1,T2,R>(accum:T1, f:(prev:T1, current:T2, ...rest:Array<NO_MORE_ARGS>)=>T1, ...rest:Array<NO_MORE_ARGS>):(xs:Array<T2>, ...rest:Array<NO_MORE_ARGS>)=>R;
+declare export function reduce<T1,T2,R>(accum:T1, ...rest:Array<NO_MORE_ARGS>):(f:(prev:T1, current:T2, ...rest:Array<NO_MORE_ARGS>)=>T1)=>(xs:Array<T2>)=>R;
+declare export function reduce<T1,T2,R>(accum:placeHolder, f:(prev:T1, current:T2, ...rest:Array<NO_MORE_ARGS>)=>T1, xs:Array<T2>, ...rest:Array<NO_MORE_ARGS>):(accum:T1, ...rest:Array<NO_MORE_ARGS>)=>R;
+declare export function reduce<T1,T2,R>(accum:T1, f:placeHolder, xs:Array<T2>, ...rest:Array<NO_MORE_ARGS>):(f:(prev:T1, current:T2, ...rest:Array<NO_MORE_ARGS>)=>T1, ...rest:Array<NO_MORE_ARGS>)=>R;
+declare export function reduce<T1,T2,R>(accum:placeHolder, f:placeHolder, xs:Array<T2>, ...rest:Array<NO_MORE_ARGS>):(accum:T1, f:(prev:T1, current:T2, ...rest:Array<NO_MORE_ARGS>)=>T1, ...rest:Array<NO_MORE_ARGS>)=>R;
+declare export function reduce<T1,T2,R>(accum:placeHolder, f:placeHolder, xs:Array<T2>, ...rest:Array<NO_MORE_ARGS>):(accum:T1, ...rest:Array<NO_MORE_ARGS>)=>(f:(prev:T1, current:T2, ...rest:Array<NO_MORE_ARGS>)=>T1, ...rest:Array<NO_MORE_ARGS>)=>R;
+
+declare export function reduce<T1,T2,R>(accum:T1, f:(accum:T1, xs:T2, ...rest:Array<NO_MORE_ARGS>)=>T1, xs:Reducable<T2>, ...rest:Array<NO_MORE_ARGS>):R;
+declare export function reduce<T1,T2,R>(accum:T1, ...rest:Array<NO_MORE_ARGS>):(f:(accum:T1, xs:T2, ...rest:Array<NO_MORE_ARGS>)=>T1, xs:Reducable<T2>, ...rest:Array<NO_MORE_ARGS>)=>R;
+declare export function reduce<T1,T2,R>(accum:T1, f:(accum:T1, xs:T2, ...rest:Array<NO_MORE_ARGS>)=>T1, ...rest:Array<NO_MORE_ARGS>):(xs:Reducable<T2>, ...rest:Array<NO_MORE_ARGS>)=>R;
+declare export function reduce<T1,T2,R>(accum:T1, ...rest:Array<NO_MORE_ARGS>):(f:(accum:T1, xs:T2, ...rest:Array<NO_MORE_ARGS>)=>T1, ...rest:Array<NO_MORE_ARGS>)=>(xs:Reducable<T2>, ...rest:Array<NO_MORE_ARGS>)=>R;
+declare export function reduce<T1,T2,R>(accum:placeHolder, f:(accum:T1, xs:T2, ...rest:Array<NO_MORE_ARGS>)=>T1, xs:Reducable<T2>):(accum:T1, ...rest:Array<NO_MORE_ARGS>)=>R;
+declare export function reduce<T1,T2,R>(accum:T1, f:placeHolder, xs:Reducable<T2>, ...rest:Array<NO_MORE_ARGS>):(f:(accum:T1, xs:T2, ...rest:Array<NO_MORE_ARGS>)=>T1, ...rest:Array<NO_MORE_ARGS>)=>R;
+declare export function reduce<T1,T2,R>(accum:placeHolder, f:placeHolder, xs:Reducable<T2>, ...rest:Array<NO_MORE_ARGS>):(accum:T1, f:(accum:T1, xs:T2, ...rest:Array<NO_MORE_ARGS>)=>T1, ...rest:Array<NO_MORE_ARGS>)=>R;
+declare export function reduce<T1,T2,R>(accum:placeHolder, f:placeHolder, xs:Reducable<T2>, ...rest:Array<NO_MORE_ARGS>):(accum:T1, ...rest:Array<NO_MORE_ARGS>)=>(f:(accum:T1, xs:T2, ...rest:Array<NO_MORE_ARGS>)=>T1, ...rest:Array<NO_MORE_ARGS>)=>R;
+
+declare export function difference<T1, T2, R>(xs:Array<T1>, ys:Array<T2>, ...rest:Array<NO_MORE_ARGS>):Array<R>;
+declare export function difference<T1, T2, R>(xs:Array<T1>, ...rest:Array<NO_MORE_ARGS>):(ys:Array<T2>, ...rest:Array<NO_MORE_ARGS>) => Array<R>;
+declare export function difference<T1, T2, R>(xs:placeHolder, ys:Array<T2>, ...rest:Array<NO_MORE_ARGS>):(xs:Array<T1>, ...rest:Array<NO_MORE_ARGS>) => Array<R>;
+
+declare export function find<T>(fn:typeToboolean<T>, xs:Array<T> | Filterable<T>, ...rest:Array<NO_MORE_ARGS>): T | void;
+declare export function find<T>(fn:typeToboolean<T>, ...rest:Array<NO_MORE_ARGS>):(xs:Array<T> | Filterable<T>, ...rest:Array<NO_MORE_ARGS>) => T | void;
+declare export function find<T>(fn:placeHolder, xs:Array<T> | Filterable<T>, ...rest:Array<NO_MORE_ARGS>):(fn:typeToboolean<T>) => T | void;
+
+declare export function pluck<T,R>(key:string | number, xs:Array<T>, ...rest:Array<NO_MORE_ARGS>):Array<R>;
+declare export function pluck<T,R>(key:string | number, xs:Functor<T>, ...rest:Array<NO_MORE_ARGS>):Functor<R>;
+declare export function pluck<T,R>(key:string | number, ...rest:Array<NO_MORE_ARGS>):(xs:Array<T>, ...rest:Array<NO_MORE_ARGS>) => Array<R>;
+declare export function pluck<T,R>(key:string | number, ...rest:Array<NO_MORE_ARGS>):(xs:Functor<T>, ...rest:Array<NO_MORE_ARGS>) => Functor<R>;
+declare export function pluck<T,R>(key:placeHolder, xs:Array<T>, ...rest:Array<NO_MORE_ARGS>): (key:string | number, ...rest:Array<NO_MORE_ARGS>) => Array<R>;
+declare export function pluck<T,R>(key:placeHolder, xs:Functor<T>, ...rest:Array<NO_MORE_ARGS>): (key:string | number, ...rest:Array<NO_MORE_ARGS>) => Functor<R>;
+
+
+declare export function always<T>(x:T, ...rest:Array<NO_MORE_ARGS>):() => T;
+declare export var True: always<true>;
+declare export var False: always<false>;
+
+
+declare export function not(x:any):boolean;
+
+
+declare export function identity<T>(x:T):T;
+
+
+declare export function head<T>(xs:Array<?T> | T, ...rest:Array<NO_MORE_ARGS>):T | void;
+
+
+declare export function tail<T>(xs:Array<?T> | T, ...rest:Array<NO_MORE_ARGS>):T | Array<?T>;
+
+
+declare export function unwrap(xs:Array<?any>):Array<?any>;
+
+
+declare export function arrayWrap<T>(x:T, ...rest:Array<NO_MORE_ARGS>):Array<T>;
+
+
+declare export function once(fn:Function): () => void;
+
+declare export function lens(get:Function, set:Function, ...rest:Array<NO_MORE_ARGS>):Function;
+declare export function lens(get:Function, ...rest:Array<NO_MORE_ARGS>):(set:Function, ...rest:Array<NO_MORE_ARGS>) => Function;
+declare export function lens(get:placeHolder, set:Function, ...rest:Array<NO_MORE_ARGS>):(get:Function, ...rest:Array<NO_MORE_ARGS>) => Function;
+
+declare export function view<T, R>(lens:Function, xs:T):R;
+declare export function view<T, R>(lens:Function):(xs:T) => R;
+declare export function view<T, R>(lens:placeHolder, xs:T):(lens:Function) => R;
+
+declare export function over<T>(lens:Function, fn:anyToAny, xs:T):T;
+declare export function over<T>(lens:Function, fn:anyToAny):(xs:T) => T;
+declare export function over<T>(lens:Function):(fn:anyToAny, xs:T) => T;
+declare export function over<T>(lens:Function):(fn:anyToAny) => (xs:T) => T;
+declare export function over<T>(lens:placeHolder, fn:anyToAny, xs:T):(lens:Function) => T;
+declare export function over<T>(lens:placeHolder, fn:placeHolder, xs:T):(lens:Function) => (fn:anyToAny) => T;
+declare export function over<T>(lens:placeHolder, fn:placeHolder, xs:T):(lens:Function, fn:anyToAny) => T;
+declare export function over<T>(lens:Function, fn:placeHolder, xs:T):(fn:anyToAny) => T;
+
+declare export function set<T>(lens:Function, value:any, xs:T):T;
+declare export function set<T>(lens:Function, value:any):(xs:T) => T;
+declare export function set<T>(lens:Function):(value:any, xs:T) => T;
+declare export function set<T>(lens:Function):(value:any) => (xs:T) => T;
+declare export function set<T>(lens:placeHolder, value:any, xs:T):(lens:Function) => T;
+declare export function set<T>(lens:placeHolder, value:placeHolder, xs:T):(lens:Function) => (value:any) => T;
+declare export function set<T>(lens:placeHolder, value:placeHolder, xs:T):(lens:Function, value:any) => T;
+declare export function set<T>(lens:Function, vakue:placeHolder, xs:T):(value:any) => T;
+
+
+declare export function mapped<T,R>(fn:(x:T) => R, xs:Array<T>):Array<R>;
+declare export function mapped<T,R>(fn:(x:T) => R, xs:Functor<T>):Functor<R>;
+declare export function mapped<T,R>(fn:(x:T) => R):(xs:Array<T>) => Array<R>;
+declare export function mapped<T,R>(fn:(x:T) => R):(xs:Functor<T>) => Functor<R>;
+declare export function mapped<T,R>(fn:placeHolder, xs:Array<T>):(fn:(x:T) => R) => Array<R>;
+declare export function mapped<T,R>(fn:placeHolder, xs:Functor<T>):(fn:(x:T) => R) => Functor<R>;
+
+
+declare export function lensProp(name:string | number):Function;
+
+declare export function flow<A,B,C,D,E,F,G>(ab:typeToReturn<A,B>, bc:typeToReturn<B,C>, cd:typeToReturn<C,D>, de:typeToReturn<D,E>, ef:typeToReturn<E,F>, fg:typeToReturn<F,G>, ...rest:Array<NO_MORE_ARGS>):typeToReturn<A,G>;
+declare export function flow<A,B,C,D,E,F>(ab:typeToReturn<A,B>, bc:typeToReturn<B,C>, cd:typeToReturn<C,D>, de:typeToReturn<D,E>, ef:typeToReturn<E,F>, ...rest:Array<NO_MORE_ARGS>):typeToReturn<A,F>;
+declare export function flow<A,B,C,D,E>(ab:typeToReturn<A,B>, bc:typeToReturn<B,C>, cd:typeToReturn<C,D>, de:typeToReturn<D,E>, ...rest:Array<NO_MORE_ARGS>):typeToReturn<A,E>;
+declare export function flow<A,B,C,D>(ab:typeToReturn<A,B>, bc:typeToReturn<B,C>, cd:typeToReturn<C,D>, ...rest:Array<NO_MORE_ARGS>):typeToReturn<A,D>;
+declare export function flow<A,B,C>(ab:typeToReturn<A,B>, bc:typeToReturn<B,C>, ...rest:Array<NO_MORE_ARGS>):typeToReturn<A,C>;
+declare export function flow<A,B>(ab:typeToReturn<A,B>, ...rest:Array<NO_MORE_ARGS>):typeToReturn<A,B>;
+
+declare export function compose<A,B,C,D,E,F,G>(fg:typeToReturn<F,G>, ef:typeToReturn<E,F>, de:typeToReturn<D,E>, cd:typeToReturn<C,D>, bc:typeToReturn<B,C>, ab:typeToReturn<A,B>, ...rest:Array<NO_MORE_ARGS>):typeToReturn<A,G>;
+declare export function compose<A,B,C,D,E,F>(ef:typeToReturn<E,F>, de:typeToReturn<D,E>, cd:typeToReturn<C,D>, bc:typeToReturn<B,C>, ab:typeToReturn<A,B>, ...rest:Array<NO_MORE_ARGS>):typeToReturn<A,F>;
+declare export function compose<A,B,C,D,E>(de:typeToReturn<D,E>, cd:typeToReturn<C,D>, bc:typeToReturn<B,C>, ab:typeToReturn<A,B>, ...rest:Array<NO_MORE_ARGS>):typeToReturn<A,E>;
+declare export function compose<A,B,C,D>(cd:typeToReturn<C,D>, bc:typeToReturn<B,C>, ab:typeToReturn<A,B>, ...rest:Array<NO_MORE_ARGS>):typeToReturn<A,D>;
+declare export function compose<A,B,C>(bc:typeToReturn<B,C>, ab:typeToReturn<A,B>, ...rest:Array<NO_MORE_ARGS>):typeToReturn<A,C>;
+declare export function compose<A,B>(ab:typeToReturn<A,B>, ...rest:Array<NO_MORE_ARGS>):typeToReturn<A,B>;
+
+declare export var eq:Curry2<any, any, boolean>;
+
+declare export function eqFn<T1, T2, T3, T4>(fnA:T1, fnB:T2, a:T3, b:T4, ...rest:Array<NO_MORE_ARGS>):boolean;
+declare export function eqFn<T1, T2, T3, T4>(fnA:T1, fnB:T2, a:T3, ...rest:Array<NO_MORE_ARGS>):Curry1<T4, boolean>;
+declare export function eqFn<T1, T2, T3, T4>(fnA:T1, fnB:T2, ...rest:Array<NO_MORE_ARGS>):Curry2<T3, T4, boolean>;
+declare export function eqFn<T1, T2, T3, T4>(fnA:T1, ...rest:Array<NO_MORE_ARGS>):Curry3<T2, T3, T4, boolean>;
+
+declare export function noop():void;
+
+declare export function invoke(fn:manyToAny, args:Array<?any>, ...rest:Array<NO_MORE_ARGS>):any;
+declare export function invoke(fn:manyToAny, ...rest:Array<NO_MORE_ARGS>):(args:Array<?any>, ...rest:Array<NO_MORE_ARGS>) => any;
+declare export function invoke(fn:placeHolder, args:Array<?any>, ...rest:Array<NO_MORE_ARGS>):(fn:manyToAny, ...rest:Array<NO_MORE_ARGS>) => any;
+
+declare export function and<T>(predicates:Array<typeToboolean<T>>, x:T):boolean;
+declare export function and<T>(predicates:Array<typeToboolean<T>>):(x:T) => boolean;
+declare export function and<T>(predicates:placeHolder, x:T):(predicates:Array<typeToboolean<T>>) => boolean;
+
+declare export function or<T>(predicates:Array<typeToboolean<T>>, x:T):boolean;
+declare export function or<T>(predicates:Array<typeToboolean<T>>):(x:T) => boolean;
+declare export function or<T>(predicates:placeHolder, x:T):(predicates:Array<typeToboolean<T>>) => boolean;
+
+
+declare export function bindMethod(meth:string, obj:container | string, ...rest:Array<NO_MORE_ARGS>):Function;
+declare export function bindMethod(meth:placeHolder, obj:container | string, ...rest:Array<NO_MORE_ARGS>):Curry1<string, Function>;
+declare export function bindMethod(meth:string, ...rest:Array<NO_MORE_ARGS>):Curry1<container | string, Function>;
+
+declare export function invokeMethod(meth:string, args:Array<?any>, obj:container | string):any;
+declare export function invokeMethod(meth:string, args:Array<?any>):(obj:container | string) => any;
+declare export function invokeMethod(meth:string):(args:Array<?any>, obj:container | string) => any;
+declare export function invokeMethod(meth:string):(args:placeHolder, obj:container | string) => (args:Array<?any>) => any;
+declare export function invokeMethod(meth:string):(args:Array<?any>) => (obj:container | string) => any;
+declare export function invokeMethod(meth:placeHolder, args:Array<?any>, obj:container | string):(meth:placeHolder) => any;
+declare export function invokeMethod(meth:string, args:placeHolder, obj:container | string):(args:Array<?any>) => any;
+declare export function invokeMethod(meth:string, args:placeHolder):(obj:container | string) => any;
+
+declare export function cond<T,R>(...conditions:Array<[(x:T) => boolean, (x:T) => R]>):(xs:T) => R;
+
+declare export function memoize<R>(fn:(...args:any[]) => R):() => R;
+
+
+declare export function eqFn<A, B>(fnA:typeToAny<A>, fnB:typeToAny<B>, a:A, b:B, ...rest:Array<NO_MORE_ARGS>):boolean;
+declare export function eqFn<A, B>(fnA:typeToAny<A>, fnB:typeToAny<B>, a:A, ...rest:Array<NO_MORE_ARGS>):Curry1<B, boolean>;
+declare export function eqFn<A, B>(fnA:typeToAny<A>, fnB:typeToAny<B>, ...rest:Array<NO_MORE_ARGS>):Curry2<A, B, boolean>;
+declare export function eqFn<A, B>(fnA:typeToAny<A>, ...rest:Array<NO_MORE_ARGS>):Curry3<typeToAny<B>, A, B, boolean>;
+declare export function eqFn<A, B>(fnA:placeHolder, fnB:typeToAny<B>, a:A, b:B, ...rest:Array<NO_MORE_ARGS>):Curry1<typeToAny<A>,boolean>;
+declare export function eqFn<A, B>(fnA:typeToAny<A>, fnB:placeHolder, a:A, b:B, ...rest:Array<NO_MORE_ARGS>):Curry1<typeToAny<B>,boolean>;
+declare export function eqFn<A, B>(fnA:typeToAny<A>, fnB:typeToAny<B>, a:placeHolder, b:B, ...rest:Array<NO_MORE_ARGS>):Curry1<A,boolean>;
+declare export function eqFn<A, B>(fnA:placeHolder, fnB:placeHolder, a:A, b:B, ...rest:Array<NO_MORE_ARGS>):Curry2<typeToAny<A>,typeToAny<B>,boolean>;
+declare export function eqFn<A, B>(fnA:placeHolder, fnB:typeToAny<B>, a:placeHolder, b:B, ...rest:Array<NO_MORE_ARGS>):Curry2<typeToAny<A>,A,boolean>;
+declare export function eqFn<A, B>(fnA:typeToAny<A>, fnB:placeHolder, a:placeHolder, b:B, ...rest:Array<NO_MORE_ARGS>):Curry2<typeToAny<B>,A,boolean>;
+declare export function eqFn<A, B>(fnA:placeHolder, fnB:placeHolder, a:placeHolder, b:B, ...rest:Array<NO_MORE_ARGS>):Curry2<typeToAny<A>,typeToAny<B>,A,boolean>;
+
+declare export function zipObject<A,B>(keys:Array<A>, vals:Array<B>, ...rest:Array<NO_MORE_ARGS>):Object;
+declare export function zipObject<A,B>(keys:Array<A>, ...rest:Array<NO_MORE_ARGS>):Curry1<Array<B>, Object>;
+declare export function zipObject<A,B>(keys:placeHolder, vals:Array<B>, ...rest:Array<NO_MORE_ARGS>):Curry1<Array<B>, Object>;
+
+declare export function either<T,R>(fn:typeToReturn<T>, x:T, ...rest:Array<NO_MORE_ARGS>):R | Error;
+declare export function either<T,R>(fn:typeToReturn<T>, ...rest:Array<NO_MORE_ARGS>):Curry1<T, R | Error>;
+declare export function either<T,R>(fn:placeHolder, x:T, ...rest:Array<NO_MORE_ARGS>):Curry1<typeToReturn<T>, R | Error>;
+
+declare export function mapFn(fns:Array<Function>, args:Array<any>, ...rest:Array<NO_MORE_ARGS>):Array<any>;
+declare export function mapFn(fns:Array<Function>, ...rest:Array<NO_MORE_ARGS>):Curry1<Array<any>, Array<any>>;
+declare export function mapFn(fns:placeHolder, args:Array<any>):Curry1<Array<Function>, Array<any>>;
+
+declare export function chainL<T1,T2,R>(fn:reducer<T1,T2,R>, args:Array<T2>, ...rest:Array<NO_MORE_ARGS>):R;
+declare export function chainL<T1,T2,R>(fn:reducer<T1,T2,R>, ...rest:Array<NO_MORE_ARGS>):Curry1<T2, R>;
+declare export function chainL<T1,T2,R>(fn:placeHolder, args:Array<T2>, ...rest:Array<NO_MORE_ARGS>):Curry1<reducer<T1,T2,R>, R>;
+
+declare export function xProd<T1,T2>(a:Array<T1>, b:Array<T2>, ...rest:Array<NO_MORE_ARGS>):Array<Array<any>>;
+declare export function xProd<T1,T2>(a:Array<T1>, ...rest:Array<NO_MORE_ARGS>):Curry1<Array<T2>, Array<Array<any>>>;
+declare export function xProd<T1,T2>(a:placeHolder, b:Array<T2>, ...rest:Array<NO_MORE_ARGS>):Curry1<Array<T1>, Array<Array<any>>>;
+
+declare export function uniqBy<T>(fn:typeToAny<T>, xs:Array<?T>, ...rest:Array<NO_MORE_ARGS>):Array<?any>
+declare export function uniqBy<T>(fn:typeToAny<T>, ...rest:Array<NO_MORE_ARGS>):(xs:Array<?T>, ...rest:Array<NO_MORE_ARGS>) => Array<?any>
+declare export function uniqBy<T>(fn:placeHolder, xs:Array<?T>, ...rest:Array<NO_MORE_ARGS>):(fn:typeToAny<T>, ...rest:Array<NO_MORE_ARGS>) => Array<?any>
+
+declare export function zipBy<T1,T2,R>(fn:reducer<T1,T2,R>, left:Array<T1>, right:Array<T2>, ...rest:Array<NO_MORE_ARGS>):Array<R>;
+declare export function zipBy<T1,T2,R>(fn:reducer<T1,T2,R>, left:Array<T1>, ...rest:Array<NO_MORE_ARGS>):Curry1<Array<T2>, Array<R>>;
+declare export function zipBy<T1,T2,R>(fn:reducer<T1,T2,R>, ...rest:Array<NO_MORE_ARGS>):Curry2<Array<T1>, Array<T2>, Array<R>>;
+declare export function zipBy<T1,T2,R>(fn:placeHolder, left:Array<T1>, right:Array<T2>, ...rest:Array<NO_MORE_ARGS>):Curry1<reducer<T1,T2,R>, Array<R>>;
+declare export function zipBy<T1,T2,R>(fn:reducer<T1,T2,R>, left:placeHolder, right:Array<T2>, ...rest:Array<NO_MORE_ARGS>):Curry1<Array<T1>, Array<R>>;
+declare export function zipBy<T1,T2,R>(fn:placeHolder, left:placeHolder, right:Array<T2>, ...rest:Array<NO_MORE_ARGS>):Curry2<reducer<T1,T2,R>, Array<T1>, Array<R>>;

@@ -1,5 +1,3 @@
-// @flow
-
 //
 // INTEL CONFIDENTIAL
 //
@@ -21,9 +19,10 @@
 // otherwise. Any license under such intellectual property rights must be
 // express and approved by Intel in writing.
 
-export const __ = {};
 
-type Container = Array<any>|Object|Function;
+export const __ = {
+  '@@functional/placeholder': true
+};
 
 function _type (val):string {
   if (val === null)
@@ -36,24 +35,31 @@ function _type (val):string {
       .slice(8, -1);
 }
 
-export function curry (n:number, fn:Function):Function {
+export const curry0 = fn => curry(0, fn);
+
+export const curry1 = fn => curry(1, fn);
+
+export const curry2 = fn => curry(2, fn);
+
+export const curry3 = fn => curry(3, fn);
+
+export const curry4 = fn => curry(4, fn);
+
+function curry (n, fn) {
   return function innerCurry () {
     var args = new Array(arguments.length);
     for (var i = 0, l = arguments.length; i < l; i++)
       args[i] = arguments[i];
 
     var gaps = n - args.length;
-    gaps += args.filter(function findGaps (x) {
-      return x === __;
-    }).length;
+    gaps += args
+      .filter(x => x === __)
+      .length;
 
     if (gaps > 0)
-      return curry(gaps, function () {
-        var innerArgs = new Array(arguments.length);
-        for (var i = 0, l = arguments.length; i < l; i++)
-          innerArgs[i] = arguments[i];
+      return curry (gaps, (...innerArgs) => {
+        const filledArgs = args.map(x => {
 
-        var filledArgs = args.map(function (x) {
           if (x === __)
             return innerArgs.shift();
 
@@ -67,55 +73,41 @@ export function curry (n:number, fn:Function):Function {
   };
 }
 
-export const partial = curry(3, function partial (arity:number, fn:Function, initialArgs:Array<any>):Function {
-  return curry(arity, function ():any {
-    var args = new Array(arguments.length);
-    for (var i = 0, l = arguments.length; i < l; i++)
-      args[i] = arguments[i];
+export const map = curry2((fn, xs) => xs.map(curry1(fn)));
 
-    return fn.apply(null, initialArgs.concat(args));
-  });
-});
+export const filter = curry2((fn, xs) => xs.filter(curry1(fn)));
 
-export const map = curry(2, function m (f:Function, x:Container):any {
-  if (x && typeof x.map === 'function')
-    return x.map(curry(1, f));
+export const tap = curry2((fn, xs) => {
+  if (typeof xs.tap === 'function')
+    xs = xs.tap(curry1(fn));
   else
-    return f(x);
+    xs.forEach(curry1(fn));
+
+  return xs;
 });
 
-export const filter = curry(2, function filter (f:Function, xs:Container):any {
-  if (xs && typeof xs.filter === 'function')
-    return xs.filter(curry(1, f));
-  else
-    return f(xs);
+export const reduce = curry3((accum, f, xs) => {
+  return (Array.isArray(xs)) ? xs.reduce(curry2(f), accum) : xs.reduce(accum, curry2(f));
 });
 
-export const reduce = curry(3, function reducer (accum:any, f:Function, xs:Container):any {
-  if (typeof accum === 'function')
-    accum = accum();
+export const some = curry2((fn, xs) => xs.some(curry1(fn)));
 
-  if (Array.isArray(xs))
-    return xs.reduce(curry(2, f), accum);
-  if (xs && typeof xs.reduce === 'function')
-    return xs.reduce(accum, curry(2, f));
-  else
-    return f(accum, xs);
-});
+export const every = curry2((fn, xs) => xs.every(curry(1, fn)));
 
-export const find = curry(2, function find (f:Function, xs:Container):any {
-  return filter(f, xs)[0];
-});
+export const difference = curry2((xs, ys) => reduce([], (arr, x) => {
+  if (ys.indexOf(x) === -1)
+    arr.push(x);
 
-export const pluck = curry(2, function pluck (key, xs) {
-  return map(function plucker (xs) {
-    return xs[key];
-  }, xs);
-});
+  return arr;
+}, xs));
 
-export const identity = (x:any):any => x;
+export const find = curry2((fn, xs) => filter(fn, xs)[0]);
 
-export const always = (x:any):Function => () => x;
+export const pluck = curry2((key, xs) => map(xs => xs[key], xs));
+
+export const identity = x => x;
+
+export const always = x => () => x;
 
 export const True = always(true);
 export const False = always(false);
@@ -144,57 +136,35 @@ export const intersectionBy = curry(3, function intersectionBy <T>(fn:(p:T) => m
   return uniqBy(fn, result);
 });
 
-const getConst = (x:any) => {
+const getConst = x => {
   return {
     value: x,
     map () { return this; }
   };
 };
 
-export const view = curry(2, function view (lens, x) {
-  return lens(getConst)(x).value;
+export const view = curry2((lens, xs) => lens(getConst)(xs).value);
+
+const getIdentity = x => ({
+  value: x,
+  map (fn) {
+    return getIdentity(fn(x));
+  }
 });
 
-const getIdentity = (x:any) => {
-  return {
-    value: x,
-    map (fn) {
-      return getIdentity(fn(x));
-    }
-  };
-};
+export const over = curry3((lens, fn, xs) => lens(
+  ys => getIdentity(fn(ys))
+)(xs).value);
 
-
-export const over = curry(3, (lens, fn, xs) => {
-  return lens((ys) => getIdentity(fn(ys)))(xs).value;
-});
-
-
-export const set = curry(3, (lens, value, xs) => {
-  return over(lens, always(value), xs);
-});
-
-
-//Track https://github.com/babel/babel-eslint/issues/280
-/*eslint-disable no-undef */
-type returnXs = <T>(v:any, xs:T) => T;
-/*eslint-enable no-undef */
-
-export const lens = curry(2, function lens (get:(xs: any) => any, set:returnXs) {
-  return (fn:(xs:any) => any) => (xs:any) => map(
-    (v) => set(v, xs),
-    fn(get(xs))
-  );
-});
+export const set = curry3((lens, value, xs) => over(lens, always(value), xs));
 
 const getValue = (x:{value: any}):any => x.value;
 
-export const mapped = curry(2, function (fn:Function, x:any):Object {
-  return getIdentity(map(flow(fn, getValue), x));
-});
+export const mapped = curry2((fn, x) => getIdentity(map(flow(fn, getValue), x)));
 
-export const lensProp = (prop:string|number):Function => {
-  return lens((xs) => xs[prop], (v, xs) => {
+export const lensProp = prop => lens(
+  xs => xs[prop],
+  (v, xs) => {
     const keys = Object.keys(xs);
     const container = Array.isArray(xs) ? [] : {};
 
@@ -205,170 +175,75 @@ export const lensProp = (prop:string|number):Function => {
     out[prop] = v;
 
     return out;
-  });
-};
+  }
+);
 
-export function flow ():Function {
-  var args = new Array(arguments.length);
 
-  for (var i = 0, l = arguments.length; i < l; i++)
-    args[i] = arguments[i];
+export const flow = (...fns) => (...args) => fns.reduce(
+  (xs, fn, idx) => idx === 0 ? fn.apply(null, xs) : fn(xs),
+  args
+);
 
-  return function flowInner (xs:any):any {
-    return args.reduce(function reducer (xs, fn) {
-      return fn(xs);
-    }, xs);
-  };
-}
+export const compose = (...fns) => flow.apply(null, fns.reverse());
 
-export function compose ():Function {
-  const args = new Array(arguments.length);
-  for (var i = 0, l = arguments.length; i < l; i++)
-    args[i] = arguments[i];
+export const cond = (...args) => x => {
+  var result;
 
-  return flow.apply(null, args.reverse());
-}
-
-export const flowN = curry(2, function flowN (n, fns) {
-  fns = over(lensProp(0), invoke, fns);
-  var wrappedFlow = wrapArgs(flow.apply(null, fns));
-
-  return curry(n, wrappedFlow);
-});
-
-export function cond ():Function {
-  var args = new Array(arguments.length);
-
-  for (var i = 0, l = arguments.length; i < l; i++)
-    args[i] = arguments[i];
-
-  return function condInner (xs) {
-    var result;
-
-    args.some(function findTruthy (pair) {
-      if (pair[0](xs)) {
-        result = pair[1](xs);
-        return true;
-      }
-    });
-
-    return result;
-  };
-}
-
-export function shallowClone (xs:any):any {
-  var type = _type(xs);
-
-  if (type === 'Array')
-    return xs.slice();
-  else if (type === 'Object')
-    return Object.keys(xs).reduce(function reducer (obj, key) {
-      obj[key] = xs[key];
-
-      return obj;
-    }, {});
-
-  throw new Error('shallow clone works with Array or Object. Got: ' + type);
-}
-
-export const not = (x:any):boolean => !x;
-
-export const eq = curry(2,
-  (a, b) => _type(a) === 'Object' && typeof a.equals === 'function' ? a.equals(b) : a === b);
-
-export const eqFn = curry(4, function eqFn (fnA, fnB, a, b) {
-  return eq(fnA(a), fnB(b));
-});
-
-export const invoke = curry(2, function invoke (fn, args) {
-  if (!Array.isArray(args))
-    throw new Error('Error in fp.invoke - Cannot call invoke with non-array');
-
-  return fn.apply(null, args);
-});
-
-export const safe = curry(3, function safe (arity, fn, def) {
-  return curry(arity, function safeCheck () {
-    for (var i = 0, l = arguments.length; i < l; i++)
-      if (arguments[i] == null)
-        return def;
-
-    try {
-      return fn.apply(null, arguments);
-    } catch (e) {
-      return def;
+  args.some(pair => {
+    if (pair[0](x)) {
+      result = pair[1](x);
+      return true;
     }
   });
-});
+
+  return result;
+};
+
+
+export const not = x => !x;
+
+export const eq = curry2(
+  (a, b) => _type(a) === 'Object' && typeof a.equals === 'function' ?
+  a.equals(b) :
+  a === b
+);
+
+export const eqFn = curry4((fnA, fnB, a, b) => eq(fnA(a), fnB(b)));
+
+export const invoke = curry2((fn, args) => fn.apply(null, args));
 
 export const noop = () => {};
 
-export const and = curry(2, function and (predicates, val) {
-  return predicates.reduce(function reducer (curr, predicate) {
-    return curr && predicate(val);
-  }, true);
-});
+export const and = curry2((predicates, val) => predicates.reduce(
+  (curr, predicate) => curr && predicate(val),
+  true)
+);
 
-export const or = curry(2, function or (predicates, val) {
-  return predicates.reduce(function reducer (curr, predicate) {
-    return curr || predicate(val);
-  }, false);
-});
+export const or = curry2((predicates, val) => predicates.reduce(
+  (curr, predicate) => curr || predicate(val),
+  false
+));
 
-export const bindMethod = curry(2, function bindMethod (meth, obj) {
-  return obj[meth].bind(obj);
-});
+export const bindMethod = curry2((meth, obj) => obj[meth].bind(obj));
 
-export const invokeMethod = curry(3, function invokeMethod (meth, args, obj) {
-  return flow(bindMethod(meth), invoke(__, args))(obj);
-});
+export const invokeMethod = curry3((meth, args, obj) => obj[meth].apply(obj, args));
 
-export const invokeMethodN = curry(3, function invokeMethodN (arity:number, meth:string, obj:any):Function {
-  return curry(arity, function ():any {
-    return obj[meth].apply(obj, arguments);
-  });
-});
-
-export const zipObject = curry(2, function zipObject (keys, vals) {
-  var keysType = _type(keys);
-  var valsType = _type(vals);
-  if (keysType !== 'Array')
-    throw new TypeError('zipObject keys must be an Array. Got: ' + keysType);
-  if (valsType !== 'Array')
-    throw new TypeError('zipObject values must be an Array. Got: ' + valsType);
-
-  return keys.reduce(function reduceToObject (obj, val, index) {
+export const zipObject = curry2((keys, vals) => {
+  return keys.reduce((obj, val, index) => {
     obj[val] = vals[index];
     return obj;
   }, {});
 });
 
-export const some = curry(2, function some (fn, xs) {
-  if (xs && typeof xs.some === 'function')
-    return xs.some(curry(1, fn));
-  else
-    return !!fn(xs);
-});
+export const unwrap = xs => xs.reduce((arr, x) => arr.concat(x), []);
 
-export const every = curry(2, function every (fn, xs) {
-  if (xs && typeof xs.every === 'function')
-    return xs.every(curry(1, fn));
-  else
-    return !!fn(xs);
-});
+export const head = xs => xs[0];
 
-export function unwrap (xs:Array<any>):Array<any> {
-  return xs.reduce(function reducer (arr, x) {
-    return arr.concat(x);
-  }, []);
-}
+export const tail = xs => xs.slice(1);
 
-export const head = view(lensProp(0));
-export const tail = flow(invokeMethod('slice', [-1]), head);
+export const arrayWrap = x => [x];
 
-export const arrayWrap = (x:any):any => [x];
-
-export function once (fn:Function):Function {
+export function once (fn) {
   var called = false;
 
   return function innerOnce () {
@@ -381,79 +256,25 @@ export function once (fn:Function):Function {
   };
 }
 
-export const either = curry(2, function either (fn, x) {
-  if (x instanceof Error)
-    return x;
+export const either = curry2((fn, x) => x instanceof Error ? x : fn(x));
 
-  return fn(x);
-});
+export const mapFn = curry2((fns, args) => map(invoke(__, args), fns));
 
-export const maybe = curry(2, function maybe (fn:Function, x:any) {
-  if (x === null)
-    return x;
+export const chainL = curry2((fn, args) => args.reduce(curry2(fn)));
 
-  return fn(x);
-});
-
-export const unsafe = curry(2, function unsafe (fn, x) {
-  if (!(x instanceof Error))
-    return x;
-
-  return fn(x);
-});
-
-export const tap = curry(2, function tap (fn:Function, xs:any):any {
-  if (xs && typeof xs.tap === 'function')
-    xs = xs.tap(curry(1, fn));
-  else
-    fn(xs);
-
-  return xs;
-});
-
-export const mapFn = curry(2, function mapFn (fns, args) {
-  return map(invoke(__, args), fns);
-});
-
-export const chainL = curry(2, function chainL (fn, args) {
-  return args.reduce(curry(2, fn));
-});
-
-export const wrapArgs = function wrapArgs (fn:Function):Function {
-  return function innerWrapArgs () {
-    return fn.call(null, [].slice.call(arguments));
-  };
-};
-
-export const xProd = curry(2, function xprod (a:any, b:any):Array<Array<any>> {
+export const xProd = curry2((a, b) => {
   const result = [];
 
-  a.forEach(function (a) {
-    b.forEach(function (b) {
-      result.push([a, b]);
-    });
+  a.forEach(a => {
+    b.forEach(b => result.push([a, b]));
   });
 
   return result;
 });
 
-export const flip = curry(2, function flip (arity, fn) {
-  return curry(arity, function flipper () {
-    var args = new Array(arguments.length);
+export const anyPass = curry2((fns, x) => some(fn => fn(x), fns));
 
-    for (var i = 0, l = arguments.length; i < l; i++)
-      args[i] = arguments[i];
-
-    args.reverse();
-    return fn.apply(null, args);
-  });
-});
-
-export const anyPass = curry(2, function anyPass (fns, x) {
-  return some(invoke(__, [x]), fns);
-});
-
-export const zipBy = curry(3, (fn:Function, left:Array<any>, right:Array<any>) => {
+export const zipBy = curry3((fn, left, right) => {
   var min = Math.min(left.length, right.length);
   left.length = min;
   right.length = min;
@@ -463,15 +284,10 @@ export const zipBy = curry(3, (fn:Function, left:Array<any>, right:Array<any>) =
   }, []);
 });
 
-export const memoize = (fn:Function):Function => {
+export const memoize = fn => {
   const cache = [];
 
-  return function memo () {
-    const args = new Array(arguments.length);
-
-    for (var i = 0, l = arguments.length; i < l; i++)
-      args[i] = arguments[i];
-
+  return function memo (...args) {
     var result;
 
     const match = cache.some(xs => {
@@ -495,7 +311,7 @@ export const memoize = (fn:Function):Function => {
   };
 };
 
-export const uniqBy = curry(2, function uniqBy <T>(fn:(xs:T) => mixed, xs:T[]):T[] {
+export const uniqBy = curry2((fn, xs) => {
   const set = [];
   const out = [];
 

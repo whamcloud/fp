@@ -46,6 +46,7 @@
     "eslint-plugin-flow-vars": "0.4.0",
     "eslint-plugin-flowtype": "2.2.7",
     "immutable": "3.8.1",
+	"intel-flow-jasmine": "1.1.0",
     "intel-jasmine-junit-reporter": "1.0.0",
     "intel-jasmine-n-matchers": "2.1.1",
     "jasmine": "2.4.1",
