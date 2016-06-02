@@ -133,7 +133,7 @@ export const differenceBy = curry(3, function differenceBy <T>(fn:(p:T) => mixed
 
 export const difference = differenceBy(identity);
 
-export const unionBy = curry(3, function unionBy <T>(fn:(p:T) => mixed, xs:T[], ys:T[]):T[] {
+export const intersectionBy = curry(3, function intersectionBy <T>(fn:(p:T) => mixed, xs:T[], ys:T[]):T[] {
   const result = xs.reduce((arr:T[], x:T) => {
     if (find(y => fn(x) === fn(y), ys))
       arr.push(x);

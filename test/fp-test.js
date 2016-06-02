@@ -519,7 +519,7 @@ describe('the fp module', () => {
     });
   });
 
-  describe('has a unionBy method', () => {
+  describe('has a intersectionBy method', () => {
     var a, b;
 
     beforeEach(() => {
@@ -555,17 +555,17 @@ describe('the fp module', () => {
     });
 
     it('should exist on fp', () => {
-      expect(fp.unionBy)
+      expect(fp.intersectionBy)
         .toEqual(jasmine.any(Function));
     });
 
     it('should be curried', () => {
-      expect(fp.unionBy(_, _, _))
+      expect(fp.intersectionBy(_, _, _))
         .toEqual(jasmine.any(Function));
     });
 
-    it('should tell union by id with results', () => {
-      expect(fp.unionBy(x => x.id, a, b))
+    it('should tell intersection by id with results', () => {
+      expect(fp.intersectionBy(x => x.id, a, b))
         .toEqual([
           {
             id: 1,
@@ -578,8 +578,8 @@ describe('the fp module', () => {
         ]);
     });
 
-    it('should tell union by id with no results', () => {
-      expect(fp.unionBy(x => x.id, a, []))
+    it('should tell intersection by id with no results', () => {
+      expect(fp.intersectionBy(x => x.id, a, []))
         .toEqual([]);
     });
 
@@ -589,7 +589,7 @@ describe('the fp module', () => {
         name: 'foo'
       });
 
-      expect(fp.unionBy(x => x.id, b, a))
+      expect(fp.intersectionBy(x => x.id, b, a))
         .toEqual([
           {
             id: 1,
