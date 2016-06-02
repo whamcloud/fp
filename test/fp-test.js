@@ -428,9 +428,180 @@ describe('the fp module', () => {
     it('should work with empty arrays', () => {
       expect(fp.difference([], [])).toEqual([]);
     });
+
+    it('should produce a set', () => {
+      expect(fp.difference([1, 1, 2], [2]))
+        .toEqual([1]);
+    });
   });
 
+  describe('has a differenceBy method', () => {
+    var a, b;
 
+    beforeEach(() => {
+      a = [
+        {
+          id: 1,
+          name: 'foo'
+        },
+        {
+          id: 2,
+          name: 'bar'
+        }
+      ];
+
+      b = [
+        {
+          id: 1,
+          name: 'foo'
+        },
+        {
+          id: 2,
+          name: 'bar'
+        },
+        {
+          id: 3,
+          name: 'baz'
+        },
+        {
+          id: 4,
+          name: 'bap'
+        }
+      ];
+    });
+
+    it('should exist on fp', () => {
+      expect(fp.differenceBy)
+        .toEqual(jasmine.any(Function));
+    });
+
+    it('should be curried', () => {
+      expect(fp.differenceBy(_, _, _))
+        .toEqual(jasmine.any(Function));
+    });
+
+    it('should tell difference by id with results', () => {
+      expect(fp.differenceBy(x => x.id, b, a))
+        .toEqual([
+          {
+            id: 3,
+            name: 'baz'
+          },
+          {
+            id: 4,
+            name: 'bap'
+          }
+        ]);
+    });
+
+    it('should tell difference by id with no results', () => {
+      expect(fp.differenceBy(x => x.id, a, b))
+        .toEqual([]);
+    });
+
+    it('should produce a set', () => {
+      b.push({
+        id: 3,
+        name: 'baz'
+      });
+
+      expect(fp.differenceBy(x => x.id, b, a))
+        .toEqual([
+          {
+            id: 3,
+            name: 'baz'
+          },
+          {
+            id: 4,
+            name: 'bap'
+          }
+        ]);
+    });
+  });
+
+  describe('has a unionBy method', () => {
+    var a, b;
+
+    beforeEach(() => {
+      a = [
+        {
+          id: 1,
+          name: 'foo'
+        },
+        {
+          id: 2,
+          name: 'bar'
+        }
+      ];
+
+      b = [
+        {
+          id: 1,
+          name: 'foo'
+        },
+        {
+          id: 2,
+          name: 'bar'
+        },
+        {
+          id: 3,
+          name: 'baz'
+        },
+        {
+          id: 4,
+          name: 'bap'
+        }
+      ];
+    });
+
+    it('should exist on fp', () => {
+      expect(fp.unionBy)
+        .toEqual(jasmine.any(Function));
+    });
+
+    it('should be curried', () => {
+      expect(fp.unionBy(_, _, _))
+        .toEqual(jasmine.any(Function));
+    });
+
+    it('should tell union by id with results', () => {
+      expect(fp.unionBy(x => x.id, a, b))
+        .toEqual([
+          {
+            id: 1,
+            name: 'foo'
+          },
+          {
+            id: 2,
+            name: 'bar'
+          }
+        ]);
+    });
+
+    it('should tell union by id with no results', () => {
+      expect(fp.unionBy(x => x.id, a, []))
+        .toEqual([]);
+    });
+
+    it('should produce a set', () => {
+      b.push({
+        id: 1,
+        name: 'foo'
+      });
+
+      expect(fp.unionBy(x => x.id, b, a))
+        .toEqual([
+          {
+            id: 1,
+            name: 'foo'
+          },
+          {
+            id: 2,
+            name: 'bar'
+          }
+        ]);
+    });
+  });
 
   describe('working with lenses', () => {
     var data, propLens, immutablePropLens;

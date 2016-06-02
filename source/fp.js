@@ -120,13 +120,28 @@ export const always = (x:any):Function => () => x;
 export const True = always(true);
 export const False = always(false);
 
-export const difference = curry(2, function difference (xs, ys) {
-  return xs.reduce(function reduceDiffs (arr, x) {
-    if (ys.indexOf(x) === -1)
+export const differenceBy = curry(3, function differenceBy <T>(fn:(p:T) => mixed, xs:T[], ys:T[]):T[] {
+  const result = xs.reduce((arr:T[], x:T) => {
+    if (!find(y => fn(x) === fn(y), ys))
       arr.push(x);
 
     return arr;
   }, []);
+
+  return uniqBy(fn, result);
+});
+
+export const difference = differenceBy(identity);
+
+export const unionBy = curry(3, function unionBy <T>(fn:(p:T) => mixed, xs:T[], ys:T[]):T[] {
+  const result = xs.reduce((arr:T[], x:T) => {
+    if (find(y => fn(x) === fn(y), ys))
+      arr.push(x);
+
+    return arr;
+  }, []);
+
+  return uniqBy(fn, result);
 });
 
 const getConst = (x:any) => {
@@ -480,7 +495,7 @@ export const memoize = (fn:Function):Function => {
   };
 };
 
-export const uniqBy = curry(2, function (fn:(xs:any) => boolean, xs:Array<?any>):Array<?any> {
+export const uniqBy = curry(2, function uniqBy <T>(fn:(xs:T) => mixed, xs:T[]):T[] {
   const set = [];
   const out = [];
 
