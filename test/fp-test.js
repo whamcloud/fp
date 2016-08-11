@@ -385,11 +385,6 @@ describe('the fp module', () => {
         .toEqual(jasmine.any(Function));
     });
 
-    it('should be curried', () => {
-      expect(fp.differenceBy(_, _, _))
-        .toEqual(jasmine.any(Function));
-    });
-
     it('should tell difference by id with results', () => {
       expect(fp.differenceBy(x => x.id, b, a))
         .toEqual([
@@ -469,11 +464,6 @@ describe('the fp module', () => {
         .toEqual(jasmine.any(Function));
     });
 
-    it('should be curried', () => {
-      expect(fp.intersectionBy(_, _, _))
-        .toEqual(jasmine.any(Function));
-    });
-
     it('should tell intersection by id with results', () => {
       expect(fp.intersectionBy(x => x.id, a, b))
         .toEqual([
@@ -526,6 +516,11 @@ describe('the fp module', () => {
             container[key] = xs[key];
             return container;
           }, container);
+
+          if (typeof prop === 'string')
+            prop = prop.toString();
+
+          // $FlowIgnore: access is fine here
           out[prop] = v;
 
           return out;
@@ -957,6 +952,7 @@ describe('the fp module', () => {
 
     describe('with a successful predicate and empty evaluation', () => {
       ['', 0, null, undefined, false].forEach((curVal) => {
+        // $FlowIgnore: this works fine
         it(`should return ${curVal}`, () => {
           const identityOrVal = fp.cond(
             [fp.eq(undefined), fp.always(curVal)],
@@ -1085,6 +1081,8 @@ describe('the fp module', () => {
         fp.eq(5),
         fp.eq(6)
       ]);
+
+      (is5Or6:(p:number) => boolean);
     });
 
     it('should exist on fp', () => {
@@ -1363,7 +1361,10 @@ describe('the fp module', () => {
         spy1 = jasmine.createSpy('spy1').and.callFake(fp.identity);
         spy2 = jasmine.createSpy('spy2').and.callFake(fp.identity);
 
-        chain = fp.flow(fp.either(spy1), fp.either(spy2));
+        chain = fp.flow(
+          fp.either(spy1),
+          fp.either(spy2)
+        );
       });
 
       it('should pass errors', () => {

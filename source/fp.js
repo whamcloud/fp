@@ -94,13 +94,6 @@ export const some = curry2((fn, xs) => xs.some(curry1(fn)));
 
 export const every = curry2((fn, xs) => xs.every(curry(1, fn)));
 
-export const difference = curry2((xs, ys) => reduce([], (arr, x) => {
-  if (ys.indexOf(x) === -1)
-    arr.push(x);
-
-  return arr;
-}, xs));
-
 export const find = curry2((fn, xs) => filter(fn, xs)[0]);
 
 export const pluck = curry2((key, xs) => map(xs => xs[key], xs));
@@ -112,8 +105,15 @@ export const always = x => () => x;
 export const True = always(true);
 export const False = always(false);
 
-export const differenceBy = curry(3, function differenceBy <T>(fn:(p:T) => mixed, xs:T[], ys:T[]):T[] {
-  const result = xs.reduce((arr:T[], x:T) => {
+export const lens = curry2((get, set) => {
+  return fn => xs => map(
+    (v) => set(v, xs),
+    fn(get(xs))
+  );
+});
+
+export const differenceBy = curry3(function differenceBy (fn, xs, ys) {
+  const result = xs.reduce((arr, x) => {
     if (!find(y => fn(x) === fn(y), ys))
       arr.push(x);
 
