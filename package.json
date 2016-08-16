@@ -1,6 +1,6 @@
 {
   "name": "intel-fp",
-  "version": "4.4.1",
+  "version": "5.0.0",
   "description": "A Functional Programming Lib.",
   "main": "dist/source/fp.js",
   "scripts": {
