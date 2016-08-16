@@ -4,11 +4,13 @@
 .eslintrc
 .flowconfig
 .gitignore
-.jscsrc
 .idea
 npm-shrinkwrap.json
 node_modules
+/bin
 /source
 /test
 /coverage
 /.nyc_output
+*.log
+run_test.sh

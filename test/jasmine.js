@@ -1,2 +1,11 @@
-const {describe, beforeEach, it, expect, jasmine} = global;
-export {describe, beforeEach, it, expect, jasmine};
+// @flow
+
+/*global describe beforeEach it expect jasmine:true*/
+
+export {
+  describe,
+  beforeEach,
+  it,
+  expect,
+  jasmine
+};

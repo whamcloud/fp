@@ -1,31 +1,38 @@
 // @flow
 
-import {describe, beforeEach, it, expect, jasmine} from './jasmine';
+import {
+  describe,
+  beforeEach,
+  it,
+  expect,
+  jasmine
+} from './jasmine';
 
-import * as fp from '../source/fp';
+import * as fp from '../source/fp.js';
 const _ = fp.__;
 
-import {Map, fromJS} from 'immutable';
+import {
+  Map,
+  fromJS
+} from 'immutable';
 
 describe('the fp module', () => {
   describe('has a curry method', () => {
     var toArray;
 
     beforeEach(() => {
-      toArray = function toArray () {
-        return [].slice.call(arguments);
-      };
+      toArray = (...rest) => rest;
     });
 
     it('should exist on fp', () => {
-      expect(fp.curry).toEqual(jasmine.any(Function));
+      expect(fp.curry0).toEqual(jasmine.any(Function));
     });
 
     describe('with 0 args', () => {
       var curry0;
 
       beforeEach(() => {
-        curry0 = fp.curry(0, toArray);
+        curry0 = fp.curry0(toArray);
       });
 
       it('should return the value', () => {
@@ -41,7 +48,7 @@ describe('the fp module', () => {
       var curry1;
 
       beforeEach(() => {
-        curry1 = fp.curry(1, toArray);
+        curry1 = fp.curry1(toArray);
       });
 
       it('should return a function if not satisfied', () => {
@@ -61,7 +68,7 @@ describe('the fp module', () => {
       var curry3;
 
       beforeEach(() => {
-        curry3 = fp.curry(3, toArray);
+        curry3 = fp.curry3(toArray);
       });
 
       it('should return a function if not satisfied', () => {
@@ -109,7 +116,7 @@ describe('the fp module', () => {
       var curry1;
 
       beforeEach(() => {
-        curry1 = fp.curry(2, toArray)(_, 2);
+        curry1 = fp.curry2(toArray)(_, 2);
       });
 
       it('should be immutable', () => {
@@ -117,46 +124,6 @@ describe('the fp module', () => {
 
         expect(curry1(1)).toEqual([1, 2]);
       });
-
-      it('should be immutable with a right placeholder', () => {
-        curry1 = fp.curry(2, toArray)(1, _);
-
-        curry1(4);
-        curry1(5);
-
-        expect(curry1(2)).toEqual([1, 2]);
-      });
-    });
-  });
-
-  describe('has a partial method', () => {
-    var spy;
-
-    beforeEach(() => {
-      spy = jasmine.createSpy('spy');
-    });
-
-    it('should exist on fp', () => {
-      expect(fp.partial)
-        .toEqual(jasmine.any(Function));
-    });
-
-    it('should be curried', () => {
-      expect(fp.partial(_, _, _)).toEqual(jasmine.any(Function));
-    });
-
-    it('should partially apply a function', () => {
-      fp.partial(2, spy, [1, 2])(3, 4);
-
-      expect(spy)
-        .toHaveBeenCalledOnceWith(1, 2, 3, 4);
-    });
-
-    it('should work as a nullary function', () => {
-      fp.partial(0, spy, [1, 2])(3, 4);
-
-      expect(spy)
-        .toHaveBeenCalledOnceWith(1, 2);
     });
   });
 
@@ -176,15 +143,12 @@ describe('the fp module', () => {
     });
 
     it('should map a list', () => {
-      expect(fp.map(add1, [1, 2, 3])).toEqual([2, 3, 4]);
-    });
-
-    it('should map a value', () => {
-      expect(fp.map(add1, 1)).toEqual(2);
+      expect(fp.map(add1, [1, 2, 3]))
+        .toEqual([2, 3, 4]);
     });
 
     it('should work with a placeholder', () => {
-      expect(fp.map(_, 1)(add1)).toEqual(2);
+      expect(fp.map(_, [1])(add1)).toEqual([2]);
     });
 
     it('should be unary\'d', () => {
@@ -220,10 +184,6 @@ describe('the fp module', () => {
       expect(fp.reduce).toEqual(jasmine.any(Function));
     });
 
-    it('should be curried', () => {
-      expect(fp.reduce(fp.__, fp.__)).toEqual(jasmine.any(Function));
-    });
-
     it('should reduce a list', () => {
       expect(fp.reduce(0, (x, y) => x + y, [1, 2, 3]))
         .toEqual(6);
@@ -237,16 +197,6 @@ describe('the fp module', () => {
       fp.reduce(0, fp.noop, obj);
 
       expect(obj.reduce).toHaveBeenCalledOnceWith(0, jasmine.any(Function));
-    });
-
-    it('should reduce a singular value', () => {
-      expect(fp.reduce(2, (x, y) => x * y, 3))
-        .toEqual(6);
-    });
-
-    it('should take an accumulator function', () => {
-      expect(fp.reduce(fp.always(5), (x, y) => x + y, 6))
-        .toEqual(11);
     });
   });
 
@@ -285,16 +235,12 @@ describe('the fp module', () => {
       expect(fp.pluck('foo', [{ foo: 'bar' }, { foo: 'baz' }])).toEqual(['bar', 'baz']);
     });
 
-    it('should pluck from a value', () => {
-      expect(fp.pluck('foo', { foo: 'bar' })).toEqual('bar');
-    });
-
     it('should be curried', () => {
       expect(fp.pluck('foo')).toEqual(jasmine.any(Function));
     });
 
     it('should work with a placeholder', () => {
-      expect(fp.pluck(_, { foo: 'bar' })('foo')).toEqual('bar');
+      expect(fp.pluck(_, ['bar'])(0)).toEqual(['b']);
     });
   });
 
@@ -368,43 +314,7 @@ describe('the fp module', () => {
       const add1 = x => x + 1;
       const mult2 = x => x * 2;
 
-      // mult2(add1(3))
       expect(fp.compose(mult2, add1)(3)).toEqual(8);
-    });
-  });
-
-  describe('has a flowN method', () => {
-    var adder, times2;
-    beforeEach(() => {
-      adder = (x, y) => {
-        return x + y;
-      };
-      times2 = (x) => {
-        return x * 2;
-      };
-    });
-    it('should exist on fp', () => {
-      expect(fp.flowN).toEqual(jasmine.any(Function));
-    });
-
-    it('should be curried', () => {
-      var curriedFlowN = fp.flowN(fp.__, [adder, times2]);
-      expect(curriedFlowN(2)(3, 4)).toEqual(14);
-    });
-
-    it('should provide a function with a forced arity', () => {
-      expect(fp.flowN(2, [adder, times2])(3)).toEqual(jasmine.any(Function));
-    });
-
-    it('should invoke a function with a forced arity when the arity is satisfied', () => {
-      const bang = x => x + '!';
-
-      expect(fp.flowN(2, [adder, times2, bang])(3, 4)).toEqual('14!');
-    });
-
-    it('should support gaps', () => {
-      var gappedFlown = fp.flowN(2, [adder, times2])(fp.__, 4);
-      expect(gappedFlown(3)).toEqual(14);
     });
   });
 
@@ -472,11 +382,6 @@ describe('the fp module', () => {
 
     it('should exist on fp', () => {
       expect(fp.differenceBy)
-        .toEqual(jasmine.any(Function));
-    });
-
-    it('should be curried', () => {
-      expect(fp.differenceBy(_, _, _))
         .toEqual(jasmine.any(Function));
     });
 
@@ -559,11 +464,6 @@ describe('the fp module', () => {
         .toEqual(jasmine.any(Function));
     });
 
-    it('should be curried', () => {
-      expect(fp.intersectionBy(_, _, _))
-        .toEqual(jasmine.any(Function));
-    });
-
     it('should tell intersection by id with results', () => {
       expect(fp.intersectionBy(x => x.id, a, b))
         .toEqual([
@@ -616,6 +516,11 @@ describe('the fp module', () => {
             container[key] = xs[key];
             return container;
           }, container);
+
+          if (typeof prop === 'string')
+            prop = prop.toString();
+
+          // $FlowIgnore: access is fine here
           out[prop] = v;
 
           return out;
@@ -646,11 +551,6 @@ describe('the fp module', () => {
     describe('has a lens method', () => {
       it('should exist on fp', () => {
         expect(fp.lens).toEqual(jasmine.any(Function));
-      });
-
-
-      it('should be curried', () => {
-        expect(fp.lens(_, _)).toEqual(jasmine.any(Function));
       });
     });
 
@@ -719,7 +619,11 @@ describe('the fp module', () => {
         var result;
 
         beforeEach(() => {
-          result = fp.over(propLens('name'), (name) => name + 'ard!', data);
+          result = fp.over(
+            propLens('name'),
+            name => `${name}ard!`,
+            data
+          );
         });
 
         it('should return data with a new name', () => {
@@ -902,10 +806,6 @@ describe('the fp module', () => {
           expect(fp.mapped).toEqual(jasmine.any(Function));
         });
 
-        it('should be curried', () => {
-          expect(fp.mapped(_, _)).toEqual(jasmine.any(Function));
-        });
-
         it('should map an array', () => {
           const result = fp.view(fp.compose(fp.mapped, fp.lensProp('name')), [
             {name: 'foo'},
@@ -1015,39 +915,44 @@ describe('the fp module', () => {
 
     beforeEach(() => {
       cond = fp.cond(
-        [(x) => {
-          return x === 0;
-        }, fp.always('water freezes at 0°C')
+        [
+          x => x === 0,
+          fp.always('water freezes at 0°C')
         ],
-        [(x) => {
-          return x === 100;
-        }, fp.always('water boils at 100°C')
+        [
+          x => x === 100,
+          fp.always('water boils at 100°C')
         ],
-        [fp.True, (temp) => {
-          return 'nothing special happens at ' + temp + '°C';
-        }
+        [
+          fp.True,
+          temp => `nothing special happens at ${temp}°C`
         ]
       );
     });
 
     it('should exist on fp', () => {
-      expect(fp.cond).toEqual(jasmine.any(Function));
+      expect(fp.cond)
+        .toEqual(jasmine.any(Function));
     });
 
     it('should freeze at 0', () => {
-      expect(cond(0)).toEqual('water freezes at 0°C');
+      expect(cond(0))
+        .toEqual('water freezes at 0°C');
     });
 
     it('should boil at 100', () => {
-      expect(cond(100)).toEqual('water boils at 100°C');
+      expect(cond(100))
+        .toEqual('water boils at 100°C');
     });
 
     it('should do nothing special at 50', () => {
-      expect(cond(50)).toEqual('nothing special happens at 50°C');
+      expect(cond(50))
+        .toEqual('nothing special happens at 50°C');
     });
 
     describe('with a successful predicate and empty evaluation', () => {
       ['', 0, null, undefined, false].forEach((curVal) => {
+        // $FlowIgnore: this works fine
         it(`should return ${curVal}`, () => {
           const identityOrVal = fp.cond(
             [fp.eq(undefined), fp.always(curVal)],
@@ -1056,28 +961,6 @@ describe('the fp module', () => {
           expect(identityOrVal(undefined)).toEqual(curVal);
         });
       });
-    });
-  });
-
-  describe('has a shallow clone method', () => {
-    it('should exist on fp', () => {
-      expect(fp.shallowClone).toEqual(jasmine.any(Function));
-    });
-
-    it('should clone an object', () => {
-      expect(fp.shallowClone({
-        x: 'foo',
-        y: ['bar']
-      }))
-        .toEqual({
-          x: 'foo',
-          y: ['bar']
-        });
-    });
-
-    it('should clone an array', () => {
-      expect(fp.shallowClone(['foo', 'bar']))
-        .toEqual(['foo', 'bar']);
     });
   });
 
@@ -1114,26 +997,15 @@ describe('the fp module', () => {
   });
 
   describe('has an invoke method', () => {
-    var spy, error;
+    var spy;
+
     beforeEach(() => {
       spy = jasmine.createSpy('spy');
-      error = new Error('Error in fp.invoke - Cannot call invoke with non-array');
     });
 
     it('should exist on fp', () => {
-      expect(fp.invoke).toEqual(jasmine.any(Function));
-    });
-
-    it('should throw if args are null', () => {
-      expect(() => {
-        fp.invoke(spy, null);
-      }).toThrow(error);
-    });
-
-    it('should throw an error if a non array is passed in', () => {
-      expect(() => {
-        fp.invoke(spy, 'some items');
-      }).toThrow(error);
+      expect(fp.invoke)
+        .toEqual(jasmine.any(Function));
     });
 
     it('should invoke the function with an array of items', () => {
@@ -1153,51 +1025,17 @@ describe('the fp module', () => {
         fn: spy2
       };
 
-      fp.pluck('fn', [x, y])
-        .forEach(fp.invoke(_, ['arg1', 2]));
+      fp.tap(
+        fp.invoke(_, ['arg1', 2]),
+        fp.pluck('fn', [x, y])
+      );
 
       expect(spy1).toHaveBeenCalledOnceWith('arg1', 2);
       expect(spy2).toHaveBeenCalledOnceWith('arg1', 2);
     });
   });
 
-  describe('has a safe method', () => {
-    var spy;
-
-    beforeEach(() => {
-      spy = jasmine.createSpy('spy');
-    });
-
-    it('should exist on fp', () => {
-      expect(fp.safe).toEqual(jasmine.any(Function));
-    });
-
-    it('should return the default if unsafe', () => {
-      expect(fp.safe(1, spy, {})(null))
-        .toEqual({});
-    });
-
-    it('should call the fn if safe', () => {
-      fp.safe(1, spy, {})('bar');
-
-      expect(spy)
-        .toHaveBeenCalledWith('bar');
-    });
-
-    it('should call the fn with multiple args', () => {
-      fp.safe(2, spy, {})('foo', 'bar');
-
-      expect(spy)
-        .toHaveBeenCalledWith('foo', 'bar');
-    });
-
-    it('should call the default if any args are unsafe', () => {
-      expect(fp.safe(2, spy, {})('foo', null))
-        .toEqual({});
-    });
-  });
-
-  describe('has a eqFn method', () => {
+  describe('has an eqFn method', () => {
     it('should exist on fp', () => {
       expect(fp.eqFn).toEqual(jasmine.any(Function));
     });
@@ -1243,6 +1081,8 @@ describe('the fp module', () => {
         fp.eq(5),
         fp.eq(6)
       ]);
+
+      (is5Or6:(p:number) => boolean);
     });
 
     it('should exist on fp', () => {
@@ -1317,7 +1157,7 @@ describe('the fp module', () => {
     });
 
     it('should be curried', () => {
-      expect(fp.bindMethod(fp.identity)).toEqual(jasmine.any(Function));
+      expect(fp.bindMethod('indexOf')).toEqual(jasmine.any(Function));
     });
 
     it('should return a bound method as a free floating function', () => {
@@ -1334,50 +1174,12 @@ describe('the fp module', () => {
     });
 
     it('should be curried', () => {
-      expect(fp.invokeMethod(fp.identity)).toEqual(jasmine.any(Function));
+      expect(fp.invokeMethod('foo')).toEqual(jasmine.any(Function));
     });
 
     it('should return a function that is bound and invoke that function', () => {
       const indexOfB = fp.invokeMethod('indexOf', ['b']);
       expect(indexOfB('abc')).toBe(1);
-    });
-  });
-
-  describe('has an invokeMethodN method', () => {
-    it('should exist on fp', () => {
-      expect(fp.invokeMethodN)
-        .toEqual(jasmine.any(Function));
-    });
-
-    it('should be curried', () => {
-      expect(fp.invokeMethodN(_, _, _))
-        .toEqual(jasmine.any(Function));
-    });
-
-    it('should return a function that is bound and invoke that function', () => {
-      const indexOf = fp.invokeMethodN(1, 'indexOf', 'abc');
-      expect(indexOf('b')).toBe(1);
-    });
-
-    it('should compose nicely with flow', () => {
-      const tests = ['', 'routes', 'lib', 'middleware', 'validators']
-        .map(fp.flow(
-          (p) => new RegExp(`${p}/[\\w-_]+\\.js$`),
-          fp.invokeMethodN(1, 'test')
-        ));
-
-      const paths = [
-        'path/foo.elm',
-        'routes/some-route.js',
-        'middleware/middle-ware.js',
-        'bar/baz.coffee'
-      ]
-        .filter(fp.anyPass(tests));
-
-      expect(paths).toEqual([
-        'routes/some-route.js',
-        'middleware/middle-ware.js'
-      ]);
     });
   });
 
@@ -1415,20 +1217,6 @@ describe('the fp module', () => {
         f: undefined
       });
     });
-
-    it('should throw an error if the keys are not an Array', () => {
-      expect(() => {
-        fp.zipObject({ key: 'val' }, 'test'.split(''));
-      })
-        .toThrowError(TypeError, 'zipObject keys must be an Array. Got: Object');
-    });
-
-    it('should throw an error if the values are not an Array', () => {
-      expect(() => {
-        fp.zipObject('abc'.split(''), { key: 'val' });
-      })
-        .toThrowError(TypeError, 'zipObject values must be an Array. Got: Object');
-    });
   });
 
   describe('has a some method', () => {
@@ -1447,11 +1235,6 @@ describe('the fp module', () => {
 
       expect(res).toBe(false);
     });
-
-    it('should work with a non-array', () => {
-      const gt15 = fp.some(x => x > 15);
-      expect(gt15(16)).toEqual(true);
-    });
   });
 
   describe('has an every method', () => {
@@ -1469,11 +1252,6 @@ describe('the fp module', () => {
       const res = fp.some(fp.eq(2), [2, 2, 2]);
 
       expect(res).toBe(true);
-    });
-
-    it('should work with a non-array', () => {
-      const gt15 = fp.every(x => x > 15);
-      expect(gt15(16)).toEqual(true);
     });
   });
 
@@ -1497,7 +1275,8 @@ describe('the fp module', () => {
 
   describe('has a head method', () => {
     it('should exist on fp', () => {
-      expect(fp.head).toEqual(jasmine.any(Function));
+      expect(fp.head)
+        .toEqual(jasmine.any(Function));
     });
 
     it('should pull the first value off an array', () => {
@@ -1581,7 +1360,11 @@ describe('the fp module', () => {
       beforeEach(() => {
         spy1 = jasmine.createSpy('spy1').and.callFake(fp.identity);
         spy2 = jasmine.createSpy('spy2').and.callFake(fp.identity);
-        chain = fp.flow.apply(null, fp.map(fp.either, [spy1, spy2]));
+
+        chain = fp.flow(
+          fp.either(spy1),
+          fp.either(spy2)
+        );
       });
 
       it('should pass errors', () => {
@@ -1650,117 +1433,36 @@ describe('the fp module', () => {
     });
   });
 
-  describe('has a maybe method', () => {
-    it('should exist on fp', () => {
-      expect(fp.maybe).toEqual(jasmine.any(Function));
-    });
-
-    it('should be curried', () => {
-      expect(fp.maybe(fp.__, fp.__)).toEqual(jasmine.any(Function));
-    });
-
-    describe('null handling', () => {
-      var spy;
-
-      beforeEach(() => {
-        spy = jasmine.createSpy('spy').and.callFake(x => x + 1);
-      });
-
-      it('should not invoke with a null token', () => {
-        fp.maybe(spy, null);
-
-        expect(spy).not.toHaveBeenCalled();
-      });
-
-      it('should return the result of the the invocation', () => {
-        const result = [1, 2, null]
-          .map(fp.maybe(spy));
-
-        expect(result).toEqual([2, 3, null]);
-      });
-    });
-  });
-
-  describe('has an unsafe method', () => {
-    it('should exist on fp', () => {
-      expect(fp.unsafe).toEqual(jasmine.any(Function));
-    });
-
-    it('should be curried', () => {
-      expect(fp.unsafe(fp.__)).toEqual(jasmine.any(Function));
-    });
-
-    describe('error handling', () => {
-      var spy1, spy2, chain;
-
-      beforeEach(() => {
-        spy1 = jasmine.createSpy('spy1').and.callFake(fp.identity);
-        spy2 = jasmine.createSpy('spy2').and.callFake(fp.identity);
-        chain = fp.flow.apply(null, fp.map(fp.unsafe, [spy1, spy2]));
-      });
-
-      it('should call spy1', () => {
-        chain(new Error('boom!'));
-        expect(spy1).toHaveBeenCalledOnceWith(new Error('boom!'));
-      });
-
-      it('should call spy2', () => {
-        chain(new Error('boom!'));
-        expect(spy2).toHaveBeenCalledOnceWith(new Error('boom!'));
-      });
-
-      it('should pass errors', () => {
-        expect(chain(new Error('boom!'))).toEqual(new Error('boom!'));
-      });
-    });
-
-    describe('non-error handling', () => {
-      var spy, result;
-
-      beforeEach(() => {
-        spy = jasmine.createSpy('spy').and.callFake(fp.identity);
-
-        result = fp.unsafe(spy, 'foo');
-      });
-
-      it('should treat non-errors as a right', () => {
-        expect(result).toBe('foo');
-      });
-
-      it('should not call fn', () => {
-        expect(spy).not.toHaveBeenCalled();
-      });
-    });
-  });
-
   describe('has a tail method', () => {
     it('should exist on fp', () => {
       expect(fp.tail).toEqual(jasmine.any(Function));
     });
 
-    it('should pull the last item from a list', () => {
+    it('should pull the rest of the list', () => {
       const items = [1, 2, 3];
-      expect(fp.tail(items)).toEqual(3);
+      expect(fp.tail(items)).toEqual([2, 3]);
     });
 
-    it('should return undefined if array is empty', () => {
-      expect(fp.tail([])).toBe(undefined);
+    it('should return an empty list if list is empty', () => {
+      expect(fp.tail([])).toEqual([]);
     });
 
     it('should work with a string', () => {
-      expect(fp.tail('foo')).toBe('o');
+      expect(fp.tail('foo')).toBe('oo');
     });
 
-    it('should return undefined when called with an empty string', () => {
-      expect(fp.tail('')).toBe(undefined);
+    it('should return an empty string when called with an empty string', () => {
+      expect(fp.tail('')).toBe('');
     });
   });
 
   describe('has a tap method', () => {
     var spy, result;
+
     beforeEach(() => {
       spy = jasmine.createSpy('spy');
-      result = fp.flow(fp.tap(spy), fp.invokeMethod('split', [',']))('1,2,3');
+
+      result = fp.tap(spy)([1]);
     });
 
     it('should exist on fp', () => {
@@ -1768,15 +1470,15 @@ describe('the fp module', () => {
     });
 
     it('should be curried', () => {
-      expect(fp.tap(fp.__, spy)).toEqual(jasmine.any(Function));
+      expect(fp.tap(fp.__, [])).toEqual(jasmine.any(Function));
     });
 
     it('should invoke the specified function with specified args', () => {
-      expect(spy).toHaveBeenCalledOnceWith('1,2,3');
+      expect(spy).toHaveBeenCalledOnceWith(1);
     });
 
     it('should carry the input through the tap', () => {
-      expect(result).toEqual(['1', '2', '3']);
+      expect(result).toEqual([1]);
     });
   });
 
@@ -1819,9 +1521,7 @@ describe('the fp module', () => {
   describe('has a chainL method', () => {
     var adder;
     beforeEach(() => {
-      adder = fp.chainL((a, b) => {
-        return a + b;
-      });
+      adder = fp.chainL((a, b) => a + b);
     });
 
     it('should exist on fp', () => {
@@ -1829,7 +1529,7 @@ describe('the fp module', () => {
     });
 
     it('should be curried', () => {
-      expect(fp.chainL(_)).toEqual(jasmine.any(Function));
+      expect(fp.chainL(_, [])).toEqual(jasmine.any(Function));
     });
 
     it('should reduce two values', () => {
@@ -1845,18 +1545,6 @@ describe('the fp module', () => {
     });
   });
 
-  describe('has a wrapArgs method', () => {
-    it('should exist on fp', () => {
-      expect(fp.wrapArgs).toEqual(jasmine.any(Function));
-    });
-
-    it('should invoke spy with an array of all arguments that were passed to the flow', () => {
-      const spy = jasmine.createSpy('spy');
-      fp.wrapArgs(fp.flow(spy))(1, 2, 3);
-      expect(spy).toHaveBeenCalledWith([1, 2, 3]);
-    });
-  });
-
   describe('xProd', () => {
     it('should exist on fp', () => {
       expect(fp.xProd).toEqual(jasmine.any(Function));
@@ -1868,56 +1556,32 @@ describe('the fp module', () => {
     });
   });
 
-  describe('flip', () => {
-    it('should exist on fp', () => {
-      expect(fp.flip).toEqual(jasmine.any(Function));
-    });
-
-    it('should be curried', () => {
-      expect(fp.flip(fp.__, fp.__)).toEqual(jasmine.any(Function));
-    });
-
-    it('should return a function', () => {
-      expect(fp.flip(2, fp.identity)).toEqual(jasmine.any(Function));
-    });
-
-    it('should curry the returned function', () => {
-      const flipper = fp.flip(2, fp.identity);
-      expect(flipper(fp.__, fp.__))
-        .toEqual(jasmine.any(Function));
-    });
-
-    it('should reverse args', () => {
-      const spy = jasmine.createSpy('spy');
-      fp.flip(4, spy)('d', 'c', 'b', 'a');
-
-      expect(spy).toHaveBeenCalledOnceWith('a', 'b', 'c', 'd');
-    });
-  });
-
   describe('anyPass', () => {
     var passes;
 
     beforeEach(() => {
-      const gt = fp.curry(2, (x, y) => y > x);
+      const gt = fp.curry2((x, y) => y > x);
 
-      passes = fp.anyPass([gt(9), gt(4), gt(5)]);
+      passes = fp.anyPass([
+        gt(9),
+        gt(4),
+        gt(5)
+      ]);
     });
 
     it('should exist on fp', () => {
-      expect(fp.anyPass).toEqual(jasmine.any(Function));
-    });
-
-    it('should be curried', () => {
-      expect(fp.anyPass(fp.__, fp.__)).toEqual(jasmine.any(Function));
+      expect(fp.anyPass)
+        .toEqual(jasmine.any(Function));
     });
 
     it('should return false if none pass', () => {
-      expect(passes(3)).toBe(false);
+      expect(passes([3]))
+        .toBe(false);
     });
 
     it('should return true if any pass', () => {
-      expect(passes(7)).toBe(true);
+      expect(passes([7]))
+        .toBe(true);
     });
   });
 
@@ -1934,10 +1598,6 @@ describe('the fp module', () => {
 
       it('should exist on fp', () => {
         expect(fp.zipBy).toEqual(jasmine.any(Function));
-      });
-
-      it('should be curried', () => {
-        expect(fp.zipBy(fp.__, fp.__, fp.__)).toEqual(jasmine.any(Function));
       });
 
       it('should invoke spy1 with dee', () => {
@@ -2048,10 +1708,6 @@ describe('the fp module', () => {
   describe('uniqBy', () => {
     it('should exist on fp', () => {
       expect(fp.uniqBy).toEqual(jasmine.any(Function));
-    });
-
-    it('should be curried', () => {
-      expect(fp.uniqBy(_, _)).toEqual(jasmine.any(Function));
     });
 
     it('should remove dups', () => {

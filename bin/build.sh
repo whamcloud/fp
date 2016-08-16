@@ -11,6 +11,6 @@ else
   babel -d dist "./source/fp.js"
 fi
 
-for i in $( find ./source -type f ); do
-  cp $i ./dist/$i.flow
+for i in $( find ./source/*.flow -type f ); do
+  cp $i ./dist/$i
 done

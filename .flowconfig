@@ -1,4 +1,5 @@
 [ignore]
+.*/fp/dist.*
 .*node_modules/babel-.*
 .*node_modules/babylon.*
 .*\(lib\|test\|builtin-modules\|binary-extensions\|faker\|spdx\).*\.json
@@ -6,5 +7,9 @@
 [include]
 
 [libs]
+node_modules/intel-flow-jasmine/flow-typed
 
 [options]
+module.use_strict=true
+experimental.strict_type_args=true
+suppress_comment= \\(.\\|\n\\)*\\$FlowIgnore
