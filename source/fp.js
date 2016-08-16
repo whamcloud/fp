@@ -158,7 +158,7 @@ export const over = curry3((lens, fn, xs) => lens(
 
 export const set = curry3((lens, value, xs) => over(lens, always(value), xs));
 
-const getValue = (x:{value: any}):any => x.value;
+const getValue = x => x.value;
 
 export const mapped = curry2((fn, x) => getIdentity(map(flow(fn, getValue), x)));
 
@@ -228,12 +228,12 @@ export const bindMethod = curry2((meth, obj) => obj[meth].bind(obj));
 
 export const invokeMethod = curry3((meth, args, obj) => obj[meth].apply(obj, args));
 
-export const zipObject = curry2((keys, vals) => {
-  return keys.reduce((obj, val, index) => {
+export const zipObject = curry2((keys, vals) =>
+  keys.reduce((obj, val, index) => {
     obj[val] = vals[index];
     return obj;
-  }, {});
-});
+  }, {})
+);
 
 export const unwrap = xs => xs.reduce((arr, x) => arr.concat(x), []);
 

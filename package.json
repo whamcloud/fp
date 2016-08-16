@@ -4,7 +4,6 @@
   "description": "A Functional Programming Lib.",
   "main": "dist/source/fp.js",
   "scripts": {
-    "jscs": "jscs .",
     "eslint": "eslint ./",
     "test:dev": "npm run postversion && npm t",
     "test": "NODE_ENV=test ./bin/test.js",
@@ -13,18 +12,13 @@
     "cover": "NODE_ENV=test ./bin/build.sh cover && nyc --reporter=text npm t"
   },
   "nyc": {
-    "include": [
-      "/"
-    ],
-    "exclude": [
-      "test"
-    ]
+    "sourceMap": false,
+    "instrument": false
   },
   "publishConfig": {
     "registry": "https://ubit-artifactory-or.intel.com/artifactory/api/npm/iml-npm-local"
   },
   "pre-commit": [
-    "jscs",
     "eslint",
     "test:dev"
   ],
@@ -35,23 +29,23 @@
   "author": "IML Team",
   "license": "MIT",
   "devDependencies": {
-    "babel-cli": "6.9.0",
-    "babel-core": "6.9.1",
-    "babel-eslint": "6.0.4",
-    "babel-plugin-__coverage__": "1.11.111",
+    "babel-cli": "6.11.4",
+    "babel-core": "6.13.2",
+    "babel-eslint": "6.1.2",
+    "babel-plugin-__coverage__": "11.0.0",
+    "babel-plugin-transform-class-properties": "6.11.5",
     "babel-plugin-transform-flow-strip-types": "6.8.0",
-    "babel-plugin-transform-strict-mode": "6.8.0",
-    "babel-preset-es2015": "6.9.0",
-    "eslint": "2.11.1",
-    "eslint-plugin-flow-vars": "0.4.0",
-    "eslint-plugin-flowtype": "2.2.7",
+    "babel-plugin-transform-strict-mode": "6.11.3",
+    "babel-preset-es2015": "6.13.2",
+    "eslint": "3.3.1",
+    "eslint-plugin-flow-vars": "0.5.0",
+    "eslint-plugin-flowtype": "2.7.0",
     "immutable": "3.8.1",
-	"intel-flow-jasmine": "1.1.0",
+    "intel-flow-jasmine": "1.3.0",
     "intel-jasmine-junit-reporter": "1.0.0",
     "intel-jasmine-n-matchers": "2.1.1",
     "jasmine": "2.4.1",
-    "jscs": "2.11.0",
-    "nyc": "6.4.4",
+    "nyc": "8.1.0",
     "pre-commit": "1.1.3"
   }
 }

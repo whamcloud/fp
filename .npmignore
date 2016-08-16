@@ -4,7 +4,6 @@
 .eslintrc
 .flowconfig
 .gitignore
-.jscsrc
 .idea
 npm-shrinkwrap.json
 node_modules
