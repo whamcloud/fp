@@ -348,3 +348,7 @@ declare export function zipBy<T1,T2,R>(fn:reducer<T1,T2,R>, ...rest:Array<NO_MOR
 declare export function zipBy<T1,T2,R>(fn:placeHolder, left:Array<T1>, right:Array<T2>, ...rest:Array<NO_MORE_ARGS>):Curry1<reducer<T1,T2,R>, Array<R>>;
 declare export function zipBy<T1,T2,R>(fn:reducer<T1,T2,R>, left:placeHolder, right:Array<T2>, ...rest:Array<NO_MORE_ARGS>):Curry1<Array<T1>, Array<R>>;
 declare export function zipBy<T1,T2,R>(fn:placeHolder, left:placeHolder, right:Array<T2>, ...rest:Array<NO_MORE_ARGS>):Curry2<reducer<T1,T2,R>, Array<T1>, Array<R>>;
+
+declare export function times <T>(fn:(p:number) => T, num:number):T[];
+declare export function times <T>(fn:(p:number) => T, ...rest:Array<NO_MORE_ARGS>):Curry1<number, T[]>;
+declare export function times <T>(fn:placeHolder, num:number, ...rest:Array<NO_MORE_ARGS>):Curry1<(p:number) => T, T[]>;

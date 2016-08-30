@@ -326,3 +326,15 @@ export const uniqBy = curry2((fn, xs) => {
 
   return out;
 });
+
+export const times = curry2((fn, num) => {
+  const list = [];
+  let idx = 0;
+
+  while (idx < num) {
+    list[idx] = fn(idx);
+    idx += 1;
+  }
+
+  return list;
+});
