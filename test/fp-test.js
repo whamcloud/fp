@@ -1768,4 +1768,28 @@ describe('the fp module', () => {
       ]);
     });
   });
+
+  describe('times', () => {
+    it('should exist on fp', () => {
+      expect(fp.times)
+        .toEqual(jasmine.any(Function));
+    });
+
+    it('should execute a fn n times', () => {
+      const result = fp.times(
+        x => x + 1,
+        5
+      );
+
+      expect(result)
+        .toEqual([1, 2, 3, 4, 5]);
+    });
+
+    it('should be curried', () => {
+      const result = fp.times(_, 5)(x => x + 1);
+
+      expect(result)
+        .toEqual([1, 2, 3, 4, 5]);
+    });
+  });
 });
