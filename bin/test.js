@@ -2,8 +2,8 @@
 
 'use strict';
 
-var Jasmine = require('jasmine');
-var jasmine = new Jasmine();
+const Jasmine = require('jasmine');
+const jasmine = new Jasmine();
 require('@mfl/jasmine-n-matchers');
 
 jasmine.loadConfig({

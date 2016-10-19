@@ -19,69 +19,39 @@
 // otherwise. Any license under such intellectual property rights must be
 // express and approved by Intel in writing.
 
+export const unary = fn => x => fn(x);
 
-export const __ = {
-  '@@functional/placeholder': true
-};
+export const curry2 = fn => curryWrap(2, fn);
 
-function _type (val):string {
-  if (val === null)
-    return 'Null';
-  else if (val === undefined)
-    return 'Undefined';
-  else
-    return Object.prototype.toString
-      .call(val)
-      .slice(8, -1);
-}
+export const curry3 = fn => curryWrap(3, fn);
 
-export const curry0 = fn => curry(0, fn);
+export const curry4 = fn => curryWrap(4, fn);
 
-export const curry1 = fn => curry(1, fn);
+export const curry5 = fn => curryWrap(5, fn);
 
-export const curry2 = fn => curry(2, fn);
+export const curry6 = fn => curryWrap(6, fn);
 
-export const curry3 = fn => curry(3, fn);
+function curryWrap (arity, fn) {
+  return function curry (...args) {
+    args = args.slice(0, arity);
 
-export const curry4 = fn => curry(4, fn);
+    return args.length === arity ? fn(...args) : buildArgs;
 
-function curry (n, fn) {
-  return function innerCurry () {
-    var args = new Array(arguments.length);
-    for (var i = 0, l = arguments.length; i < l; i++)
-      args[i] = arguments[i];
-
-    var gaps = n - args.length;
-    gaps += args
-      .filter(x => x === __)
-      .length;
-
-    if (gaps > 0)
-      return curry (gaps, (...innerArgs) => {
-        const filledArgs = args.map(x => {
-
-          if (x === __)
-            return innerArgs.shift();
-
-          return x;
-        });
-
-        return fn.apply(null, filledArgs.concat(innerArgs).slice(0, n));
-      });
-    else
-      return fn.apply(null, args.slice(0, n));
+    function buildArgs (...moreArgs) {
+      return curry(...args.concat(moreArgs));
+    }
   };
 }
 
-export const map = curry2((fn, xs) => xs.map(curry1(fn)));
+export const map = curry2((fn, xs) => xs.map(unary(fn)));
 
-export const filter = curry2((fn, xs) => xs.filter(curry1(fn)));
+export const filter = curry2((fn, xs) => xs.filter(unary(fn)));
 
 export const tap = curry2((fn, xs) => {
   if (typeof xs.tap === 'function')
-    xs = xs.tap(curry1(fn));
+    xs = xs.tap(unary(fn));
   else
-    xs.forEach(curry1(fn));
+    xs.forEach(unary(fn));
 
   return xs;
 });
@@ -90,9 +60,9 @@ export const reduce = curry3((accum, f, xs) => {
   return (Array.isArray(xs)) ? xs.reduce(curry2(f), accum) : xs.reduce(accum, curry2(f));
 });
 
-export const some = curry2((fn, xs) => xs.some(curry1(fn)));
+export const some = curry2((fn, xs) => xs.some(unary(fn)));
 
-export const every = curry2((fn, xs) => xs.every(curry(1, fn)));
+export const every = curry2((fn, xs) => xs.every(unary(fn)));
 
 export const find = curry2((fn, xs) => filter(fn, xs)[0]);
 
@@ -125,7 +95,7 @@ export const differenceBy = curry3(function differenceBy (fn, xs, ys) {
 
 export const difference = differenceBy(identity);
 
-export const intersectionBy = curry(3, function intersectionBy <T>(fn:(p:T) => mixed, xs:T[], ys:T[]):T[] {
+export const intersectionBy = curry3((fn, xs, ys) => {
   const result = xs.reduce((arr:T[], x:T) => {
     if (find(y => fn(x) === fn(y), ys))
       arr.push(x);
@@ -187,7 +157,7 @@ export const flow = (...fns) => (...args) => fns.reduce(
 export const compose = (...fns) => flow.apply(null, fns.reverse());
 
 export const cond = (...args) => x => {
-  var result;
+  let result;
 
   args.some(pair => {
     if (pair[0](x)) {
@@ -203,7 +173,7 @@ export const cond = (...args) => x => {
 export const not = x => !x;
 
 export const eq = curry2(
-  (a, b) => _type(a) === 'Object' && typeof a.equals === 'function' ?
+  (a, b) => a && typeof a.equals === 'function' ?
   a.equals(b) :
   a === b
 );
@@ -241,10 +211,12 @@ export const head = xs => xs[0];
 
 export const tail = xs => xs.slice(1);
 
+export const last = xs => xs.slice(-1)[0];
+
 export const arrayWrap = x => [x];
 
 export function once (fn) {
-  var called = false;
+  let called = false;
 
   return function innerOnce () {
     if (called)
@@ -258,7 +230,7 @@ export function once (fn) {
 
 export const either = curry2((fn, x) => x instanceof Error ? x : fn(x));
 
-export const mapFn = curry2((fns, args) => map(invoke(__, args), fns));
+export const mapFn = curry2((fns, args) => map(x => invoke(x, args), fns));
 
 export const chainL = curry2((fn, args) => args.reduce(curry2(fn)));
 
@@ -275,7 +247,7 @@ export const xProd = curry2((a, b) => {
 export const anyPass = curry2((fns, x) => some(fn => fn(x), fns));
 
 export const zipBy = curry3((fn, left, right) => {
-  var min = Math.min(left.length, right.length);
+  const min = Math.min(left.length, right.length);
   left.length = min;
   right.length = min;
 
@@ -288,7 +260,7 @@ export const memoize = fn => {
   const cache = [];
 
   return function memo (...args) {
-    var result;
+    let result;
 
     const match = cache.some(xs => {
       const cacheHit = args.length === xs.length - 1 && args.every((x, idx) => x === xs[idx]);
