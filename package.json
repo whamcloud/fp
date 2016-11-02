@@ -30,6 +30,9 @@
   },
   "author": "MFL Team",
   "license": "MIT",
+  "dependencies": {
+    "intel-maybe": "2.0.0"
+  },
   "devDependencies": {
     "babel-cli": "6.18.0",
     "babel-core": "6.18.2",

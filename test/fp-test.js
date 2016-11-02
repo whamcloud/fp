@@ -1,5 +1,12 @@
 // @flow
 
+import * as fp from '../source/fp.js';
+import * as maybe from 'intel-maybe';
+
+import type {
+  Maybe
+} from 'intel-maybe';
+
 import {
   describe,
   beforeEach,
@@ -7,8 +14,6 @@ import {
   expect,
   jasmine
 } from './jasmine';
-
-import * as fp from '../source/fp.js';
 
 import {
   Map,
@@ -131,23 +136,33 @@ describe('the fp module', () => {
 
   describe('has a find method', () => {
     it('should exist on fp', () => {
-      expect(fp.find).toEqual(jasmine.any(Function));
+      expect(fp.find)
+        .toEqual(jasmine.any(Function));
     });
 
     it('should find a value', () => {
-      const result = fp.find(fp.eq(3), [1, 2, 3]);
+      const result:Maybe<number> = fp
+        .find(fp.eq(3), [1, 2, 3]);
 
-      expect(result)
-        .toEqual(3);
+      expect(maybe.from(result))
+        .toBe(3);
     });
 
     it('should be curried', () => {
-      expect(fp.find(fp.eq(1))([1, 2, 3]))
-        .toEqual(1);
+      const result:Maybe<number> = fp.find(fp.eq(1))([1, 2, 3]);
+
+      expect(
+        maybe.from(result)
+      )
+        .toBe(1);
     });
 
     it('should return undefined on no match', () => {
-      expect(fp.find(fp.eq(10), [1, 2, 3]))
+      expect(
+        maybe.from(
+          fp.find(fp.eq(10), [1, 2, 3])
+        )
+      )
         .toBe(undefined);
     });
   });
@@ -1162,19 +1177,28 @@ describe('the fp module', () => {
     });
 
     it('should pull the first value off an array', () => {
-      expect(fp.head([1, 2, 3])).toBe(1);
+      expect(
+        maybe.from(fp.head([1, 2, 3]))
+      )
+        .toBe(1);
     });
 
     it('should return undefined if array is empty', () => {
-      expect(fp.head([])).toBe(undefined);
+      expect(
+        maybe.from(fp.head([]))
+      ).toBe(undefined);
     });
 
     it('should work with a string', () => {
-      expect(fp.head('foo')).toBe('f');
+      expect(
+        maybe.from(fp.head('foo'))
+      ).toBe('f');
     });
 
     it('should return undefined when called with an empty string', () => {
-      expect(fp.head('')).toBe(undefined);
+      expect(
+        maybe.from(fp.head(''))
+      ).toBe(undefined);
     });
   });
 
@@ -1343,28 +1367,34 @@ describe('the fp module', () => {
     it('should pull the last element', () => {
       const items = [1, 2, 3];
 
-      expect(fp.last(items))
+      expect(
+        maybe.from(fp.last(items)))
         .toBe(3);
     });
 
     it('should return undefined if the list is empty', () => {
-      expect(fp.last([]))
+      expect(
+        maybe.from(fp.last([]))
+      )
         .toBe(undefined);
     });
 
     it('should work with a string', () => {
-      expect(fp.last('foo'))
+      expect(
+        maybe.from(fp.last('foo'))
+      )
         .toBe('o');
     });
 
     it('should return undefined when called with an empty string', () => {
-      expect(fp.last(''))
+      expect(maybe.from(fp.last('')))
         .toBe(undefined);
     });
   });
 
   describe('has a tap method', () => {
-    let spy, result;
+    let spy,
+      result;
 
     beforeEach(() => {
       spy = jasmine.createSpy('spy');

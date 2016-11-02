@@ -19,9 +19,13 @@
 // otherwise. Any license under such intellectual property rights must be
 // express and approved by Intel in writing.
 
+import * as maybe from 'intel-maybe';
+
 export const unary = fn => x => fn(x);
 
-export const curry2 = fn => curryWrap(2, fn);
+export function curry2 (fn) {
+  return curryWrap(2, fn);
+}
 
 export const curry3 = fn => curryWrap(3, fn);
 

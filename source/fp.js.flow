@@ -21,6 +21,10 @@
 // otherwise. Any license under such intellectual property rights must be
 // express and approved by Intel in writing.
 
+import type {
+  Maybe
+} from 'intel-maybe';
+
 type typeToAny<T> = (x:T) => any;
 type manyToAny = (...rest:Array<any>) => any;
 type anyToAny = (x:any) => any;
@@ -106,8 +110,8 @@ declare export function intersectionBy <A>(fn:Fn1<A, mixed>, xs:A[], ...rest:emp
 declare export function difference<A>(xs:A[], ys:A[], ...rest:empty[]):A[];
 declare export function difference<A>(xs:A[], ...rest:empty[]):Fn1<A[], A[]>;
 
-declare export function find<A>(fn:Fn1<A, boolean>, xs:Array<A>, ...rest:empty[]): A | void;
-declare export function find<A>(fn:Fn1<A, boolean>, ...rest:empty[]):Fn1<Array<A>, A | void>;
+declare export function find<A>(fn:Fn1<A, boolean>, xs:Array<A>, ...rest:empty[]): Maybe<A>;
+declare export function find<A>(fn:Fn1<A, boolean>, ...rest:empty[]):Fn1<Array<A>, Maybe<A>>;
 
 declare export function pluck<A,B>(key:string | number, xs:A[], ...rest:empty[]):B[];
 declare export function pluck<A,B>(key:string | number, ...rest:empty[]):Fn1<A[], B[]>;
@@ -121,14 +125,14 @@ declare export function not(x:any):boolean;
 
 declare export function identity<A>(x:A):A;
 
-declare export function head<A>(xs:A[], ...rest:empty[]):A | void;
-declare export function head<A:string>(xs:A, ...rest:empty[]):A | void;
+declare export function head<A>(xs:A[], ...rest:empty[]):Maybe<A>;
+declare export function head<A:string>(xs:A, ...rest:empty[]):Maybe<A>;
 
-declare export function tail<A>(xs:A[], ...rest:empty[]):A[] | void;
+declare export function tail<A>(xs:A[], ...rest:empty[]):A[];
 declare export function tail<A:string>(xs:A, ...rest:empty[]):A;
 
-declare export function last<A>(xs:A[], ...rest:empty[]):A | void;
-declare export function last<A:string>(xs:A, ...rest:empty[]):A | void;
+declare export function last<A>(xs:A[], ...rest:empty[]):Maybe<A>;
+declare export function last<A:string>(xs:A, ...rest:empty[]):Maybe<A>;
 
 declare export function unwrap(xs:Array<any>):Array<any>;
 

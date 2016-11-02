@@ -3,6 +3,10 @@
 import * as fp from '../source/fp.js';
 
 import type {
+  Maybe
+} from 'intel-maybe';
+
+import type {
   Fn1,
   Fn2
 } from '../source/fp.js';
@@ -45,3 +49,5 @@ const tappit2 = fp.tap((x:string) => x + 'bar');
 
 (fp.tap(tappit, ['foo']):Array<string>);
 (fp.tap(tappit)(['foo']):Array<string>);
+
+(fp.find((x:number) => x === 3, []):Maybe<number>);
