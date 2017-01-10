@@ -5,16 +5,10 @@
   "main": "dist/source/fp.js",
   "scripts": {
     "eslint": "eslint ./",
-    "test:dev": "npm run postversion && npm t",
-    "test": "NODE_ENV=test ./bin/test.js",
+    "test": "jest",
+    "cover": "NODE_ENV=test yarn test -- --coverage",
     "postversion": "./bin/build.sh",
-    "flow": "flow",
-    "cover:dev": "npm run cover -- --reporter=html",
-    "cover": "NODE_ENV=test ./bin/build.sh cover && nyc --reporter=text npm t"
-  },
-  "nyc": {
-    "sourceMap": false,
-    "instrument": false
+    "flow": "flow"
   },
   "publishConfig": {
     "access": "public"
@@ -22,35 +16,40 @@
   "pre-commit": [
     "flow",
     "eslint",
-    "test:dev"
+    "test"
   ],
   "repository": {
     "type": "git",
     "url": "git@github.com:intel-hpdd/fp.git"
   },
+  "jest": {
+    "setupTestFrameworkScriptFile": "./setup-jasmine-env.js",
+    "coveragePathIgnorePatterns": [
+      "/node_modules/",
+      "/setup-jasmine-env.js",
+      "/dist",
+      "/test"
+    ]
+  },
   "author": "MFL Team",
   "license": "MIT",
   "dependencies": {
-    "intel-maybe": "2.0.0"
+    "intel-maybe": "2.1.0"
   },
   "devDependencies": {
     "babel-cli": "6.18.0",
-    "babel-core": "6.18.2",
-    "babel-eslint": "7.1.0",
-    "babel-plugin-__coverage__": "11.0.0",
-    "babel-plugin-transform-class-properties": "6.18.0",
-    "babel-plugin-transform-flow-strip-types": "6.18.0",
-    "babel-plugin-transform-strict-mode": "6.18.0",
-    "babel-preset-es2015": "6.18.0",
-    "eslint": "3.9.1",
-    "eslint-plugin-flowtype": "2.25.0",
-    "eslint-plugin-import": "2.0.1",
-    "flow-bin": "0.34.0",
+    "babel-core": "6.21.0",
+    "babel-eslint": "7.1.1",
+    "babel-plugin-transform-flow-strip-types": "6.21.0",
+    "babel-preset-env": "1.1.7",
+    "eslint": "3.13.1",
+    "eslint-plugin-flowtype": "2.29.2",
+    "eslint-plugin-import": "2.2.0",
+    "flow-bin": "0.37.4",
     "immutable": "3.8.1",
-    "@mfl/flow-jasmine": "1.5.0",
+    "@mfl/flow-jasmine": "1.6.0",
     "@mfl/jasmine-n-matchers": "2.1.1",
-    "jasmine": "2.5.2",
-    "nyc": "8.3.2",
-    "pre-commit": "1.1.3"
+    "jest": "18.1.0",
+    "pre-commit": "1.2.2"
   }
 }

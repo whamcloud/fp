@@ -52,10 +52,7 @@ export const map = curry2((fn, xs) => xs.map(unary(fn)));
 export const filter = curry2((fn, xs) => xs.filter(unary(fn)));
 
 export const tap = curry2((fn, xs) => {
-  if (typeof xs.tap === 'function')
-    xs = xs.tap(unary(fn));
-  else
-    xs.forEach(unary(fn));
+  xs.forEach(unary(fn));
 
   return xs;
 });

@@ -5,12 +5,12 @@
 .flowconfig
 .gitignore
 .idea
-npm-shrinkwrap.json
+yarn.lock
+setup-jasmine-env.js
 node_modules
 /bin
 /source
 /test
 /coverage
-/.nyc_output
 *.log
 run_test.sh
