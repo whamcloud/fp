@@ -12,6 +12,7 @@ node_modules
 /source
 /test
 /coverage
+/dist/test
 *.log
 run_test.sh
 readme.md
