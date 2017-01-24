@@ -2,12 +2,11 @@
   "name": "@mfl/fp",
   "version": "7.0.4",
   "description": "A Functional Programming Lib.",
-  "main": "dist/source/fp.js",
+  "main": "source/fp.js",
   "scripts": {
     "eslint": "eslint ./",
     "test": "jest",
     "cover": "NODE_ENV=test yarn test -- --coverage",
-    "postversion": "./bin/build.sh",
     "flow": "flow"
   },
   "publishConfig": {
@@ -27,18 +26,15 @@
     "coveragePathIgnorePatterns": [
       "/node_modules/",
       "/setup-jasmine-env.js",
-      "/dist",
       "/test"
     ]
   },
   "author": "MFL Team",
   "license": "MIT",
   "dependencies": {
-    "intel-maybe": "2.1.0"
+    "@iml/maybe": "^2.1.1"
   },
   "devDependencies": {
-    "babel-cli": "6.18.0",
-    "babel-core": "6.21.0",
     "babel-eslint": "7.1.1",
     "babel-plugin-transform-flow-strip-types": "6.21.0",
     "babel-preset-env": "1.1.8",
