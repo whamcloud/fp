@@ -1,6 +1,6 @@
 {
   "name": "@mfl/fp",
-  "version": "7.0.4",
+  "version": "7.0.5",
   "description": "A Functional Programming Lib.",
   "main": "source/fp.js",
   "scripts": {
