@@ -21,24 +21,82 @@
 // otherwise. Any license under such intellectual property rights must be
 // express and approved by Intel in writing.
 
-import type {
-  Maybe
-} from 'intel-maybe';
+import type { Maybe } from '@iml/maybe';
 
-type typeToAny<T> = (x:T) => any;
-type manyToAny = (...rest:Array<any>) => any;
-type anyToAny = (x:any) => any;
-type container = (Array<?any> | Object | Function);
+type typeToAny<T> = (x: T) => any;
+type manyToAny = (...rest: Array<any>) => any;
+type anyToAny = (x: any) => any;
+type container = Array<?any> | Object | Function;
 
-export type Fn1<A, B> = (a:A, ...rest:empty[]) => B;
-export type Fn2<A, B, C> = (a:A, b:B, ...rest:empty[]) => C;
-export type Fn3<A, B, C, D> = (a:A, b:B, c:C, ...rest:empty[]) => D;
-export type Fn4<A, B, C, D, E> = (a:A, b:B, c:C, d:D, ...rest:empty[]) => E;
-export type Fn5<A, B, C, D, E, F> = (a: A, b: B, c: C, d: D, e: E, ...rest:empty[]) => F;
-export type Fn6<A, B, C, D, E, F, G> = (a: A, b: B, c: C, d: D, e: E, f: F, ...rest:empty[]) => G;
-export type Fn7<A, B, C, D, E, F, G, H> = (a: A, b: B, c: C, d: D, e: E, f: F, g: G, ...rest:empty[]) => H;
-export type Fn8<A, B, C, D, E, F, G, H, I> = (a: A, b: B, c: C, d: D, e: E, f: F, g: G, h: H, ...rest:empty[]) => I;
-export type Fn9<A, B, C, D, E, F, G, H, I, L> = (a: A, b: B, c: C, d: D, e: E, f: F, g: G, h: H, i: I, ...rest:empty[]) => L;
+export type Fn1<A, B> = (a: A, ...rest: empty[]) => B;
+export type Fn2<A, B, C> = (
+  a: A,
+  b: B,
+  ...rest: empty[]
+) => C;
+export type Fn3<A, B, C, D> = (
+  a: A,
+  b: B,
+  c: C,
+  ...rest: empty[]
+) => D;
+export type Fn4<A, B, C, D, E> = (
+  a: A,
+  b: B,
+  c: C,
+  d: D,
+  ...rest: empty[]
+) => E;
+export type Fn5<A, B, C, D, E, F> = (
+  a: A,
+  b: B,
+  c: C,
+  d: D,
+  e: E,
+  ...rest: empty[]
+) => F;
+export type Fn6<A, B, C, D, E, F, G> = (
+  a: A,
+  b: B,
+  c: C,
+  d: D,
+  e: E,
+  f: F,
+  ...rest: empty[]
+) => G;
+export type Fn7<A, B, C, D, E, F, G, H> = (
+  a: A,
+  b: B,
+  c: C,
+  d: D,
+  e: E,
+  f: F,
+  g: G,
+  ...rest: empty[]
+) => H;
+export type Fn8<A, B, C, D, E, F, G, H, I> = (
+  a: A,
+  b: B,
+  c: C,
+  d: D,
+  e: E,
+  f: F,
+  g: G,
+  h: H,
+  ...rest: empty[]
+) => I;
+export type Fn9<A, B, C, D, E, F, G, H, I, L> = (
+  a: A,
+  b: B,
+  c: C,
+  d: D,
+  e: E,
+  f: F,
+  g: G,
+  h: H,
+  i: I,
+  ...rest: empty[]
+) => L;
 
 export type Curry2<A, B, C> =
   & Fn1<A, Fn1<B, C>>
@@ -70,162 +128,546 @@ export type Curry6<A, B, C, D, E, F, G> =
   & Fn5<A, B, C, D, E, Fn1<F, G>>
   & Fn6<A, B, C, D, E, F, G>;
 
-declare export function unary<A, B> (fn:Fn1<A, B>):Fn1<A, B>;
-declare export function curry2<A, B, C> (fn:Fn2<A, B, C>):Curry2<A, B, C>;
-declare export function curry3<A, B, C, D> (fn:Fn3<A, B, C, D>):Curry3<A, B, C, D>;
-declare export function curry4<A, B, C, D, E> (fn:Fn4<A, B, C, D, E>):Curry4<A, B, C, D, E>;
-declare export function curry5<A, B, C, D, E, F> (fn:Fn5<A, B, C, D, E, F>):Curry5<A, B, C, D, E, F>;
-declare export function curry6<A, B, C, D, E, F, G> (fn:Fn6<A, B, C, D, E, F, G>):Curry6<A, B, C, D, E, F, G>;
+declare export function unary<A, B>(
+  fn: Fn1<A, B>
+): Fn1<A, B>;
+declare export function curry2<A, B, C>(
+  fn: Fn2<A, B, C>
+): Curry2<A, B, C>;
+declare export function curry3<A, B, C, D>(
+  fn: Fn3<A, B, C, D>
+): Curry3<A, B, C, D>;
+declare export function curry4<A, B, C, D, E>(
+  fn: Fn4<A, B, C, D, E>
+): Curry4<A, B, C, D, E>;
+declare export function curry5<A, B, C, D, E, F>(
+  fn: Fn5<A, B, C, D, E, F>
+): Curry5<A, B, C, D, E, F>;
+declare export function curry6<A, B, C, D, E, F, G>(
+  fn: Fn6<A, B, C, D, E, F, G>
+): Curry6<A, B, C, D, E, F, G>;
 
-declare export function map<A,B>(fn:Fn1<A, B>, xs:A[], ...rest:empty[]):B[];
-declare export function map<A,B>(fn:Fn1<A, B>, ...rest:empty[]):Fn1<A[], B[]>;
+declare export function map<A, B>(
+  fn: Fn1<A, B>,
+  xs: A[],
+  ...rest: empty[]
+): B[];
+declare export function map<A, B>(
+  fn: Fn1<A, B>,
+  ...rest: empty[]
+): Fn1<A[], B[]>;
 
-declare export function tap<A>(fn:Fn1<A, any>, xs:A[], ...rest:empty[]):A[];
-declare export function tap<A>(fn:Fn1<A, any>, ...rest:empty[]):Fn1<A[], A[]>;
+declare export function tap<A>(
+  fn: Fn1<A, any>,
+  xs: A[],
+  ...rest: empty[]
+): A[];
+declare export function tap<A>(
+  fn: Fn1<A, any>,
+  ...rest: empty[]
+): Fn1<A[], A[]>;
 
-declare export function filter<A>(fn:Fn1<A, boolean>, xs:A[], ...rest:empty[]):A[];
-declare export function filter<A>(fn:Fn1<A, boolean>, ...rest:empty[]):Fn1<A[], A[]>;
+declare export function filter<A>(
+  fn: Fn1<A, boolean>,
+  xs: A[],
+  ...rest: empty[]
+): A[];
+declare export function filter<A>(
+  fn: Fn1<A, boolean>,
+  ...rest: empty[]
+): Fn1<A[], A[]>;
 
-declare export function some<A>(fn:Fn1<A, boolean>, xs:Array<A>, ...rest:empty[]):boolean;
-declare export function some<A>(fn:Fn1<A, boolean>, ...rest:empty[]):Fn1<Array<A>, boolean>;
+declare export function some<A>(
+  fn: Fn1<A, boolean>,
+  xs: Array<A>,
+  ...rest: empty[]
+): boolean;
+declare export function some<A>(
+  fn: Fn1<A, boolean>,
+  ...rest: empty[]
+): Fn1<Array<A>, boolean>;
 
-declare export function anyPass<A>(fns:Fn1<A, boolean>[], xs:A[], ...rest:empty[]):boolean;
-declare export function anyPass<A>(fns:Fn1<A, boolean>[], ...rest:empty[]):Fn1<A[], boolean>;
+declare export function anyPass<A>(
+  fns: Fn1<A, boolean>[],
+  xs: A[],
+  ...rest: empty[]
+): boolean;
+declare export function anyPass<A>(
+  fns: Fn1<A, boolean>[],
+  ...rest: empty[]
+): Fn1<A[], boolean>;
 
-declare export function every<A>(fn:Fn1<A, boolean>, xs:Array<A>, ...rest:empty[]):boolean;
-declare export function every<A>(fn:Fn1<A, boolean>, ...rest:empty[]):Fn1<Array<A>, boolean>;
+declare export function every<A>(
+  fn: Fn1<A, boolean>,
+  xs: Array<A>,
+  ...rest: empty[]
+): boolean;
+declare export function every<A>(
+  fn: Fn1<A, boolean>,
+  ...rest: empty[]
+): Fn1<Array<A>, boolean>;
 
-declare export function reduce<A,B>(accum:A, f:Fn2<A, B, A>, xs:Array<B>, ...rest:empty[]):A;
-declare export function reduce<A,B>(accum:A, f:Fn2<A, B, A>, ...rest:empty[]):Fn1<Array<B>, A>;
-declare export function reduce<A,B>(accum:A, ...rest:empty[]):Fn2<Fn2<A, B, A>, Array<B>, A>;
+declare export function reduce<A, B>(
+  accum: A,
+  f: Fn2<A, B, A>,
+  xs: Array<B>,
+  ...rest: empty[]
+): A;
+declare export function reduce<A, B>(
+  accum: A,
+  f: Fn2<A, B, A>,
+  ...rest: empty[]
+): Fn1<Array<B>, A>;
+declare export function reduce<A, B>(
+  accum: A,
+  ...rest: empty[]
+): Fn2<Fn2<A, B, A>, Array<B>, A>;
 
-declare export function differenceBy<A>(fn:Fn1<A, mixed>, xs:A[], ys:A[]):A[];
-declare export function differenceBy<A>(fn:Fn1<A, mixed>, xs:A[], ...rest:empty[]):Fn1<A[], A[]>;
-declare export function differenceBy<A>(fn:Fn1<A, mixed>, ...rest:empty[]):Curry2<A[], A[], A[]>;
+declare export function differenceBy<A>(
+  fn: Fn1<A, mixed>,
+  xs: A[],
+  ys: A[]
+): A[];
+declare export function differenceBy<A>(
+  fn: Fn1<A, mixed>,
+  xs: A[],
+  ...rest: empty[]
+): Fn1<A[], A[]>;
+declare export function differenceBy<A>(
+  fn: Fn1<A, mixed>,
+  ...rest: empty[]
+): Curry2<A[], A[], A[]>;
 
-declare export function intersectionBy <A>(fn:Fn1<A, mixed>, xs:A[], ys:A[]):A[];
-declare export function intersectionBy <A>(fn:Fn1<A, mixed>, ...rest:empty[]):Curry2<A[], A[], A[]>;
-declare export function intersectionBy <A>(fn:Fn1<A, mixed>, xs:A[], ...rest:empty[]):Fn1<A[], A[]>;
+declare export function intersectionBy<A>(
+  fn: Fn1<A, mixed>,
+  xs: A[],
+  ys: A[]
+): A[];
+declare export function intersectionBy<A>(
+  fn: Fn1<A, mixed>,
+  ...rest: empty[]
+): Curry2<A[], A[], A[]>;
+declare export function intersectionBy<A>(
+  fn: Fn1<A, mixed>,
+  xs: A[],
+  ...rest: empty[]
+): Fn1<A[], A[]>;
 
-declare export function difference<A>(xs:A[], ys:A[], ...rest:empty[]):A[];
-declare export function difference<A>(xs:A[], ...rest:empty[]):Fn1<A[], A[]>;
+declare export function difference<A>(
+  xs: A[],
+  ys: A[],
+  ...rest: empty[]
+): A[];
+declare export function difference<A>(
+  xs: A[],
+  ...rest: empty[]
+): Fn1<A[], A[]>;
 
-declare export function find<A>(fn:Fn1<A, boolean>, xs:Array<A>, ...rest:empty[]): Maybe<A>;
-declare export function find<A>(fn:Fn1<A, boolean>, ...rest:empty[]):Fn1<Array<A>, Maybe<A>>;
+declare export function find<A>(
+  fn: Fn1<A, boolean>,
+  xs: Array<A>,
+  ...rest: empty[]
+): Maybe<A>;
+declare export function find<A>(
+  fn: Fn1<A, boolean>,
+  ...rest: empty[]
+): Fn1<Array<A>, Maybe<A>>;
 
-declare export function pluck<A,B>(key:string | number, xs:A[], ...rest:empty[]):B[];
-declare export function pluck<A,B>(key:string | number, ...rest:empty[]):Fn1<A[], B[]>;
+declare export function pluck<A, B>(
+  key: string | number,
+  xs: A[],
+  ...rest: empty[]
+): B[];
+declare export function pluck<A, B>(
+  key: string | number,
+  ...rest: empty[]
+): Fn1<A[], B[]>;
 
-declare export function always<A>(x:A, ...rest:empty[]):(...rest:any[]) => A;
+declare export function always<A>(x: A, ...rest: empty[]): (
+  ...rest: any[]
+) => A;
 
-declare export var True:always<true>;
-declare export var False:always<false>;
+declare export var True: always<true>;
+declare export var False: always<false>;
 
-declare export function not(x:any):boolean;
+declare export function not(x: any): boolean;
 
-declare export function identity<A>(x:A):A;
+declare export function identity<A>(x: A): A;
 
-declare export function head<A>(xs:A[], ...rest:empty[]):Maybe<A>;
-declare export function head<A:string>(xs:A, ...rest:empty[]):Maybe<A>;
+declare export function head<A>(
+  xs: A[],
+  ...rest: empty[]
+): Maybe<A>;
+declare export function head<A: string>(
+  xs: A,
+  ...rest: empty[]
+): Maybe<A>;
 
-declare export function tail<A>(xs:A[], ...rest:empty[]):A[];
-declare export function tail<A:string>(xs:A, ...rest:empty[]):A;
+declare export function tail<A>(
+  xs: A[],
+  ...rest: empty[]
+): A[];
+declare export function tail<A: string>(
+  xs: A,
+  ...rest: empty[]
+): A;
 
-declare export function last<A>(xs:A[], ...rest:empty[]):Maybe<A>;
-declare export function last<A:string>(xs:A, ...rest:empty[]):Maybe<A>;
+declare export function last<A>(
+  xs: A[],
+  ...rest: empty[]
+): Maybe<A>;
+declare export function last<A: string>(
+  xs: A,
+  ...rest: empty[]
+): Maybe<A>;
 
-declare export function unwrap(xs:Array<any>):Array<any>;
+declare export function unwrap(xs: Array<any>): Array<any>;
 
-declare export function arrayWrap<A>(x:A, ...rest:empty[]):A[];
+declare export function arrayWrap<A>(
+  x: A,
+  ...rest: empty[]
+): A[];
 
-declare export function once(fn:Function): () => void;
+declare export function once(fn: Function): () => void;
 
-declare export function lens(get:Function, set:Function, ...rest:empty[]):Function;
-declare export function lens(get:Function, ...rest:empty[]):Fn1<Function, Function>;
+declare export function lens(
+  get: Function,
+  set: Function,
+  ...rest: empty[]
+): Function;
+declare export function lens(
+  get: Function,
+  ...rest: empty[]
+): Fn1<Function, Function>;
 
-declare export function view<A, B>(lens:Function, xs:A, ...rest:empty[]):B;
-declare export function view<A, B>(lens:Function, ...rest:empty[]):Fn1<A, B>;
+declare export function view<A, B>(
+  lens: Function,
+  xs: A,
+  ...rest: empty[]
+): B;
+declare export function view<A, B>(
+  lens: Function,
+  ...rest: empty[]
+): Fn1<A, B>;
 
-declare export function over<A>(lens:Function, fn:anyToAny, ...rest:empty[]):Fn1<A, A>;
-declare export function over<A>(lens:Function, ...rest:empty[]):Curry2<anyToAny, A, A>;
-declare export function over<A>(lens:Function, fn:anyToAny, xs:A, ...rest:empty[]):A;
+declare export function over<A>(
+  lens: Function,
+  fn: anyToAny,
+  ...rest: empty[]
+): Fn1<A, A>;
+declare export function over<A>(
+  lens: Function,
+  ...rest: empty[]
+): Curry2<anyToAny, A, A>;
+declare export function over<A>(
+  lens: Function,
+  fn: anyToAny,
+  xs: A,
+  ...rest: empty[]
+): A;
 
-declare export function set<A>(lens:Function, value:any, xs:A, ...rest:empty[]):A;
-declare export function set<A>(lens:Function, value:any, ...rest:empty[]):Fn1<A, A>;
-declare export function set<A>(lens:Function, ...rest:empty[]):Curry2<any, A, A>;
+declare export function set<A>(
+  lens: Function,
+  value: any,
+  xs: A,
+  ...rest: empty[]
+): A;
+declare export function set<A>(
+  lens: Function,
+  value: any,
+  ...rest: empty[]
+): Fn1<A, A>;
+declare export function set<A>(
+  lens: Function,
+  ...rest: empty[]
+): Curry2<any, A, A>;
 
-declare export function mapped<A,B>(fn:Fn1<A, B>, xs:Array<A>):Array<B>;
-declare export function mapped<A,B>(fn:Fn1<A, B>):Fn1<A[], B[]>;
+declare export function mapped<A, B>(
+  fn: Fn1<A, B>,
+  xs: Array<A>
+): Array<B>;
+declare export function mapped<A, B>(
+  fn: Fn1<A, B>
+): Fn1<A[], B[]>;
 
-declare export function lensProp(name:string | number):Function;
+declare export function lensProp(
+  name: string | number
+): Function;
 
-declare export function flow<A,B>(ab:Fn1<A,B>, ...rest:empty[]):Fn1<A,B>;
-declare export function flow<A,B,C>(ab:Fn1<A,B>, bc:Fn1<B,C>, ...rest:empty[]):Fn1<A,C>;
-declare export function flow<A,B,C,D>(ab:Fn1<A,B>, bc:Fn1<B,C>, cd:Fn1<C,D>, ...rest:empty[]):Fn1<A,D>;
-declare export function flow<A,B,C,D,E>(ab:Fn1<A,B>, bc:Fn1<B,C>, cd:Fn1<C,D>, de:Fn1<D,E>, ...rest:empty[]):Fn1<A,E>;
-declare export function flow<A,B,C,D,E,F>(ab:Fn1<A,B>, bc:Fn1<B,C>, cd:Fn1<C,D>, de:Fn1<D,E>, ef:Fn1<E,F>, ...rest:empty[]):Fn1<A,F>;
-declare export function flow<A,B,C,D,E,F,G>(ab:Fn1<A,B>, bc:Fn1<B,C>, cd:Fn1<C,D>, de:Fn1<D,E>, ef:Fn1<E,F>, fg:Fn1<F,G>, ...rest:empty[]):Fn1<A,G>;
-declare export function flow<A,B,C,D,E,F,G,H>(ab:Fn1<A,B>, bc:Fn1<B,C>, cd:Fn1<C,D>, de:Fn1<D,E>, ef:Fn1<E,F>, fg:Fn1<F,G>, gh:Fn1<G,H>, ...rest:empty[]):Fn1<A,H>;
-declare export function flow<A,B,C,D,E,F,G,H,I>(ab:Fn1<A,B>, bc:Fn1<B,C>, cd:Fn1<C,D>, de:Fn1<D,E>, ef:Fn1<E,F>, fg:Fn1<F,G>, gh:Fn1<G,H>, hi:Fn1<H,I>, ...rest:empty[]):Fn1<A,I>;
+declare export function flow<A, B>(
+  ab: Fn1<A, B>,
+  ...rest: empty[]
+): Fn1<A, B>;
+declare export function flow<A, B, C>(
+  ab: Fn1<A, B>,
+  bc: Fn1<B, C>,
+  ...rest: empty[]
+): Fn1<A, C>;
+declare export function flow<A, B, C, D>(
+  ab: Fn1<A, B>,
+  bc: Fn1<B, C>,
+  cd: Fn1<C, D>,
+  ...rest: empty[]
+): Fn1<A, D>;
+declare export function flow<A, B, C, D, E>(
+  ab: Fn1<A, B>,
+  bc: Fn1<B, C>,
+  cd: Fn1<C, D>,
+  de: Fn1<D, E>,
+  ...rest: empty[]
+): Fn1<A, E>;
+declare export function flow<A, B, C, D, E, F>(
+  ab: Fn1<A, B>,
+  bc: Fn1<B, C>,
+  cd: Fn1<C, D>,
+  de: Fn1<D, E>,
+  ef: Fn1<E, F>,
+  ...rest: empty[]
+): Fn1<A, F>;
+declare export function flow<A, B, C, D, E, F, G>(
+  ab: Fn1<A, B>,
+  bc: Fn1<B, C>,
+  cd: Fn1<C, D>,
+  de: Fn1<D, E>,
+  ef: Fn1<E, F>,
+  fg: Fn1<F, G>,
+  ...rest: empty[]
+): Fn1<A, G>;
+declare export function flow<A, B, C, D, E, F, G, H>(
+  ab: Fn1<A, B>,
+  bc: Fn1<B, C>,
+  cd: Fn1<C, D>,
+  de: Fn1<D, E>,
+  ef: Fn1<E, F>,
+  fg: Fn1<F, G>,
+  gh: Fn1<G, H>,
+  ...rest: empty[]
+): Fn1<A, H>;
+declare export function flow<A, B, C, D, E, F, G, H, I>(
+  ab: Fn1<A, B>,
+  bc: Fn1<B, C>,
+  cd: Fn1<C, D>,
+  de: Fn1<D, E>,
+  ef: Fn1<E, F>,
+  fg: Fn1<F, G>,
+  gh: Fn1<G, H>,
+  hi: Fn1<H, I>,
+  ...rest: empty[]
+): Fn1<A, I>;
 
-declare export function compose<A,B,C,D,E,F,G>(fg:Fn1<F,G>, ef:Fn1<E,F>, de:Fn1<D,E>, cd:Fn1<C,D>, bc:Fn1<B,C>, ab:Fn1<A,B>, ...rest:empty[]):Fn1<A,G>;
-declare export function compose<A,B,C,D,E,F>(ef:Fn1<E,F>, de:Fn1<D,E>, cd:Fn1<C,D>, bc:Fn1<B,C>, ab:Fn1<A,B>, ...rest:empty[]):Fn1<A,F>;
-declare export function compose<A,B,C,D,E>(de:Fn1<D,E>, cd:Fn1<C,D>, bc:Fn1<B,C>, ab:Fn1<A,B>, ...rest:empty[]):Fn1<A,E>;
-declare export function compose<A,B,C,D>(cd:Fn1<C,D>, bc:Fn1<B,C>, ab:Fn1<A,B>, ...rest:empty[]):Fn1<A,D>;
-declare export function compose<A,B,C>(bc:Fn1<B,C>, ab:Fn1<A,B>, ...rest:empty[]):Fn1<A,C>;
-declare export function compose<A,B>(ab:Fn1<A,B>, ...rest:empty[]):Fn1<A,B>;
+declare export function compose<A, B, C, D, E, F, G>(
+  fg: Fn1<F, G>,
+  ef: Fn1<E, F>,
+  de: Fn1<D, E>,
+  cd: Fn1<C, D>,
+  bc: Fn1<B, C>,
+  ab: Fn1<A, B>,
+  ...rest: empty[]
+): Fn1<A, G>;
+declare export function compose<A, B, C, D, E, F>(
+  ef: Fn1<E, F>,
+  de: Fn1<D, E>,
+  cd: Fn1<C, D>,
+  bc: Fn1<B, C>,
+  ab: Fn1<A, B>,
+  ...rest: empty[]
+): Fn1<A, F>;
+declare export function compose<A, B, C, D, E>(
+  de: Fn1<D, E>,
+  cd: Fn1<C, D>,
+  bc: Fn1<B, C>,
+  ab: Fn1<A, B>,
+  ...rest: empty[]
+): Fn1<A, E>;
+declare export function compose<A, B, C, D>(
+  cd: Fn1<C, D>,
+  bc: Fn1<B, C>,
+  ab: Fn1<A, B>,
+  ...rest: empty[]
+): Fn1<A, D>;
+declare export function compose<A, B, C>(
+  bc: Fn1<B, C>,
+  ab: Fn1<A, B>,
+  ...rest: empty[]
+): Fn1<A, C>;
+declare export function compose<A, B>(
+  ab: Fn1<A, B>,
+  ...rest: empty[]
+): Fn1<A, B>;
 
-declare export var eq:Curry2<any, any, boolean>;
+declare export var eq: Curry2<any, any, boolean>;
 
-declare export function noop():void;
+declare export function noop(): void;
 
-declare export function invoke(fn:manyToAny, args:Array<?any>, ...rest:empty[]):any;
-declare export function invoke(fn:manyToAny, ...rest:empty[]):Fn1<any[], any>;
+declare export function invoke(
+  fn: manyToAny,
+  args: Array<?any>,
+  ...rest: empty[]
+): any;
+declare export function invoke(
+  fn: manyToAny,
+  ...rest: empty[]
+): Fn1<any[], any>;
 
 type anyToBoolArrT = Array<Fn1<any, boolean>>;
-declare export function and<A>(predicates:anyToBoolArrT, ...rest:empty[]):Fn1<A, boolean>;
-declare export function and<A>(predicates:anyToBoolArrT, x:A, ...rest:empty[]):boolean;
+declare export function and<A>(
+  predicates: anyToBoolArrT,
+  ...rest: empty[]
+): Fn1<A, boolean>;
+declare export function and<A>(
+  predicates: anyToBoolArrT,
+  x: A,
+  ...rest: empty[]
+): boolean;
 
-declare export function or<A>(predicates:anyToBoolArrT, ...rest:empty[]):Fn1<A, boolean>;
-declare export function or<A>(predicates:anyToBoolArrT, x:A, ...rest:empty[]):boolean;
+declare export function or<A>(
+  predicates: anyToBoolArrT,
+  ...rest: empty[]
+): Fn1<A, boolean>;
+declare export function or<A>(
+  predicates: anyToBoolArrT,
+  x: A,
+  ...rest: empty[]
+): boolean;
 
-declare export function bindMethod(meth:string, obj:container | string, ...rest:empty[]):Function;
-declare export function bindMethod(meth:string, ...rest:empty[]):Fn1<container | string, Function>;
+declare export function bindMethod(
+  meth: string,
+  obj: container | string,
+  ...rest: empty[]
+): Function;
+declare export function bindMethod(
+  meth: string,
+  ...rest: empty[]
+): Fn1<container | string, Function>;
 
-declare export function invokeMethod(meth:string, ...rest:empty[]):Curry2<Array<any>, any, any>;
-declare export function invokeMethod(meth:string, args:Array<any>, ...rest:empty[]):Fn1<any, any>;
-declare export function invokeMethod(meth:string, args:Array<any>, obj:any, ...rest:empty[]):any;
+declare export function invokeMethod(
+  meth: string,
+  ...rest: empty[]
+): Curry2<Array<any>, any, any>;
+declare export function invokeMethod(
+  meth: string,
+  args: Array<any>,
+  ...rest: empty[]
+): Fn1<any, any>;
+declare export function invokeMethod(
+  meth: string,
+  args: Array<any>,
+  obj: any,
+  ...rest: empty[]
+): any;
 
-declare export function cond<A,B>(...conditions:Array<[Fn1<A, boolean>, Fn1<A, B>]>):Fn1<A, B>;
+declare export function cond<A, B>(
+  ...conditions: Array<[Fn1<A, boolean>, Fn1<A, B>]>
+): Fn1<A, B>;
 
-declare export function memoize<A>(fn:(...args:any[]) => A):() => A;
+declare export function memoize<A>(
+  fn: (...args: any[]) => A
+): () => A;
 
-declare export function eqFn<A, B>(fnA:typeToAny<A>, fnB:typeToAny<B>, a:A, ...rest:empty[]):Fn1<B, boolean>;
-declare export function eqFn<A, B>(fnA:typeToAny<A>, fnB:typeToAny<B>, ...rest:empty[]):Curry2<A, B, boolean>;
-declare export function eqFn<A, B>(fnA:typeToAny<A>, ...rest:empty[]):Curry3<typeToAny<B>, A, B, boolean>;
-declare export function eqFn<A, B>(fnA:typeToAny<A>, fnB:typeToAny<B>, a:A, b:B, ...rest:empty[]):boolean;
+declare export function eqFn<A, B>(
+  fnA: typeToAny<A>,
+  fnB: typeToAny<B>,
+  a: A,
+  ...rest: empty[]
+): Fn1<B, boolean>;
+declare export function eqFn<A, B>(
+  fnA: typeToAny<A>,
+  fnB: typeToAny<B>,
+  ...rest: empty[]
+): Curry2<A, B, boolean>;
+declare export function eqFn<A, B>(
+  fnA: typeToAny<A>,
+  ...rest: empty[]
+): Curry3<typeToAny<B>, A, B, boolean>;
+declare export function eqFn<A, B>(
+  fnA: typeToAny<A>,
+  fnB: typeToAny<B>,
+  a: A,
+  b: B,
+  ...rest: empty[]
+): boolean;
 
-declare export function zipObject<A,B>(keys:Array<A>, vals:Array<B>, ...rest:empty[]):Object;
-declare export function zipObject<A,B>(keys:Array<A>, ...rest:empty[]):Fn1<Array<B>, Object>;
+declare export function zipObject<A, B>(
+  keys: Array<A>,
+  vals: Array<B>,
+  ...rest: empty[]
+): Object;
+declare export function zipObject<A, B>(
+  keys: Array<A>,
+  ...rest: empty[]
+): Fn1<Array<B>, Object>;
 
-declare export function either<A,B>(fn:Fn1<A, B>, ...rest:empty[]):Fn1<A, B | Error>;
-declare export function either<A,B>(fn:Fn1<A, B>, x:A, ...rest:empty[]):B | Error;
+declare export function either<A, B>(
+  fn: Fn1<A, B>,
+  ...rest: empty[]
+): Fn1<A, B | Error>;
+declare export function either<A, B>(
+  fn: Fn1<A, B>,
+  x: A,
+  ...rest: empty[]
+): B | Error;
 
-declare export function mapFn(fns:Array<Function>, args:Array<any>, ...rest:empty[]):Array<any>;
-declare export function mapFn(fns:Array<Function>, ...rest:empty[]):Fn1<Array<any>, Array<any>>;
+declare export function mapFn(
+  fns: Array<Function>,
+  args: Array<any>,
+  ...rest: empty[]
+): Array<any>;
+declare export function mapFn(
+  fns: Array<Function>,
+  ...rest: empty[]
+): Fn1<Array<any>, Array<any>>;
 
-declare export function chainL<A,B,C>(fn:Fn2<A,B,C>, args:B[], ...rest:empty[]):C;
-declare export function chainL<A,B,C>(fn:Fn2<A,B,C>, ...rest:empty[]):Fn1<B[], C>;
+declare export function chainL<A, B, C>(
+  fn: Fn2<A, B, C>,
+  args: B[],
+  ...rest: empty[]
+): C;
+declare export function chainL<A, B, C>(
+  fn: Fn2<A, B, C>,
+  ...rest: empty[]
+): Fn1<B[], C>;
 
-declare export function xProd<A,B>(a:A[], b:B[], ...rest:empty[]):Array<Array<any>>;
-declare export function xProd<A,B>(a:A[], ...rest:empty[]):Fn1<B[], Array<Array<any>>>;
+declare export function xProd<A, B>(
+  a: A[],
+  b: B[],
+  ...rest: empty[]
+): Array<Array<any>>;
+declare export function xProd<A, B>(
+  a: A[],
+  ...rest: empty[]
+): Fn1<B[], Array<Array<any>>>;
 
-declare export function uniqBy<A>(fn:Fn1<A, any>, xs:A[], ...rest:empty[]):any[];
-declare export function uniqBy<A>(fn:Fn1<A, any>, ...rest:empty[]):Fn1<A[], any[]>;
+declare export function uniqBy<A>(
+  fn: Fn1<A, any>,
+  xs: A[],
+  ...rest: empty[]
+): any[];
+declare export function uniqBy<A>(
+  fn: Fn1<A, any>,
+  ...rest: empty[]
+): Fn1<A[], any[]>;
 
-declare export function zipBy<A,B,C>(fn:Fn2<A,B,C>, left:A[], right:B[], ...rest:empty[]):C[];
-declare export function zipBy<A,B,C>(fn:Fn2<A,B,C>, left:A[], ...rest:empty[]):Fn1<B[], C[]>;
-declare export function zipBy<A,B,C>(fn:Fn2<A,B,C>, ...rest:empty[]):Curry2<A[], B[], C[]>;
+declare export function zipBy<A, B, C>(
+  fn: Fn2<A, B, C>,
+  left: A[],
+  right: B[],
+  ...rest: empty[]
+): C[];
+declare export function zipBy<A, B, C>(
+  fn: Fn2<A, B, C>,
+  left: A[],
+  ...rest: empty[]
+): Fn1<B[], C[]>;
+declare export function zipBy<A, B, C>(
+  fn: Fn2<A, B, C>,
+  ...rest: empty[]
+): Curry2<A[], B[], C[]>;
 
-declare export function times <A>(fn:Fn1<number, A>, num:number):A[];
-declare export function times <A>(fn:Fn1<number, A>, ...rest:empty[]):Fn1<number, A[]>;
+declare export function times<A>(
+  fn: Fn1<number, A>,
+  num: number
+): A[];
+declare export function times<A>(
+  fn: Fn1<number, A>,
+  ...rest: empty[]
+): Fn1<number, A[]>;
