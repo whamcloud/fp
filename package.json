@@ -27,6 +27,9 @@
       "/node_modules/",
       "/setup-jasmine-env.js",
       "/test"
+    ],
+    "transformIgnorePatterns": [
+     "/node_modules/(?!@iml)/"
     ]
   },
   "author": "MFL Team",
