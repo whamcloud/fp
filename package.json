@@ -39,16 +39,19 @@
   },
   "devDependencies": {
     "babel-eslint": "7.1.1",
-    "babel-plugin-transform-flow-strip-types": "6.21.0",
+    "babel-plugin-transform-flow-strip-types": "6.22.0",
     "babel-preset-env": "1.1.8",
-    "eslint": "3.13.1",
+    "eslint": "3.15.0",
+    "eslint-config-prettier": "1.1.1",
     "eslint-plugin-flowtype": "2.30.0",
     "eslint-plugin-import": "2.2.0",
-    "flow-bin": "0.38.0",
+    "eslint-plugin-prettier": "2.0.0",
+    "flow-bin": "0.39.0",
     "immutable": "3.8.1",
     "@mfl/flow-jasmine": "1.6.0",
     "@mfl/jasmine-n-matchers": "2.1.1",
     "jest": "18.1.0",
-    "pre-commit": "1.2.2"
+    "pre-commit": "1.2.2",
+    "prettier": "0.16.0"
   }
 }
