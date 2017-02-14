@@ -9,6 +9,8 @@ import { describe, beforeEach, it, expect, jasmine } from './jasmine';
 
 import { Map, fromJS } from 'immutable';
 
+type matchTupleT<T> = [T, (x: Class<T>) => mixed];
+
 describe('the fp module', () => {
   describe('has a curry method', () => {
     let toArray;
@@ -1404,18 +1406,19 @@ describe('the fp module', () => {
     let matcher;
 
     beforeEach(() => {
-      matcher = fp.match([
-        [FileExists, () => 'file exists'],
-        [FileDoesNotExist, () => 'file does not exist']
-      ]);
+      const case1 = [FileExists, (x: Class<FileExists>) => x];
+      const case2 = [FileDoesNotExist, (x: Class<FileDoesNotExist>) => x];
+      matcher = fp.match([case1, case2]);
     });
 
     it('should match when a file exists', () => {
-      expect(matcher(new FileExists())).toEqual('file exists');
+      expect(matcher(new FileExists()) instanceof FileExists).toBe(true);
     });
 
     it('should match when a file does not exist', () => {
-      expect(matcher(new FileDoesNotExist())).toEqual('file does not exist');
+      expect(matcher(new FileDoesNotExist()) instanceof FileDoesNotExist).toBe(
+        true
+      );
     });
   });
 });

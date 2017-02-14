@@ -128,9 +128,6 @@ export type Curry6<A, B, C, D, E, F, G> =
   & Fn5<A, B, C, D, E, Fn1<F, G>>
   & Fn6<A, B, C, D, E, F, G>;
 
-
-export type matchTupleT<T> = [T, (x: T) => mixed];
-
 declare export function unary<A, B>(
   fn: Fn1<A, B>
 ): Fn1<A, B>;
@@ -677,6 +674,6 @@ declare export function times<A>(
 ): A[];
 
 declare export function match<A>(
-  xs: Array<matchTupleT<A>>,
+  xs: Array<[A, (x: Class<A>) => mixed]>,
   ...rest: empty[]
 ): Fn1<A, mixed>;
