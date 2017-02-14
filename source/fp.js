@@ -312,7 +312,7 @@ export const times = curry2((fn, num) => {
   return list;
 });
 
-export const match = <T>(xs: Array<matchTupleT<T>>) => (x: T) => {
+export const match = xs => x => {
   const map = new Map(xs);
 
   const result: ?matchTupleT<T> = Array.from(map).find(
