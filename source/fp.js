@@ -311,3 +311,14 @@ export const times = curry2((fn, num) => {
 
   return list;
 });
+
+export const match = <T>(xs: Array<matchTupleT<T>>) => (x: T) => {
+  const map = new Map(xs);
+
+  const result: ?matchTupleT<T> = Array.from(map).find(
+    ([k]) => x instanceof k || x === k
+  );
+
+  if (result) return result[1](x);
+  else throw new Error(`could not match on ${String.toString(x)}`);
+};

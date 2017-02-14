@@ -1397,4 +1397,25 @@ describe('the fp module', () => {
       expect(result).toEqual([1, 2, 3, 4, 5]);
     });
   });
+
+  describe('match', () => {
+    class FileExists {}
+    class FileDoesNotExist {}
+    let matcher;
+
+    beforeEach(() => {
+      matcher = fp.match([
+        [FileExists, () => 'file exists'],
+        [FileDoesNotExist, () => 'file does not exist']
+      ]);
+    });
+
+    it('should match when a file exists', () => {
+      expect(matcher(new FileExists())).toEqual('file exists');
+    });
+
+    it('should match when a file does not exist', () => {
+      expect(matcher(new FileDoesNotExist())).toEqual('file does not exist');
+    });
+  });
 });
