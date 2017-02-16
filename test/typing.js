@@ -46,111 +46,115 @@ class ClassType3 {}
 class ClassType4 {}
 class ClassType5 {}
 
-const class1RNum = [ClassType1, () => 7];
+const class1RString = [ClassType1, (x: ClassType1) => 'test'];
 const class1RClass1 = [ClassType1, (x: ClassType1) => x];
-const class2RString = [ClassType2, () => 'foo'];
+const class2RString = [ClassType2, (x: ClassType2) => 'foo'];
 const class2RClass2 = [ClassType2, (x: ClassType2) => x];
-const class3RString = [ClassType3, () => 'bar'];
+const class3RString = [ClassType3, (x: ClassType3) => 'bar'];
 const class3RClass3 = [ClassType3, (x: ClassType3) => x];
 const class4RClass4 = [ClassType4, (x: ClassType4) => x];
-const class4RString = [ClassType4, () => 'baz'];
+const class4RString = [ClassType4, (x: ClassType4) => 'baz'];
 const class5RClass5 = [ClassType5, (x: ClassType5) => x];
-const class5RString = [ClassType5, () => 'bam'];
+const class5RString = [ClassType5, (x: ClassType5) => 'bam'];
 // 2 entries
-(fp.match1([class1RNum, class2RString])(new ClassType1()): 7);
-(fp.match1([class1RClass1, class2RString])(new ClassType1()): ClassType1);
-(fp.match2([class1RClass1, class2RString])(new ClassType2()): 'foo');
-(fp.match2([class1RClass1, class2RClass2])(new ClassType2()): ClassType2);
+(fp.match([class1RClass1, class2RString])(new ClassType2()): 'foo');
+(fp.match([
+  [ClassType1, (x: ClassType1) => x],
+  [ClassType2, (x: ClassType2) => x]
+])(new ClassType2()): ClassType2);
 
 // 3 entries
-(fp.match1([class1RNum, class2RClass2, class3RClass3])(new ClassType1()): 7);
-(fp.match2([
-  class1RNum,
+(fp.match([
+  class1RString,
+  class2RClass2,
+  class3RClass3
+])(new ClassType1()): 'test');
+(fp.match([
+  class1RString,
   class2RClass2,
   class3RString
 ])(new ClassType2()): ClassType2);
-(fp.match3([
-  class1RNum,
+(fp.match([
+  class1RString,
   class2RClass2,
   class3RString
 ])(new ClassType3()): 'bar');
-(fp.match3([
-  class1RNum,
+(fp.match([
+  class1RString,
   class2RClass2,
   class3RClass3
 ])(new ClassType3()): ClassType3);
 
 // 4 entries
-(fp.match1([
-  class1RNum,
+(fp.match([
+  class1RString,
   class2RClass2,
   class3RString,
   class4RClass4
-])(new ClassType1()): 7);
-(fp.match2([
-  class1RNum,
+])(new ClassType1()): 'test');
+(fp.match([
+  class1RString,
   class2RClass2,
   class3RString,
   class4RClass4
 ])(new ClassType2()): ClassType2);
-(fp.match3([
-  class1RNum,
+(fp.match([
+  class1RString,
   class2RClass2,
   class3RString,
   class4RClass4
 ])(new ClassType3()): 'bar');
-(fp.match4([
-  class1RNum,
+(fp.match([
+  class1RString,
   class2RClass2,
   class3RString,
   class4RClass4
 ])(new ClassType4()): ClassType4);
-(fp.match4([
-  class1RNum,
+(fp.match([
+  class1RString,
   class2RClass2,
   class3RString,
   class4RString
 ])(new ClassType4()): 'baz');
-
 // 5 entries
 
-(fp.match1([
-  class1RNum,
+(fp.match([
+  class1RString,
   class2RClass2,
   class3RString,
   class4RClass4,
   class5RString
-])(new ClassType1()): 7);
-(fp.match2([
-  class1RNum,
+])(new ClassType1()): 'test');
+(fp.match([
+  class1RString,
   class2RClass2,
   class3RString,
   class4RClass4,
   class5RString
 ])(new ClassType2()): ClassType2);
-(fp.match3([
-  class1RNum,
+(fp.match([
+  class1RString,
   class2RClass2,
   class3RString,
   class4RClass4,
   class5RString
 ])(new ClassType3()): 'bar');
-(fp.match4([
-  class1RNum,
+(fp.match([
+  class1RString,
   class2RClass2,
   class3RString,
   class4RClass4,
   class5RString
 ])(new ClassType4()): ClassType4);
-(fp.match5([
-  class1RNum,
+(fp.match([
+  class1RString,
   class2RClass2,
   class3RString,
   class4RClass4,
   class5RString
 ])(new ClassType5()): 'bam');
-(fp.match5([
-  class1RNum,
+(fp.match([
+  class1RString,
   class2RClass2,
   class3RString,
   class4RClass4,

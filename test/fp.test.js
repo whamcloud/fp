@@ -1430,26 +1430,26 @@ describe('the fp module', () => {
     describe('with 2 entries', () => {
       it('should return "foo"', () => {
         expect(
-          fp.match1([class1RString, class2RString])(new ClassType1())
+          fp.match([class1RString, class2RString])(new ClassType1())
         ).toEqual('foo');
       });
 
       it('should return an instance of ClassType1', () => {
         expect(
-          fp.match1([class1RClass1, class2RString])(new ClassType1()) instanceof
+          fp.match([class1RClass1, class2RString])(new ClassType1()) instanceof
             ClassType1
         ).toBe(true);
       });
 
       it('should return "bar"', () => {
         expect(
-          fp.match2([class1RString, class2RString])(new ClassType2())
+          fp.match([class1RString, class2RString])(new ClassType2())
         ).toEqual('bar');
       });
 
       it('should return an instance of ClassType2', () => {
         expect(
-          fp.match2([class1RString, class2RClass2])(new ClassType2()) instanceof
+          fp.match([class1RString, class2RClass2])(new ClassType2()) instanceof
             ClassType2
         ).toBe(true);
       });
@@ -1458,7 +1458,7 @@ describe('the fp module', () => {
     describe('with 3 entries', () => {
       it('should return "foo"', () => {
         expect(
-          fp.match1([
+          fp.match([
             class1RString,
             class2RString,
             class3RString
@@ -1468,7 +1468,7 @@ describe('the fp module', () => {
 
       it('should return "bar"', () => {
         expect(
-          fp.match2([
+          fp.match([
             class1RString,
             class2RString,
             class3RString
@@ -1478,7 +1478,7 @@ describe('the fp module', () => {
 
       it('should return "baz"', () => {
         expect(
-          fp.match3([
+          fp.match([
             class1RString,
             class2RString,
             class3RString
@@ -1488,7 +1488,7 @@ describe('the fp module', () => {
 
       it('should return an instance of ClassType3', () => {
         expect(
-          fp.match3([
+          fp.match([
             class1RString,
             class2RString,
             class3RClass3
@@ -1500,7 +1500,7 @@ describe('the fp module', () => {
     describe('with 4 entries', () => {
       it('should return "foo"', () => {
         expect(
-          fp.match1([
+          fp.match([
             class1RString,
             class2RString,
             class3RString,
@@ -1511,7 +1511,7 @@ describe('the fp module', () => {
 
       it('should return "bar"', () => {
         expect(
-          fp.match2([
+          fp.match([
             class1RClass1,
             class2RString,
             class3RString,
@@ -1522,7 +1522,7 @@ describe('the fp module', () => {
 
       it('should return "baz"', () => {
         expect(
-          fp.match3([
+          fp.match([
             class1RClass1,
             class2RClass2,
             class3RString,
@@ -1533,7 +1533,7 @@ describe('the fp module', () => {
 
       it('should return "bam"', () => {
         expect(
-          fp.match4([
+          fp.match([
             class1RString,
             class2RString,
             class3RString,
@@ -1544,7 +1544,7 @@ describe('the fp module', () => {
 
       it('should return an instance of ClassType4', () => {
         expect(
-          fp.match4([
+          fp.match([
             class1RString,
             class2RString,
             class3RString,
@@ -1557,7 +1557,7 @@ describe('the fp module', () => {
     describe('with 5 entries', () => {
       it('should return "foo"', () => {
         expect(
-          fp.match1([
+          fp.match([
             class1RString,
             class2RString,
             class3RString,
@@ -1569,7 +1569,7 @@ describe('the fp module', () => {
 
       it('should return "bar"', () => {
         expect(
-          fp.match2([
+          fp.match([
             class1RClass1,
             class2RString,
             class3RString,
@@ -1581,7 +1581,7 @@ describe('the fp module', () => {
 
       it('should return "baz"', () => {
         expect(
-          fp.match3([
+          fp.match([
             class1RClass1,
             class2RClass2,
             class3RString,
@@ -1593,7 +1593,7 @@ describe('the fp module', () => {
 
       it('should return "bam"', () => {
         expect(
-          fp.match4([
+          fp.match([
             class1RString,
             class2RString,
             class3RString,
@@ -1605,7 +1605,7 @@ describe('the fp module', () => {
 
       it('should return "jam"', () => {
         expect(
-          fp.match5([
+          fp.match([
             class1RString,
             class2RString,
             class3RString,
@@ -1617,7 +1617,7 @@ describe('the fp module', () => {
 
       it('should return an instance of ClassType5', () => {
         expect(
-          fp.match5([
+          fp.match([
             class1RString,
             class2RString,
             class3RString,

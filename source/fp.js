@@ -312,16 +312,11 @@ export const times = curry2((fn, num) => {
   return list;
 });
 
-const match = xs => x => {
+export const match = xs => x => {
   const map = new Map(xs);
 
-  const result = Array.from(map).find(([k]) => x instanceof k);
+  const result = Array.from(map).find(([k]) => x instanceof k || x === k);
 
   if (result) return result[1](x);
   else throw new Error(`could not match on ${String.toString(x)}`);
 };
-export const match1 = match;
-export const match2 = match;
-export const match3 = match;
-export const match4 = match;
-export const match5 = match;
