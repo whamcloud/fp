@@ -673,7 +673,24 @@ declare export function times<A>(
   num: number
 ): A[];
 
-declare export function match<A>(
-  xs: Array<[A, (x: Class<A>) => mixed]>,
+declare export function match<A, B>(
+  xs: [[Class<A>, (x: A) => mixed], [Class<B>, (x: B) => mixed]],
   ...rest: empty[]
-): Fn1<A, mixed>;
+): (x: A | B) => mixed;
+
+declare export function match<A, B, C>(
+  xs: [[Class<A>, (x: A) => mixed], [Class<B>, (x: B) => mixed], [Class<C>, (x: C) => mixed]],
+  ...rest: empty[]
+): (x: A | B | C) => mixed;
+
+declare export function match<A, B, C, D>(
+  xs: [[Class<A>, (x: A) => mixed], [Class<B>, (x: B) => mixed], [Class<C>, (x: C) => mixed],
+    [Class<D>, (x: D) => mixed]],
+  ...rest: empty[]
+): (x: A | B | C | D) => mixed;
+
+declare export function match<A, B, C, D, E>(
+  xs: [[Class<A>, (x: A) => mixed], [Class<B>, (x: B) => mixed], [Class<C>, (x: C) => mixed],
+    [Class<D>, (x: D) => mixed], [Class<E>, (x: E) => mixed]],
+  ...rest: empty[]
+): (x: A | B | C | D | E) => mixed;

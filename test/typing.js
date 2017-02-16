@@ -39,3 +39,31 @@ const tappit = (x: string): string => x + 'bar';
 (fp.tap(tappit)(['foo']): Array<string>);
 
 (fp.find((x: number) => x === 3, []): Maybe<number>);
+
+class ClassType1 {}
+class ClassType2 {}
+class ClassType3 {}
+class ClassType4 {}
+class ClassType5 {}
+
+const withClass1 = [ClassType1, (x: ClassType1) => x];
+const withClass2 = [ClassType2, (x: ClassType2) => x];
+const withClass3 = [ClassType3, (x: ClassType3) => x];
+const withClass4 = [ClassType4, (x: ClassType4) => x];
+const withClass5 = [ClassType5, (x: ClassType5) => x];
+
+(fp.match([withClass1, withClass2])(new ClassType2()): mixed);
+(fp.match([withClass1, withClass2, withClass3])(new ClassType3()): mixed);
+(fp.match([
+  withClass1,
+  withClass2,
+  withClass3,
+  withClass4
+])(new ClassType4()): mixed);
+(fp.match([
+  withClass1,
+  withClass2,
+  withClass3,
+  withClass4,
+  withClass5
+])(new ClassType5()): mixed);

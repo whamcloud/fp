@@ -9,8 +9,6 @@ import { describe, beforeEach, it, expect, jasmine } from './jasmine';
 
 import { Map, fromJS } from 'immutable';
 
-type matchTupleT<T> = [T, (x: Class<T>) => mixed];
-
 describe('the fp module', () => {
   describe('has a curry method', () => {
     let toArray;
@@ -1401,24 +1399,75 @@ describe('the fp module', () => {
   });
 
   describe('match', () => {
-    class FileExists {}
-    class FileDoesNotExist {}
-    let matcher;
+    class ClassType1 {}
+    class ClassType2 {}
+    class ClassType3 {}
+    class ClassType4 {}
+    class ClassType5 {}
+    let withClass1, withClass2, withClass3, withClass4, withClass5;
+    let match;
 
     beforeEach(() => {
-      const case1 = [FileExists, (x: Class<FileExists>) => x];
-      const case2 = [FileDoesNotExist, (x: Class<FileDoesNotExist>) => x];
-      matcher = fp.match([case1, case2]);
+      withClass1 = [ClassType1, (x: ClassType1) => x];
+      withClass2 = [ClassType2, (x: ClassType2) => x];
+      withClass3 = [ClassType3, (x: ClassType3) => x];
+      withClass4 = [ClassType4, (x: ClassType4) => x];
+      withClass5 = [ClassType5, (x: ClassType5) => x];
     });
 
-    it('should match when a file exists', () => {
-      expect(matcher(new FileExists()) instanceof FileExists).toBe(true);
+    describe('with 2 entries', () => {
+      beforeEach(() => {
+        match = fp.match([withClass1, withClass2])(new ClassType1());
+      });
+
+      it('should return an instance of ClassType1', () => {
+        expect(match instanceof ClassType1).toBe(true);
+      });
     });
 
-    it('should match when a file does not exist', () => {
-      expect(matcher(new FileDoesNotExist()) instanceof FileDoesNotExist).toBe(
-        true
-      );
+    describe('with 3 entries', () => {
+      beforeEach(() => {
+        match = fp.match([
+          withClass1,
+          withClass2,
+          withClass3
+        ])(new ClassType2());
+      });
+
+      it('should return an instance of ClassType2', () => {
+        expect(match instanceof ClassType2).toBe(true);
+      });
+    });
+
+    describe('with 4 entries', () => {
+      beforeEach(() => {
+        match = fp.match([
+          withClass1,
+          withClass2,
+          withClass3,
+          withClass4
+        ])(new ClassType3());
+      });
+
+      it('should return an instance of ClassType3', () => {
+        expect(match instanceof ClassType3).toBe(true);
+      });
+    });
+
+    describe('with 5 entries', () => {
+      beforeEach(() => {
+        match = fp.match([
+          withClass1,
+          withClass2,
+          withClass3,
+          withClass4,
+          withClass5
+        ])(new ClassType4());
+      });
+
+      it('should return an instance of ClassType4', () => {
+        expect(match instanceof ClassType4).toBe(true);
+      });
     });
   });
 });
