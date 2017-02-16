@@ -315,7 +315,18 @@ export const times = curry2((fn, num) => {
 export const match = xs => x => {
   const map = new Map(xs);
 
-  const result = Array.from(map).find(([k]) => x instanceof k || x === k);
+  const result = Array.from(map).find(([k]) => {
+    console.log(
+      'typeof k',
+      typeof k,
+      'x',
+      typeof x,
+      typeof k === 'function' && x instanceof k
+    );
+    return typeof k === 'function' && x instanceof k && typeof x === 'object' ||
+      typeof k === 'function' && !(x instanceof k) && k() === x ||
+      x === k;
+  });
 
   if (result) return result[1](x);
   else throw new Error(`could not match on ${String.toString(x)}`);

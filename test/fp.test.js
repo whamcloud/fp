@@ -1453,6 +1453,24 @@ describe('the fp module', () => {
             ClassType2
         ).toBe(true);
       });
+
+      it('should work with a primitive as the matcher', () => {
+        expect(
+          fp.match([
+            ['foo', (() => 'foo': (x: 'foo') => 'foo')],
+            ['bar', (() => 'bar': (x: 'bar') => 'bar')]
+          ])('bar')
+        ).toEqual('bar');
+      });
+
+      it('should work with a function as a matcher', () => {
+        expect(
+          fp.match([
+            [() => 'foo', (() => 'foo': (x: 'foo') => 'foo')],
+            [() => 'bar', (() => 'bar': (x: 'bar') => 'bar')]
+          ])('bar')
+        );
+      });
     });
 
     describe('with 3 entries', () => {
@@ -1494,6 +1512,26 @@ describe('the fp module', () => {
             class3RClass3
           ])(new ClassType3()) instanceof ClassType3
         ).toBe(true);
+      });
+
+      it('should work with a primitive as the matcher', () => {
+        expect(
+          fp.match([
+            ['foo', (() => 'foo': (x: 'foo') => 'foo')],
+            ['bar', (() => 'bar': (x: 'bar') => 'bar')],
+            ['baz', (() => 'baz': (x: 'baz') => 'baz')]
+          ])('baz')
+        ).toEqual('baz');
+      });
+
+      it('should work with a function as a matcher', () => {
+        expect(
+          fp.match([
+            [() => 'foo', (() => 'foo': (x: 'foo') => 'foo')],
+            [() => 'bar', (() => 'bar': (x: 'bar') => 'bar')],
+            [() => 'baz', (() => 'baz': (x: 'baz') => 'baz')]
+          ])('bar')
+        );
       });
     });
 
@@ -1551,6 +1589,28 @@ describe('the fp module', () => {
             class4RClass4
           ])(new ClassType4()) instanceof ClassType4
         ).toBe(true);
+      });
+
+      it('should work with a primitive as the matcher', () => {
+        expect(
+          fp.match([
+            ['foo', (() => 'foo': (x: 'foo') => 'foo')],
+            ['bar', (() => 'bar': (x: 'bar') => 'bar')],
+            ['baz', (() => 'baz': (x: 'baz') => 'baz')],
+            ['bam', (() => 'bam': (x: 'bam') => 'bam')]
+          ])('bam')
+        ).toEqual('bam');
+      });
+
+      it('should work with a function as a matcher', () => {
+        expect(
+          fp.match([
+            [() => 'foo', (() => 'foo': (x: 'foo') => 'foo')],
+            [() => 'bar', (() => 'bar': (x: 'bar') => 'bar')],
+            [() => 'baz', (() => 'baz': (x: 'baz') => 'baz')],
+            [() => 'bam', (() => 'bam': (x: 'bam') => 'bam')]
+          ])('baz')
+        );
       });
     });
 
@@ -1625,6 +1685,30 @@ describe('the fp module', () => {
             class5RClass5
           ])(new ClassType5()) instanceof ClassType5
         ).toBe(true);
+      });
+
+      it('should work with a primitive as the matcher', () => {
+        expect(
+          fp.match([
+            ['foo', (() => 'foo': (x: 'foo') => 'foo')],
+            ['bar', (() => 'bar': (x: 'bar') => 'bar')],
+            ['baz', (() => 'baz': (x: 'baz') => 'baz')],
+            ['bam', (() => 'bam': (x: 'bam') => 'bam')],
+            ['jam', (() => 'jam': (x: 'jam') => 'jam')]
+          ])('bam')
+        ).toEqual('bam');
+      });
+
+      it('should work with a function as a matcher', () => {
+        expect(
+          fp.match([
+            [() => 'foo', (() => 'foo': (x: 'foo') => 'foo')],
+            [() => 'bar', (() => 'bar': (x: 'bar') => 'bar')],
+            [() => 'baz', (() => 'baz': (x: 'baz') => 'baz')],
+            [() => 'bam', (() => 'bam': (x: 'bam') => 'bam')],
+            [() => 'jam', (() => 'jam': (x: 'jam') => 'jam')]
+          ])('bam')
+        );
       });
     });
   });
