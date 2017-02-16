@@ -673,24 +673,72 @@ declare export function times<A>(
   num: number
 ): A[];
 
-declare export function match<A, B>(
-  xs: [[Class<A>, (x: A) => mixed], [Class<B>, (x: B) => mixed]],
+declare export function match1<A, B, R1, R2>(
+  xs: [[Class<A>, (x: A) => R1], [Class<B>, (x: B) => R2]],
   ...rest: empty[]
-): (x: A | B) => mixed;
+): (x: A) => R1;
 
-declare export function match<A, B, C>(
-  xs: [[Class<A>, (x: A) => mixed], [Class<B>, (x: B) => mixed], [Class<C>, (x: C) => mixed]],
+declare export function match2<A, B, R1, R2>(
+  xs: [[Class<A>, (x: A) => R1], [Class<B>, (x: B) => R2]],
   ...rest: empty[]
-): (x: A | B | C) => mixed;
+): (x: B) => R2;
 
-declare export function match<A, B, C, D>(
-  xs: [[Class<A>, (x: A) => mixed], [Class<B>, (x: B) => mixed], [Class<C>, (x: C) => mixed],
-    [Class<D>, (x: D) => mixed]],
+declare export function match1<A, B, C, R1, R2, R3>(
+  xs: [[Class<A>, (x: A) => R1], [Class<B>, (x: B) => R2], [Class<C>, (x: C) => R3]],
   ...rest: empty[]
-): (x: A | B | C | D) => mixed;
+): (x: A) => R1;
 
-declare export function match<A, B, C, D, E>(
-  xs: [[Class<A>, (x: A) => mixed], [Class<B>, (x: B) => mixed], [Class<C>, (x: C) => mixed],
-    [Class<D>, (x: D) => mixed], [Class<E>, (x: E) => mixed]],
+declare export function match2<A, B, C, R1, R2, R3>(
+  xs: [[Class<A>, (x: A) => R1], [Class<B>, (x: B) => R2], [Class<C>, (x: C) => R3]],
   ...rest: empty[]
-): (x: A | B | C | D | E) => mixed;
+): (x: B) => R2;
+
+declare export function match3<A, B, C, R1, R2, R3>(
+  xs: [[Class<A>, (x: A) => R1], [Class<B>, (x: B) => R2], [Class<C>, (x: C) => R3]],
+  ...rest: empty[]
+): (x: C) => R3;
+
+declare export function match1<A, B, C, D, R1, R2, R3, R4>(
+  xs: [[Class<A>, (x: A) => R1], [Class<B>, (x: B) => R2], [Class<C>, (x: C) => R3], [Class<D>, (x: D) => R4]],
+  ...rest: empty[]
+): (x: A) => R1;
+
+declare export function match2<A, B, C, D, R1, R2, R3, R4>(
+  xs: [[Class<A>, (x: A) => R1], [Class<B>, (x: B) => R2], [Class<C>, (x: C) => R3], [Class<D>, (x: D) => R4]],
+  ...rest: empty[]
+): (x: B) => R2;
+
+declare export function match3<A, B, C, D, R1, R2, R3, R4>(
+  xs: [[Class<A>, (x: A) => R1], [Class<B>, (x: B) => R2], [Class<C>, (x: C) => R3], [Class<D>, (x: D) => R4]],
+  ...rest: empty[]
+): (x: C) => R3;
+
+declare export function match4<A, B, C, D, R1, R2, R3, R4>(
+  xs: [[Class<A>, (x: A) => R1], [Class<B>, (x: B) => R2], [Class<C>, (x: C) => R3], [Class<D>, (x: D) => R4]],
+  ...rest: empty[]
+): (x: D) => R4;
+
+declare export function match1<A, B, C, D, E, R1, R2, R3, R4, R5>(
+  xs: [[Class<A>, (x: A) => R1], [Class<B>, (x: B) => R2], [Class<C>, (x: C) => R3], [Class<D>, (x: D) => R4], [Class<E>, (x: E) => R5]],
+  ...rest: empty[]
+): (x: A) => R1;
+
+declare export function match2<A, B, C, D, E, R1, R2, R3, R4, R5>(
+  xs: [[Class<A>, (x: A) => R1], [Class<B>, (x: B) => R2], [Class<C>, (x: C) => R3], [Class<D>, (x: D) => R4], [Class<E>, (x: E) => R5]],
+  ...rest: empty[]
+): (x: B) => R2;
+
+declare export function match3<A, B, C, D, E, R1, R2, R3, R4, R5>(
+  xs: [[Class<A>, (x: A) => R1], [Class<B>, (x: B) => R2], [Class<C>, (x: C) => R3], [Class<D>, (x: D) => R4], [Class<E>, (x: E) => R5]],
+  ...rest: empty[]
+): (x: C) => R3;
+
+declare export function match4<A, B, C, D, E, R1, R2, R3, R4, R5>(
+  xs: [[Class<A>, (x: A) => R1], [Class<B>, (x: B) => R2], [Class<C>, (x: C) => R3], [Class<D>, (x: D) => R4], [Class<E>, (x: E) => R5]],
+  ...rest: empty[]
+): (x: D) => R4;
+
+declare export function match5<A, B, C, D, E, R1, R2, R3, R4, R5>(
+  xs: [[Class<A>, (x: A) => R1], [Class<B>, (x: B) => R2], [Class<C>, (x: C) => R3], [Class<D>, (x: D) => R4], [Class<E>, (x: E) => R5]],
+  ...rest: empty[]
+): (x: E) => R5;

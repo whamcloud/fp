@@ -1397,76 +1397,234 @@ describe('the fp module', () => {
       expect(result).toEqual([1, 2, 3, 4, 5]);
     });
   });
-
   describe('match', () => {
     class ClassType1 {}
     class ClassType2 {}
     class ClassType3 {}
     class ClassType4 {}
     class ClassType5 {}
-    let withClass1, withClass2, withClass3, withClass4, withClass5;
-    let match;
+    let class1RClass1,
+      class1RString,
+      class2RClass2,
+      class2RString,
+      class3RClass3,
+      class3RString,
+      class4RClass4,
+      class4RString,
+      class5RClass5,
+      class5RString;
 
     beforeEach(() => {
-      withClass1 = [ClassType1, (x: ClassType1) => x];
-      withClass2 = [ClassType2, (x: ClassType2) => x];
-      withClass3 = [ClassType3, (x: ClassType3) => x];
-      withClass4 = [ClassType4, (x: ClassType4) => x];
-      withClass5 = [ClassType5, (x: ClassType5) => x];
+      class1RClass1 = [ClassType1, (x: ClassType1) => x];
+      class1RString = [ClassType1, () => 'foo'];
+      class2RClass2 = [ClassType2, (x: ClassType2) => x];
+      class2RString = [ClassType2, () => 'bar'];
+      class3RClass3 = [ClassType3, (x: ClassType3) => x];
+      class3RString = [ClassType3, () => 'baz'];
+      class4RClass4 = [ClassType4, (x: ClassType4) => x];
+      class4RString = [ClassType4, () => 'bam'];
+      class5RClass5 = [ClassType5, (x: ClassType5) => x];
+      class5RString = [ClassType5, () => 'jam'];
     });
 
     describe('with 2 entries', () => {
-      beforeEach(() => {
-        match = fp.match([withClass1, withClass2])(new ClassType1());
+      it('should return "foo"', () => {
+        expect(
+          fp.match1([class1RString, class2RString])(new ClassType1())
+        ).toEqual('foo');
       });
 
       it('should return an instance of ClassType1', () => {
-        expect(match instanceof ClassType1).toBe(true);
+        expect(
+          fp.match1([class1RClass1, class2RString])(new ClassType1()) instanceof
+            ClassType1
+        ).toBe(true);
+      });
+
+      it('should return "bar"', () => {
+        expect(
+          fp.match2([class1RString, class2RString])(new ClassType2())
+        ).toEqual('bar');
+      });
+
+      it('should return an instance of ClassType2', () => {
+        expect(
+          fp.match2([class1RString, class2RClass2])(new ClassType2()) instanceof
+            ClassType2
+        ).toBe(true);
       });
     });
 
     describe('with 3 entries', () => {
-      beforeEach(() => {
-        match = fp.match([
-          withClass1,
-          withClass2,
-          withClass3
-        ])(new ClassType2());
+      it('should return "foo"', () => {
+        expect(
+          fp.match1([
+            class1RString,
+            class2RString,
+            class3RString
+          ])(new ClassType1())
+        ).toEqual('foo');
       });
 
-      it('should return an instance of ClassType2', () => {
-        expect(match instanceof ClassType2).toBe(true);
+      it('should return "bar"', () => {
+        expect(
+          fp.match2([
+            class1RString,
+            class2RString,
+            class3RString
+          ])(new ClassType2())
+        ).toEqual('bar');
+      });
+
+      it('should return "baz"', () => {
+        expect(
+          fp.match3([
+            class1RString,
+            class2RString,
+            class3RString
+          ])(new ClassType3())
+        ).toEqual('baz');
+      });
+
+      it('should return an instance of ClassType3', () => {
+        expect(
+          fp.match3([
+            class1RString,
+            class2RString,
+            class3RClass3
+          ])(new ClassType3()) instanceof ClassType3
+        ).toBe(true);
       });
     });
 
     describe('with 4 entries', () => {
-      beforeEach(() => {
-        match = fp.match([
-          withClass1,
-          withClass2,
-          withClass3,
-          withClass4
-        ])(new ClassType3());
+      it('should return "foo"', () => {
+        expect(
+          fp.match1([
+            class1RString,
+            class2RString,
+            class3RString,
+            class4RString
+          ])(new ClassType1())
+        ).toEqual('foo');
       });
 
-      it('should return an instance of ClassType3', () => {
-        expect(match instanceof ClassType3).toBe(true);
+      it('should return "bar"', () => {
+        expect(
+          fp.match2([
+            class1RClass1,
+            class2RString,
+            class3RString,
+            class4RString
+          ])(new ClassType2())
+        ).toEqual('bar');
+      });
+
+      it('should return "baz"', () => {
+        expect(
+          fp.match3([
+            class1RClass1,
+            class2RClass2,
+            class3RString,
+            class4RString
+          ])(new ClassType3())
+        ).toEqual('baz');
+      });
+
+      it('should return "bam"', () => {
+        expect(
+          fp.match4([
+            class1RString,
+            class2RString,
+            class3RString,
+            class4RString
+          ])(new ClassType4())
+        ).toEqual('bam');
+      });
+
+      it('should return an instance of ClassType4', () => {
+        expect(
+          fp.match4([
+            class1RString,
+            class2RString,
+            class3RString,
+            class4RClass4
+          ])(new ClassType4()) instanceof ClassType4
+        ).toBe(true);
       });
     });
 
     describe('with 5 entries', () => {
-      beforeEach(() => {
-        match = fp.match([
-          withClass1,
-          withClass2,
-          withClass3,
-          withClass4,
-          withClass5
-        ])(new ClassType4());
+      it('should return "foo"', () => {
+        expect(
+          fp.match1([
+            class1RString,
+            class2RString,
+            class3RString,
+            class4RString,
+            class5RString
+          ])(new ClassType1())
+        ).toEqual('foo');
       });
 
-      it('should return an instance of ClassType4', () => {
-        expect(match instanceof ClassType4).toBe(true);
+      it('should return "bar"', () => {
+        expect(
+          fp.match2([
+            class1RClass1,
+            class2RString,
+            class3RString,
+            class4RString,
+            class5RString
+          ])(new ClassType2())
+        ).toEqual('bar');
+      });
+
+      it('should return "baz"', () => {
+        expect(
+          fp.match3([
+            class1RClass1,
+            class2RClass2,
+            class3RString,
+            class4RString,
+            class5RString
+          ])(new ClassType3())
+        ).toEqual('baz');
+      });
+
+      it('should return "bam"', () => {
+        expect(
+          fp.match4([
+            class1RString,
+            class2RString,
+            class3RString,
+            class4RString,
+            class5RString
+          ])(new ClassType4())
+        ).toEqual('bam');
+      });
+
+      it('should return "jam"', () => {
+        expect(
+          fp.match5([
+            class1RString,
+            class2RString,
+            class3RString,
+            class4RString,
+            class5RString
+          ])(new ClassType5())
+        ).toEqual('jam');
+      });
+
+      it('should return an instance of ClassType5', () => {
+        expect(
+          fp.match5([
+            class1RString,
+            class2RString,
+            class3RString,
+            class4RClass4,
+            class5RClass5
+          ])(new ClassType5()) instanceof ClassType5
+        ).toBe(true);
       });
     });
   });
