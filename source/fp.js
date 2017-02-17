@@ -313,14 +313,11 @@ export const times = curry2((fn, num) => {
 });
 
 function isClass(x: mixed) {
-  return typeof x === 'function' &&
-    Function.prototype.toString.call(x).indexOf('class') > -1;
+  return typeof x === 'function' && x.toString().indexOf('class') > -1;
 }
 
 export const match = xs => x => {
-  const map = new Map(xs);
-
-  const result = Array.from(map).find(([k]) => {
+  const result = xs.find(([k]) => {
     return isClass(k) && x instanceof k ||
       typeof k === 'function' && !isClass(k) && k() === x ||
       x === k;

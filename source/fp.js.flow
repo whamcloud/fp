@@ -673,26 +673,25 @@ declare export function times<A>(
   num: number
 ): A[];
 
-type IToR <I, R> = (I) => R;
 type MatchInput <T> = Class<T> | (() => T) | T;
-declare export function match<A, B, R1, R2, F1:IToR<A, R1>, F2:IToR<B, R2>>(
+declare export function match<A, B, R1, R2, F1:Fn1<A, R1>, F2:Fn1<B, R2>>(
   xs: [[MatchInput<A>, F1], [MatchInput<B>, F2]],
   ...rest: empty[]
 ): F1 & F2;
 
-declare export function match<A, B, C, R1, R2, R3, F1:IToR<A, R1>, F2:IToR<B, R2>, F3:IToR<C, R3>>(
+declare export function match<A, B, C, R1, R2, R3, F1:Fn1<A, R1>, F2:Fn1<B, R2>, F3:Fn1<C, R3>>(
   xs: [[MatchInput<A>, F1], [MatchInput<B>, F2], [MatchInput<C>, F3]],
   ...rest: empty[]
 ): F1 & F2 & F3;
 
-declare export function match<A, B, C, D, R1, R2, R3, R4, F1:IToR<A, R1>, F2:IToR<B, R2>, F3:IToR<C, R3>,
-  F4:IToR<D, R4>>(
+declare export function match<A, B, C, D, R1, R2, R3, R4, F1:Fn1<A, R1>, F2:Fn1<B, R2>, F3:Fn1<C, R3>,
+  F4:Fn1<D, R4>>(
   xs: [[MatchInput<A>, F1], [MatchInput<B>, F2], [MatchInput<C>, F3], [MatchInput<D>, F4]],
   ...rest: empty[]
 ): F1 & F2 & F3 & F4;
 
-declare export function match<A, B, C, D, E, R1, R2, R3, R4, R5, F1:IToR<A, R1>, F2:IToR<B, R2>, F3:IToR<C, R3>,
-  F4:IToR<D, R4>, F5:IToR<E, R5>>(
+declare export function match<A, B, C, D, E, R1, R2, R3, R4, R5, F1:Fn1<A, R1>, F2:Fn1<B, R2>, F3:Fn1<C, R3>,
+  F4:Fn1<D, R4>, F5:Fn1<E, R5>>(
   xs: [[MatchInput<A>, F1], [MatchInput<B>, F2], [MatchInput<C>, F3], [MatchInput<D>, F4], [MatchInput<E>, F5]],
   ...rest: empty[]
 ): F1 & F2 & F3 & F4 & F5;

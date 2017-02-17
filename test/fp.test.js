@@ -1416,299 +1416,277 @@ describe('the fp module', () => {
 
     beforeEach(() => {
       class1RClass1 = [ClassType1, (x: ClassType1) => x];
-      class1RString = [ClassType1, () => 'foo'];
+      class1RString = [ClassType1, (() => 'foo': (x: ClassType1) => 'foo')];
       class2RClass2 = [ClassType2, (x: ClassType2) => x];
-      class2RString = [ClassType2, () => 'bar'];
+      class2RString = [ClassType2, (() => 'bar': (x: ClassType2) => 'bar')];
       class3RClass3 = [ClassType3, (x: ClassType3) => x];
-      class3RString = [ClassType3, () => 'baz'];
+      class3RString = [ClassType3, (() => 'baz': (x: ClassType3) => 'baz')];
       class4RClass4 = [ClassType4, (x: ClassType4) => x];
-      class4RString = [ClassType4, () => 'bam'];
+      class4RString = [ClassType4, (() => 'bam': (x: ClassType4) => 'bam')];
       class5RClass5 = [ClassType5, (x: ClassType5) => x];
-      class5RString = [ClassType5, () => 'jam'];
+      class5RString = [ClassType5, (() => 'jam': (x: ClassType5) => 'jam')];
     });
 
     describe('with 2 entries', () => {
       it('should return "foo"', () => {
-        expect(
-          fp.match([class1RString, class2RString])(new ClassType1())
-        ).toEqual('foo');
+        const r = fp.match([class1RString, class2RString])(new ClassType1());
+        expect(r).toEqual('foo');
       });
 
       it('should return an instance of ClassType1', () => {
-        expect(
-          fp.match([class1RClass1, class2RString])(new ClassType1()) instanceof
-            ClassType1
-        ).toBe(true);
+        const r = fp.match([
+          class1RClass1,
+          class2RString
+        ])(new ClassType1()) instanceof ClassType1;
+        expect(r).toBe(true);
       });
 
       it('should return "bar"', () => {
-        expect(
-          fp.match([class1RString, class2RString])(new ClassType2())
-        ).toEqual('bar');
+        const r = fp.match([class1RString, class2RString])(new ClassType2());
+        expect(r).toEqual('bar');
       });
 
       it('should return an instance of ClassType2', () => {
-        expect(
-          fp.match([class1RString, class2RClass2])(new ClassType2()) instanceof
-            ClassType2
-        ).toBe(true);
+        const r = fp.match([
+          class1RString,
+          class2RClass2
+        ])(new ClassType2()) instanceof ClassType2;
+        expect(r).toBe(true);
       });
 
       it('should work with a primitive as the matcher', () => {
-        expect(
-          fp.match([
-            ['foo', (() => 'foo': (x: 'foo') => 'foo')],
-            ['bar', (() => 'bar': (x: 'bar') => 'bar')]
-          ])('bar')
-        ).toEqual('bar');
+        const r = fp.match([
+          ['foo', (() => 'foo': (x: 'foo') => 'foo')],
+          ['bar', (() => 'bar': (x: 'bar') => 'bar')]
+        ])('bar');
+        expect(r).toEqual('bar');
       });
 
       it('should work with a function as a matcher', () => {
-        expect(
-          fp.match([
-            [() => 'foo', (() => 'foo': (x: 'foo') => 'foo')],
-            [() => 'bar', (() => 'bar': (x: 'bar') => 'bar')]
-          ])('bar')
-        );
+        const r = fp.match([
+          [() => 'foo', (() => 'foo': (x: 'foo') => 'foo')],
+          [() => 'bar', (() => 'bar': (x: 'bar') => 'bar')]
+        ])('bar');
+        expect(r).toEqual('bar');
       });
     });
 
     describe('with 3 entries', () => {
       it('should return "foo"', () => {
-        expect(
-          fp.match([
-            class1RString,
-            class2RString,
-            class3RString
-          ])(new ClassType1())
-        ).toEqual('foo');
+        const r = fp.match([
+          class1RString,
+          class2RString,
+          class3RString
+        ])(new ClassType1());
+        expect(r).toEqual('foo');
       });
 
       it('should return "bar"', () => {
-        expect(
-          fp.match([
-            class1RString,
-            class2RString,
-            class3RString
-          ])(new ClassType2())
-        ).toEqual('bar');
+        const r = fp.match([
+          class1RString,
+          class2RString,
+          class3RString
+        ])(new ClassType2());
+
+        expect(r).toEqual('bar');
       });
 
       it('should return "baz"', () => {
-        expect(
-          fp.match([
-            class1RString,
-            class2RString,
-            class3RString
-          ])(new ClassType3())
-        ).toEqual('baz');
+        const r = fp.match([
+          class1RString,
+          class2RString,
+          class3RString
+        ])(new ClassType3());
+        expect(r).toEqual('baz');
       });
 
       it('should return an instance of ClassType3', () => {
-        expect(
-          fp.match([
-            class1RString,
-            class2RString,
-            class3RClass3
-          ])(new ClassType3()) instanceof ClassType3
-        ).toBe(true);
+        const r = fp.match([
+          class1RString,
+          class2RString,
+          class3RClass3
+        ])(new ClassType3()) instanceof ClassType3;
+        expect(r).toBe(true);
       });
 
       it('should work with a primitive as the matcher', () => {
-        expect(
-          fp.match([
-            ['foo', (() => 'foo': (x: 'foo') => 'foo')],
-            ['bar', (() => 'bar': (x: 'bar') => 'bar')],
-            ['baz', (() => 'baz': (x: 'baz') => 'baz')]
-          ])('baz')
-        ).toEqual('baz');
+        const r = fp.match([
+          ['foo', (() => 'foo': (x: 'foo') => 'foo')],
+          ['bar', (() => 'bar': (x: 'bar') => 'bar')],
+          ['baz', (() => 'baz': (x: 'baz') => 'baz')]
+        ])('baz');
+        expect(r).toEqual('baz');
       });
 
       it('should work with a function as a matcher', () => {
-        expect(
-          fp.match([
-            [() => 'foo', (() => 'foo': (x: 'foo') => 'foo')],
-            [() => 'bar', (() => 'bar': (x: 'bar') => 'bar')],
-            [() => 'baz', (() => 'baz': (x: 'baz') => 'baz')]
-          ])('bar')
-        );
+        const r = fp.match([
+          [() => 'foo', (() => 'foo': (x: 'foo') => 'foo')],
+          [() => 'bar', (() => 'bar': (x: 'bar') => 'bar')],
+          [() => 'baz', (() => 'baz': (x: 'baz') => 'baz')]
+        ])('bar');
+        expect(r).toEqual('bar');
       });
     });
 
     describe('with 4 entries', () => {
       it('should return "foo"', () => {
-        expect(
-          fp.match([
-            class1RString,
-            class2RString,
-            class3RString,
-            class4RString
-          ])(new ClassType1())
-        ).toEqual('foo');
+        const r = fp.match([
+          class1RString,
+          class2RString,
+          class3RString,
+          class4RString
+        ])(new ClassType1());
+        expect(r).toEqual('foo');
       });
 
       it('should return "bar"', () => {
-        expect(
-          fp.match([
-            class1RClass1,
-            class2RString,
-            class3RString,
-            class4RString
-          ])(new ClassType2())
-        ).toEqual('bar');
+        const r = fp.match([
+          class1RClass1,
+          class2RString,
+          class3RString,
+          class4RString
+        ])(new ClassType2());
+        expect(r).toEqual('bar');
       });
 
       it('should return "baz"', () => {
-        expect(
-          fp.match([
-            class1RClass1,
-            class2RClass2,
-            class3RString,
-            class4RString
-          ])(new ClassType3())
-        ).toEqual('baz');
+        const r = fp.match([
+          class1RClass1,
+          class2RClass2,
+          class3RString,
+          class4RString
+        ])(new ClassType3());
+        expect(r).toEqual('baz');
       });
 
       it('should return "bam"', () => {
-        expect(
-          fp.match([
-            class1RString,
-            class2RString,
-            class3RString,
-            class4RString
-          ])(new ClassType4())
-        ).toEqual('bam');
+        const r = fp.match([
+          class1RString,
+          class2RString,
+          class3RString,
+          class4RString
+        ])(new ClassType4());
+        expect(r).toEqual('bam');
       });
 
       it('should return an instance of ClassType4', () => {
-        expect(
-          fp.match([
-            class1RString,
-            class2RString,
-            class3RString,
-            class4RClass4
-          ])(new ClassType4()) instanceof ClassType4
-        ).toBe(true);
+        const r = fp.match([
+          class1RString,
+          class2RString,
+          class3RString,
+          class4RClass4
+        ])(new ClassType4()) instanceof ClassType4;
+        expect(r).toBe(true);
       });
 
       it('should work with a primitive as the matcher', () => {
-        expect(
-          fp.match([
-            ['foo', (() => 'foo': (x: 'foo') => 'foo')],
-            ['bar', (() => 'bar': (x: 'bar') => 'bar')],
-            ['baz', (() => 'baz': (x: 'baz') => 'baz')],
-            ['bam', (() => 'bam': (x: 'bam') => 'bam')]
-          ])('bam')
-        ).toEqual('bam');
+        const r = fp.match([
+          ['foo', (() => 'foo': (x: 'foo') => 'foo')],
+          ['bar', (() => 'bar': (x: 'bar') => 'bar')],
+          ['baz', (() => 'baz': (x: 'baz') => 'baz')],
+          ['bam', (() => 'bam': (x: 'bam') => 'bam')]
+        ])('bam');
+        expect(r).toEqual('bam');
       });
 
       it('should work with a function as a matcher', () => {
-        expect(
-          fp.match([
-            [() => 'foo', (() => 'foo': (x: 'foo') => 'foo')],
-            [() => 'bar', (() => 'bar': (x: 'bar') => 'bar')],
-            [() => 'baz', (() => 'baz': (x: 'baz') => 'baz')],
-            [() => 'bam', (() => 'bam': (x: 'bam') => 'bam')]
-          ])('baz')
-        );
+        const r = fp.match([
+          [() => 'foo', (() => 'foo': (x: 'foo') => 'foo')],
+          [() => 'bar', (() => 'bar': (x: 'bar') => 'bar')],
+          [() => 'baz', (() => 'baz': (x: 'baz') => 'baz')],
+          [() => 'bam', (() => 'bam': (x: 'bam') => 'bam')]
+        ])('baz');
+        expect(r).toEqual('baz');
       });
     });
 
     describe('with 5 entries', () => {
       it('should return "foo"', () => {
-        expect(
-          fp.match([
-            class1RString,
-            class2RString,
-            class3RString,
-            class4RString,
-            class5RString
-          ])(new ClassType1())
-        ).toEqual('foo');
+        const r = fp.match([
+          class1RString,
+          class2RString,
+          class3RString,
+          class4RString,
+          class5RString
+        ])(new ClassType1());
+        expect(r).toEqual('foo');
       });
 
       it('should return "bar"', () => {
-        expect(
-          fp.match([
-            class1RClass1,
-            class2RString,
-            class3RString,
-            class4RString,
-            class5RString
-          ])(new ClassType2())
-        ).toEqual('bar');
+        const r = fp.match([
+          class1RClass1,
+          class2RString,
+          class3RString,
+          class4RString,
+          class5RString
+        ])(new ClassType2());
+        expect(r).toEqual('bar');
       });
 
       it('should return "baz"', () => {
-        expect(
-          fp.match([
-            class1RClass1,
-            class2RClass2,
-            class3RString,
-            class4RString,
-            class5RString
-          ])(new ClassType3())
-        ).toEqual('baz');
+        const r = fp.match([
+          class1RClass1,
+          class2RClass2,
+          class3RString,
+          class4RString,
+          class5RString
+        ])(new ClassType3());
+        expect(r).toEqual('baz');
       });
 
       it('should return "bam"', () => {
-        expect(
-          fp.match([
-            class1RString,
-            class2RString,
-            class3RString,
-            class4RString,
-            class5RString
-          ])(new ClassType4())
-        ).toEqual('bam');
+        const r = fp.match([
+          class1RString,
+          class2RString,
+          class3RString,
+          class4RString,
+          class5RString
+        ])(new ClassType4());
+        expect(r).toEqual('bam');
       });
 
       it('should return "jam"', () => {
-        expect(
-          fp.match([
-            class1RString,
-            class2RString,
-            class3RString,
-            class4RString,
-            class5RString
-          ])(new ClassType5())
-        ).toEqual('jam');
+        const r = fp.match([
+          class1RString,
+          class2RString,
+          class3RString,
+          class4RString,
+          class5RString
+        ])(new ClassType5());
+        expect(r).toEqual('jam');
       });
 
       it('should return an instance of ClassType5', () => {
-        expect(
-          fp.match([
-            class1RString,
-            class2RString,
-            class3RString,
-            class4RClass4,
-            class5RClass5
-          ])(new ClassType5()) instanceof ClassType5
-        ).toBe(true);
+        const r = fp.match([
+          class1RString,
+          class2RString,
+          class3RString,
+          class4RClass4,
+          class5RClass5
+        ])(new ClassType5()) instanceof ClassType5;
+        expect(r).toBe(true);
       });
 
       it('should work with a primitive as the matcher', () => {
-        expect(
-          fp.match([
-            ['foo', (() => 'foo': (x: 'foo') => 'foo')],
-            ['bar', (() => 'bar': (x: 'bar') => 'bar')],
-            ['baz', (() => 'baz': (x: 'baz') => 'baz')],
-            ['bam', (() => 'bam': (x: 'bam') => 'bam')],
-            ['jam', (() => 'jam': (x: 'jam') => 'jam')]
-          ])('jam')
-        ).toEqual('jam');
+        const r = fp.match([
+          ['foo', (() => 'foo': (x: 'foo') => 'foo')],
+          ['bar', (() => 'bar': (x: 'bar') => 'bar')],
+          ['baz', (() => 'baz': (x: 'baz') => 'baz')],
+          ['bam', (() => 'bam': (x: 'bam') => 'bam')],
+          ['jam', (() => 'jam': (x: 'jam') => 'jam')]
+        ])('jam');
+        expect(r).toEqual('jam');
       });
 
       it('should work with a function as a matcher', () => {
-        expect(
-          fp.match([
-            [() => 'foo', (() => 'foo': (x: 'foo') => 'foo')],
-            [() => 'bar', (() => 'bar': (x: 'bar') => 'bar')],
-            [() => 'baz', (() => 'baz': (x: 'baz') => 'baz')],
-            [() => 'bam', (() => 'bam': (x: 'bam') => 'bam')],
-            [() => 'jam', (() => 'jam': (x: 'jam') => 'jam')]
-          ])('bam')
-        ).toEqual('bam');
+        const r = fp.match([
+          [() => 'foo', (() => 'foo': (x: 'foo') => 'foo')],
+          [() => 'bar', (() => 'bar': (x: 'bar') => 'bar')],
+          [() => 'baz', (() => 'baz': (x: 'baz') => 'baz')],
+          [() => 'bam', (() => 'bam': (x: 'bam') => 'bam')],
+          [() => 'jam', (() => 'jam': (x: 'jam') => 'jam')]
+        ])('bam');
+        expect(r).toEqual('bam');
       });
     });
   });
