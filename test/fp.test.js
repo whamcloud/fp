@@ -1695,8 +1695,8 @@ describe('the fp module', () => {
             ['baz', (() => 'baz': (x: 'baz') => 'baz')],
             ['bam', (() => 'bam': (x: 'bam') => 'bam')],
             ['jam', (() => 'jam': (x: 'jam') => 'jam')]
-          ])('bam')
-        ).toEqual('bam');
+          ])('jam')
+        ).toEqual('jam');
       });
 
       it('should work with a function as a matcher', () => {
@@ -1708,7 +1708,7 @@ describe('the fp module', () => {
             [() => 'bam', (() => 'bam': (x: 'bam') => 'bam')],
             [() => 'jam', (() => 'jam': (x: 'jam') => 'jam')]
           ])('bam')
-        );
+        ).toEqual('bam');
       });
     });
   });

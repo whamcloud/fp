@@ -312,19 +312,17 @@ export const times = curry2((fn, num) => {
   return list;
 });
 
+function isClass(x: mixed) {
+  return typeof x === 'function' &&
+    Function.prototype.toString.call(x).indexOf('class') > -1;
+}
+
 export const match = xs => x => {
   const map = new Map(xs);
 
   const result = Array.from(map).find(([k]) => {
-    console.log(
-      'typeof k',
-      typeof k,
-      'x',
-      typeof x,
-      typeof k === 'function' && x instanceof k
-    );
-    return typeof k === 'function' && x instanceof k && typeof x === 'object' ||
-      typeof k === 'function' && !(x instanceof k) && k() === x ||
+    return isClass(k) && x instanceof k ||
+      typeof k === 'function' && !isClass(k) && k() === x ||
       x === k;
   });
 
