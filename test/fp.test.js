@@ -1437,7 +1437,8 @@ describe('the fp module', () => {
         const r = fp.match([
           class1RClass1,
           class2RString
-        ])(new ClassType1()) instanceof ClassType1;
+        ])(new ClassType1()) instanceof
+          ClassType1;
         expect(r).toBe(true);
       });
 
@@ -1450,7 +1451,8 @@ describe('the fp module', () => {
         const r = fp.match([
           class1RString,
           class2RClass2
-        ])(new ClassType2()) instanceof ClassType2;
+        ])(new ClassType2()) instanceof
+          ClassType2;
         expect(r).toBe(true);
       });
 
@@ -1505,7 +1507,8 @@ describe('the fp module', () => {
           class1RString,
           class2RString,
           class3RClass3
-        ])(new ClassType3()) instanceof ClassType3;
+        ])(new ClassType3()) instanceof
+          ClassType3;
         expect(r).toBe(true);
       });
 
@@ -1575,7 +1578,8 @@ describe('the fp module', () => {
           class2RString,
           class3RString,
           class4RClass4
-        ])(new ClassType4()) instanceof ClassType4;
+        ])(new ClassType4()) instanceof
+          ClassType4;
         expect(r).toBe(true);
       });
 
@@ -1663,7 +1667,8 @@ describe('the fp module', () => {
           class3RString,
           class4RClass4,
           class5RClass5
-        ])(new ClassType5()) instanceof ClassType5;
+        ])(new ClassType5()) instanceof
+          ClassType5;
         expect(r).toBe(true);
       });
 
