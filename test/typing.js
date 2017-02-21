@@ -71,26 +71,18 @@ const class5RString = [ClassType5, (() => 'bam': (x: ClassType5) => 'bam')];
   [() => 'bar', (() => 'bar': (x: 'bar') => 'bar')]
 ])('foo'): 'foo');
 // 3 entries
-(fp.match([
-  class1RString,
-  class2RClass2,
-  class3RClass3
-])(new ClassType1()): 'test');
-(fp.match([
-  class1RString,
-  class2RClass2,
-  class3RString
-])(new ClassType2()): ClassType2);
-(fp.match([
-  class1RString,
-  class2RClass2,
-  class3RString
-])(new ClassType3()): 'bar');
-(fp.match([
-  class1RString,
-  class2RClass2,
-  class3RClass3
-])(new ClassType3()): ClassType3);
+(fp.match([class1RString, class2RClass2, class3RClass3])(
+  new ClassType1()
+): 'test');
+(fp.match([class1RString, class2RClass2, class3RString])(
+  new ClassType2()
+): ClassType2);
+(fp.match([class1RString, class2RClass2, class3RString])(
+  new ClassType3()
+): 'bar');
+(fp.match([class1RString, class2RClass2, class3RClass3])(
+  new ClassType3()
+): ClassType3);
 (fp.match([
   ['foo', (() => 'foo': (x: 'foo') => 'foo')],
   ['bar', (() => 'bar': (x: 'bar') => 'bar')],
@@ -103,36 +95,21 @@ const class5RString = [ClassType5, (() => 'bam': (x: ClassType5) => 'bam')];
 ])('bar'): 'bar');
 
 // 4 entries
-(fp.match([
-  class1RString,
-  class2RClass2,
-  class3RString,
-  class4RClass4
-])(new ClassType1()): 'test');
-(fp.match([
-  class1RString,
-  class2RClass2,
-  class3RString,
-  class4RClass4
-])(new ClassType2()): ClassType2);
-(fp.match([
-  class1RString,
-  class2RClass2,
-  class3RString,
-  class4RClass4
-])(new ClassType3()): 'bar');
-(fp.match([
-  class1RString,
-  class2RClass2,
-  class3RString,
-  class4RClass4
-])(new ClassType4()): ClassType4);
-(fp.match([
-  class1RString,
-  class2RClass2,
-  class3RString,
-  class4RString
-])(new ClassType4()): 'baz');
+(fp.match([class1RString, class2RClass2, class3RString, class4RClass4])(
+  new ClassType1()
+): 'test');
+(fp.match([class1RString, class2RClass2, class3RString, class4RClass4])(
+  new ClassType2()
+): ClassType2);
+(fp.match([class1RString, class2RClass2, class3RString, class4RClass4])(
+  new ClassType3()
+): 'bar');
+(fp.match([class1RString, class2RClass2, class3RString, class4RClass4])(
+  new ClassType4()
+): ClassType4);
+(fp.match([class1RString, class2RClass2, class3RString, class4RString])(
+  new ClassType4()
+): 'baz');
 (fp.match([
   ['foo', (() => 'foo': (x: 'foo') => 'foo')],
   ['bar', (() => 'bar': (x: 'bar') => 'bar')],

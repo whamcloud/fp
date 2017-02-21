@@ -125,8 +125,8 @@ describe('the fp module', () => {
       expect(maybe.from(result)).toBe(1);
     });
 
-    it('should return undefined on no match', () => {
-      expect(maybe.from(fp.find(fp.eq(10), [1, 2, 3]))).toBe(undefined);
+    it('should return null on no match', () => {
+      expect(maybe.from(fp.find(fp.eq(10), [1, 2, 3]))).toBe(null);
     });
   });
 
@@ -988,14 +988,14 @@ describe('the fp module', () => {
     it('should pull the first value off an array', () => {
       expect(maybe.from(fp.head([1, 2, 3]))).toBe(1);
     });
-    it('should return undefined if array is empty', () => {
-      expect(maybe.from(fp.head([]))).toBe(undefined);
+    it('should return null if array is empty', () => {
+      expect(maybe.from(fp.head([]))).toBe(null);
     });
     it('should work with a string', () => {
       expect(maybe.from(fp.head('foo'))).toBe('f');
     });
-    it('should return undefined when called with an empty string', () => {
-      expect(maybe.from(fp.head(''))).toBe(undefined);
+    it('should return null when called with an empty string', () => {
+      expect(maybe.from(fp.head(''))).toBe(null);
     });
   });
   describe('has an arrayWrap method', () => {
@@ -1123,14 +1123,14 @@ describe('the fp module', () => {
       const items = [1, 2, 3];
       expect(maybe.from(fp.last(items))).toBe(3);
     });
-    it('should return undefined if the list is empty', () => {
-      expect(maybe.from(fp.last([]))).toBe(undefined);
+    it('should return null if the list is empty', () => {
+      expect(maybe.from(fp.last([]))).toBe(null);
     });
     it('should work with a string', () => {
       expect(maybe.from(fp.last('foo'))).toBe('o');
     });
-    it('should return undefined when called with an empty string', () => {
-      expect(maybe.from(fp.last(''))).toBe(undefined);
+    it('should return null when called with an empty string', () => {
+      expect(maybe.from(fp.last(''))).toBe(null);
     });
   });
   describe('has a tap method', () => {
@@ -1413,7 +1413,6 @@ describe('the fp module', () => {
       class4RString,
       class5RClass5,
       class5RString;
-
     beforeEach(() => {
       class1RClass1 = [ClassType1, (x: ClassType1) => x];
       class1RString = [ClassType1, (() => 'foo': (x: ClassType1) => 'foo')];
@@ -1426,36 +1425,27 @@ describe('the fp module', () => {
       class5RClass5 = [ClassType5, (x: ClassType5) => x];
       class5RString = [ClassType5, (() => 'jam': (x: ClassType5) => 'jam')];
     });
-
     describe('with 2 entries', () => {
       it('should return "foo"', () => {
         const r = fp.match([class1RString, class2RString])(new ClassType1());
         expect(r).toEqual('foo');
       });
-
       it('should return an instance of ClassType1', () => {
-        const r = fp.match([
-          class1RClass1,
-          class2RString
-        ])(new ClassType1()) instanceof
-          ClassType1;
+        const r = fp.match([class1RClass1, class2RString])(
+          new ClassType1()
+        ) instanceof ClassType1;
         expect(r).toBe(true);
       });
-
       it('should return "bar"', () => {
         const r = fp.match([class1RString, class2RString])(new ClassType2());
         expect(r).toEqual('bar');
       });
-
       it('should return an instance of ClassType2', () => {
-        const r = fp.match([
-          class1RString,
-          class2RClass2
-        ])(new ClassType2()) instanceof
-          ClassType2;
+        const r = fp.match([class1RString, class2RClass2])(
+          new ClassType2()
+        ) instanceof ClassType2;
         expect(r).toBe(true);
       });
-
       it('should work with a primitive as the matcher', () => {
         const r = fp.match([
           ['foo', (() => 'foo': (x: 'foo') => 'foo')],
@@ -1463,7 +1453,6 @@ describe('the fp module', () => {
         ])('bar');
         expect(r).toEqual('bar');
       });
-
       it('should work with a function as a matcher', () => {
         const r = fp.match([
           [() => 'foo', (() => 'foo': (x: 'foo') => 'foo')],
@@ -1472,46 +1461,31 @@ describe('the fp module', () => {
         expect(r).toEqual('bar');
       });
     });
-
     describe('with 3 entries', () => {
       it('should return "foo"', () => {
-        const r = fp.match([
-          class1RString,
-          class2RString,
-          class3RString
-        ])(new ClassType1());
+        const r = fp.match([class1RString, class2RString, class3RString])(
+          new ClassType1()
+        );
         expect(r).toEqual('foo');
       });
-
       it('should return "bar"', () => {
-        const r = fp.match([
-          class1RString,
-          class2RString,
-          class3RString
-        ])(new ClassType2());
-
+        const r = fp.match([class1RString, class2RString, class3RString])(
+          new ClassType2()
+        );
         expect(r).toEqual('bar');
       });
-
       it('should return "baz"', () => {
-        const r = fp.match([
-          class1RString,
-          class2RString,
-          class3RString
-        ])(new ClassType3());
+        const r = fp.match([class1RString, class2RString, class3RString])(
+          new ClassType3()
+        );
         expect(r).toEqual('baz');
       });
-
       it('should return an instance of ClassType3', () => {
-        const r = fp.match([
-          class1RString,
-          class2RString,
-          class3RClass3
-        ])(new ClassType3()) instanceof
-          ClassType3;
+        const r = fp.match([class1RString, class2RString, class3RClass3])(
+          new ClassType3()
+        ) instanceof ClassType3;
         expect(r).toBe(true);
       });
-
       it('should work with a primitive as the matcher', () => {
         const r = fp.match([
           ['foo', (() => 'foo': (x: 'foo') => 'foo')],
@@ -1520,7 +1494,6 @@ describe('the fp module', () => {
         ])('baz');
         expect(r).toEqual('baz');
       });
-
       it('should work with a function as a matcher', () => {
         const r = fp.match([
           [() => 'foo', (() => 'foo': (x: 'foo') => 'foo')],
@@ -1530,7 +1503,6 @@ describe('the fp module', () => {
         expect(r).toEqual('bar');
       });
     });
-
     describe('with 4 entries', () => {
       it('should return "foo"', () => {
         const r = fp.match([
@@ -1541,7 +1513,6 @@ describe('the fp module', () => {
         ])(new ClassType1());
         expect(r).toEqual('foo');
       });
-
       it('should return "bar"', () => {
         const r = fp.match([
           class1RClass1,
@@ -1551,7 +1522,6 @@ describe('the fp module', () => {
         ])(new ClassType2());
         expect(r).toEqual('bar');
       });
-
       it('should return "baz"', () => {
         const r = fp.match([
           class1RClass1,
@@ -1561,7 +1531,6 @@ describe('the fp module', () => {
         ])(new ClassType3());
         expect(r).toEqual('baz');
       });
-
       it('should return "bam"', () => {
         const r = fp.match([
           class1RString,
@@ -1571,18 +1540,15 @@ describe('the fp module', () => {
         ])(new ClassType4());
         expect(r).toEqual('bam');
       });
-
       it('should return an instance of ClassType4', () => {
         const r = fp.match([
           class1RString,
           class2RString,
           class3RString,
           class4RClass4
-        ])(new ClassType4()) instanceof
-          ClassType4;
+        ])(new ClassType4()) instanceof ClassType4;
         expect(r).toBe(true);
       });
-
       it('should work with a primitive as the matcher', () => {
         const r = fp.match([
           ['foo', (() => 'foo': (x: 'foo') => 'foo')],
@@ -1592,7 +1558,6 @@ describe('the fp module', () => {
         ])('bam');
         expect(r).toEqual('bam');
       });
-
       it('should work with a function as a matcher', () => {
         const r = fp.match([
           [() => 'foo', (() => 'foo': (x: 'foo') => 'foo')],
@@ -1603,7 +1568,6 @@ describe('the fp module', () => {
         expect(r).toEqual('baz');
       });
     });
-
     describe('with 5 entries', () => {
       it('should return "foo"', () => {
         const r = fp.match([
@@ -1615,7 +1579,6 @@ describe('the fp module', () => {
         ])(new ClassType1());
         expect(r).toEqual('foo');
       });
-
       it('should return "bar"', () => {
         const r = fp.match([
           class1RClass1,
@@ -1626,7 +1589,6 @@ describe('the fp module', () => {
         ])(new ClassType2());
         expect(r).toEqual('bar');
       });
-
       it('should return "baz"', () => {
         const r = fp.match([
           class1RClass1,
@@ -1637,7 +1599,6 @@ describe('the fp module', () => {
         ])(new ClassType3());
         expect(r).toEqual('baz');
       });
-
       it('should return "bam"', () => {
         const r = fp.match([
           class1RString,
@@ -1648,7 +1609,6 @@ describe('the fp module', () => {
         ])(new ClassType4());
         expect(r).toEqual('bam');
       });
-
       it('should return "jam"', () => {
         const r = fp.match([
           class1RString,
@@ -1659,7 +1619,6 @@ describe('the fp module', () => {
         ])(new ClassType5());
         expect(r).toEqual('jam');
       });
-
       it('should return an instance of ClassType5', () => {
         const r = fp.match([
           class1RString,
@@ -1667,11 +1626,9 @@ describe('the fp module', () => {
           class3RString,
           class4RClass4,
           class5RClass5
-        ])(new ClassType5()) instanceof
-          ClassType5;
+        ])(new ClassType5()) instanceof ClassType5;
         expect(r).toBe(true);
       });
-
       it('should work with a primitive as the matcher', () => {
         const r = fp.match([
           ['foo', (() => 'foo': (x: 'foo') => 'foo')],
@@ -1682,7 +1639,6 @@ describe('the fp module', () => {
         ])('jam');
         expect(r).toEqual('jam');
       });
-
       it('should work with a function as a matcher', () => {
         const r = fp.match([
           [() => 'foo', (() => 'foo': (x: 'foo') => 'foo')],

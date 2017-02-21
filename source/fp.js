@@ -19,6 +19,8 @@
 // otherwise. Any license under such intellectual property rights must be
 // express and approved by Intel in writing.
 
+import * as maybe from '@iml/maybe';
+
 export const unary = fn => x => fn(x);
 
 export function curry2(fn) {
@@ -65,7 +67,7 @@ export const some = curry2((fn, xs) => xs.some(unary(fn)));
 
 export const every = curry2((fn, xs) => xs.every(unary(fn)));
 
-export const find = curry2((fn, xs) => filter(fn, xs)[0]);
+export const find = curry2((fn, xs) => maybe.of(xs.find(fn)));
 
 export const pluck = curry2((key, xs) => map(xs => xs[key], xs));
 
@@ -83,7 +85,7 @@ export const lens = curry2((get, set) => {
 export const differenceBy = curry3(function differenceBy(fn, xs, ys) {
   const result = xs.reduce(
     (arr, x) => {
-      if (!find(y => fn(x) === fn(y), ys)) arr.push(x);
+      if (!ys.find(y => fn(x) === fn(y))) arr.push(x);
 
       return arr;
     },
@@ -98,7 +100,7 @@ export const difference = differenceBy(identity);
 export const intersectionBy = curry3((fn, xs, ys) => {
   const result = xs.reduce(
     (arr: T[], x: T) => {
-      if (find(y => fn(x) === fn(y), ys)) arr.push(x);
+      if (ys.find(y => fn(x) === fn(y))) arr.push(x);
 
       return arr;
     },
@@ -205,11 +207,11 @@ export const zipObject = curry2((keys, vals) => keys.reduce(
 
 export const unwrap = xs => xs.reduce((arr, x) => arr.concat(x), []);
 
-export const head = xs => xs[0];
+export const head = xs => maybe.of(xs[0]);
 
 export const tail = xs => xs.slice(1);
 
-export const last = xs => xs.slice(-1)[0];
+export const last = xs => maybe.of(xs.slice(-1)[0]);
 
 export const arrayWrap = x => [x];
 
