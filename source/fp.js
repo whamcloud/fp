@@ -1,7 +1,7 @@
 //
 // INTEL CONFIDENTIAL
 //
-// Copyright 2013-2016 Intel Corporation All Rights Reserved.
+// Copyright 2013-2017 Intel Corporation All Rights Reserved.
 //
 // The source code contained or described herein and all documents related
 // to the source code ("Material") are owned by Intel Corporation or its
@@ -23,53 +23,29 @@ import * as maybe from '@iml/maybe';
 
 export const unary = fn => x => fn(x);
 
-export function curry2(fn) {
-  return curryWrap(2, fn);
-}
+export const map = fn => xs => xs.map(unary(fn));
 
-export const curry3 = fn => curryWrap(3, fn);
+export const filter = fn => xs => xs.filter(unary(fn));
 
-export const curry4 = fn => curryWrap(4, fn);
-
-export const curry5 = fn => curryWrap(5, fn);
-
-export const curry6 = fn => curryWrap(6, fn);
-
-function curryWrap(arity, fn) {
-  return function curry(...args) {
-    args = args.slice(0, arity);
-
-    return args.length === arity ? fn(...args) : buildArgs;
-
-    function buildArgs(...moreArgs) {
-      return curry(...args.concat(moreArgs));
-    }
-  };
-}
-
-export const map = curry2((fn, xs) => xs.map(unary(fn)));
-
-export const filter = curry2((fn, xs) => xs.filter(unary(fn)));
-
-export const tap = curry2((fn, xs) => {
+export const tap = fn => xs => {
   xs.forEach(unary(fn));
 
   return xs;
-});
+};
 
-export const reduce = curry3((accum, f, xs) => {
+export const reduce = accum => f => xs => {
   return Array.isArray(xs)
-    ? xs.reduce(curry2(f), accum)
-    : xs.reduce(accum, curry2(f));
-});
+    ? xs.reduce((x, y) => f(x, y), accum)
+    : xs.reduce(accum, (x, y) => f(x, y));
+};
 
-export const some = curry2((fn, xs) => xs.some(unary(fn)));
+export const some = fn => xs => xs.some(unary(fn));
 
-export const every = curry2((fn, xs) => xs.every(unary(fn)));
+export const every = fn => xs => xs.every(unary(fn));
 
-export const find = curry2((fn, xs) => maybe.of(xs.find(fn)));
+export const find = fn => xs => maybe.of(xs.find(fn));
 
-export const pluck = curry2((key, xs) => map(xs => xs[key], xs));
+export const pluck = key => xs => map(xs => xs[key])(xs);
 
 export const identity = x => x;
 
@@ -78,11 +54,11 @@ export const always = x => () => x;
 export const True = always(true);
 export const False = always(false);
 
-export const lens = curry2((get, set) => {
-  return fn => xs => map(v => set(v, xs), fn(get(xs)));
-});
+export const lens = get => set => {
+  return fn => xs => map(v => set(v, xs))(fn(get(xs)));
+};
 
-export const differenceBy = curry3(function differenceBy(fn, xs, ys) {
+export const differenceBy = fn => xs => ys => {
   const result = xs.reduce(
     (arr, x) => {
       if (!ys.find(y => fn(x) === fn(y))) arr.push(x);
@@ -92,12 +68,12 @@ export const differenceBy = curry3(function differenceBy(fn, xs, ys) {
     []
   );
 
-  return uniqBy(fn, result);
-});
+  return uniqBy(fn)(result);
+};
 
 export const difference = differenceBy(identity);
 
-export const intersectionBy = curry3((fn, xs, ys) => {
+export const intersectionBy = fn => xs => ys => {
   const result = xs.reduce(
     (arr: T[], x: T) => {
       if (ys.find(y => fn(x) === fn(y))) arr.push(x);
@@ -107,8 +83,8 @@ export const intersectionBy = curry3((fn, xs, ys) => {
     []
   );
 
-  return uniqBy(fn, result);
-});
+  return uniqBy(fn)(result);
+};
 
 const getConst = x => {
   return {
@@ -119,7 +95,7 @@ const getConst = x => {
   };
 };
 
-export const view = curry2((lens, xs) => lens(getConst)(xs).value);
+export const view = lens => xs => lens(getConst)(xs).value;
 
 const getIdentity = x => ({
   value: x,
@@ -128,18 +104,16 @@ const getIdentity = x => ({
   }
 });
 
-export const over = curry3(
-  (lens, fn, xs) => lens(ys => getIdentity(fn(ys)))(xs).value
-);
+export const over = lens =>
+  fn => xs => lens(ys => getIdentity(fn(ys)))(xs).value;
 
-export const set = curry3((lens, value, xs) => over(lens, always(value), xs));
+export const set = lens => value => xs => over(lens)(always(value))(xs);
 
 const getValue = x => x.value;
 
-export const mapped = curry2((fn, x) =>
-  getIdentity(map(flow(fn, getValue), x)));
+export const mapped = fn => x => getIdentity(map(flow(fn, getValue))(x));
 
-export const lensProp = prop => lens(xs => xs[prop], (v, xs) => {
+export const lensProp = prop => lens(xs => xs[prop])((v, xs) => {
   const keys = Object.keys(xs);
   const container = Array.isArray(xs) ? [] : {};
 
@@ -176,34 +150,32 @@ export const cond = (...args) => x => {
 
 export const not = x => !x;
 
-export const eq = curry2(
-  (a, b) => a && typeof a.equals === 'function' ? a.equals(b) : a === b
-);
+export const eq = a =>
+  b => a && typeof a.equals === 'function' ? a.equals(b) : a === b;
 
-export const eqFn = curry4((fnA, fnB, a, b) => eq(fnA(a), fnB(b)));
+export const eqFn = fnA => fnB => a => b => eq(fnA(a))(fnB(b));
 
-export const invoke = curry2((fn, args) => fn.apply(null, args));
+export const invoke = fn => args => fn.apply(null, args);
 
 export const noop = () => {};
 
-export const and = curry2((predicates, val) =>
-  predicates.reduce((curr, predicate) => curr && predicate(val), true));
+export const and = predicates =>
+  val => predicates.reduce((curr, predicate) => curr && predicate(val), true);
 
-export const or = curry2((predicates, val) =>
-  predicates.reduce((curr, predicate) => curr || predicate(val), false));
+export const or = predicates =>
+  val => predicates.reduce((curr, predicate) => curr || predicate(val), false);
 
-export const bindMethod = curry2((meth, obj) => obj[meth].bind(obj));
+export const bindMethod = meth => obj => obj[meth].bind(obj);
 
-export const invokeMethod = curry3((meth, args, obj) =>
-  obj[meth].apply(obj, args));
+export const invokeMethod = meth => args => obj => obj[meth].apply(obj, args);
 
-export const zipObject = curry2((keys, vals) => keys.reduce(
+export const zipObject = keys => vals => keys.reduce(
   (obj, val, index) => {
     obj[val] = vals[index];
     return obj;
   },
   {}
-));
+);
 
 export const unwrap = xs => xs.reduce((arr, x) => arr.concat(x), []);
 
@@ -227,13 +199,13 @@ export function once(fn) {
   };
 }
 
-export const either = curry2((fn, x) => x instanceof Error ? x : fn(x));
+export const either = fn => x => x instanceof Error ? x : fn(x);
 
-export const mapFn = curry2((fns, args) => map(x => invoke(x, args), fns));
+export const mapFn = fns => args => map(x => invoke(x)(args))(fns);
 
-export const chainL = curry2((fn, args) => args.reduce(curry2(fn)));
+export const chainL = fn => args => args.reduce((x, y) => fn(x, y));
 
-export const xProd = curry2((a, b) => {
+export const xProd = a => b => {
   const result = [];
 
   a.forEach(a => {
@@ -241,11 +213,11 @@ export const xProd = curry2((a, b) => {
   });
 
   return result;
-});
+};
 
-export const anyPass = curry2((fns, x) => some(fn => fn(x), fns));
+export const anyPass = fns => x => some(fn => fn(x))(fns);
 
-export const zipBy = curry3((fn, left, right) => {
+export const zipBy = fn => left => right => {
   const min = Math.min(left.length, right.length);
   left.length = min;
   right.length = min;
@@ -256,7 +228,7 @@ export const zipBy = curry3((fn, left, right) => {
     },
     []
   );
-});
+};
 
 export const memoize = fn => {
   const cache = [];
@@ -286,7 +258,7 @@ export const memoize = fn => {
   };
 };
 
-export const uniqBy = curry2((fn, xs) => {
+export const uniqBy = fn => xs => {
   const set = [];
   const out = [];
 
@@ -300,9 +272,9 @@ export const uniqBy = curry2((fn, xs) => {
   });
 
   return out;
-});
+};
 
-export const times = curry2((fn, num) => {
+export const times = fn => num => {
   const list = [];
   let idx = 0;
 
@@ -312,7 +284,7 @@ export const times = curry2((fn, num) => {
   }
 
   return list;
-});
+};
 
 function isClass(x: mixed) {
   return typeof x === 'function' && x.toString().indexOf('class') > -1;
@@ -320,8 +292,8 @@ function isClass(x: mixed) {
 
 export const match = xs => x => {
   const result = xs.find(([k]) => {
-    return isClass(k) && x instanceof k ||
-      typeof k === 'function' && !isClass(k) && k() === x ||
+    return (isClass(k) && x instanceof k) ||
+      (typeof k === 'function' && !isClass(k) && k() === x) ||
       x === k;
   });
 
