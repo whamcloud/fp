@@ -2,6 +2,8 @@
 
 [![Build Status](https://travis-ci.org/intel-hpdd/fp.svg?branch=master)](https://travis-ci.org/intel-hpdd/fp)
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/intel-hpdd/fp.svg)](https://greenkeeper.io/)
+
 #### Functional Composition, starting à la carte.
 
 A core concept of functional programming is composition. [Wikipedia](https://en.wikipedia.org/wiki/Function_composition_(computer_science)) defines function composition as follows:
