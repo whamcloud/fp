@@ -1,5 +1,7 @@
 ## Functional Programming
 
+[![Build Status](https://travis-ci.org/intel-hpdd/fp.svg?branch=master)](https://travis-ci.org/intel-hpdd/fp)
+
 #### Functional Composition, starting à la carte.
 
 A core concept of functional programming is composition. [Wikipedia](https://en.wikipedia.org/wiki/Function_composition_(computer_science)) defines function composition as follows:
@@ -376,10 +378,10 @@ console.log(menu.veggieburger());
 
 Still delicious.
 
-These functions and more can be found in an internal IML developed library called [fp](https://github.intel.com/IML/fp)
+These functions and more can be found in an internal IML developed library called [fp](https://github.com/intel-hpdd/fp)
 
 ## References
 
 [Mostly Adequeate Guide (Quite good till it goes to Fantasy Land)](https://drboolean.gitbooks.io/mostly-adequate-guide/content/)
 
-[fp (Our in-house JavaScript functional programming library)](https://github.intel.com/IML/fp)
+[fp (Our in-house JavaScript functional programming library)](https://github.com/intel-hpdd/fp)
