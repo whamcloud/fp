@@ -21,7 +21,7 @@
 // otherwise. Any license under such intellectual property rights must be
 // express and approved by Intel in writing.
 
-import type { Maybe } from '@iml/maybe';
+import type { Maybe } from '@mfl/maybe';
 
 type typeToAny<T> = (x: T) => any;
 type manyToAny = (...rest: Array<any>) => any;

@@ -1,9 +1,11 @@
 // @flow
 
-import * as fp from '../source/fp.js';
-import * as maybe from '@iml/maybe';
+import '@mfl/jasmine-n-matchers';
 
-import type { Maybe } from '@iml/maybe';
+import * as fp from '../source/fp.js';
+import * as maybe from '@mfl/maybe';
+
+import type { Maybe } from '@mfl/maybe';
 import type { Fn1 } from '../source/fp.js';
 
 import { describe, beforeEach, it, expect, jasmine } from './jasmine';
@@ -21,9 +23,8 @@ describe('the fp module', () => {
     });
 
     it('should exist on fp', () => {
-      const result: ((x: number) => number) => (
-        x: number[]
-      ) => number[] = fp.map;
+      const result: ((x: number) => number) => (x: number[]) => number[] =
+        fp.map;
       expect(result).toEqual(jasmine.any(Function));
     });
 
@@ -46,9 +47,8 @@ describe('the fp module', () => {
 
   describe('has a filter method', () => {
     it('should exist on fp', () => {
-      const result: (fn: (a: number) => boolean) => (
-        a: number[]
-      ) => number[] = fp.filter;
+      const result: (fn: (a: number) => boolean) => (a: number[]) => number[] =
+        fp.filter;
       expect(result).toEqual(jasmine.any(Function));
     });
 
@@ -65,9 +65,10 @@ describe('the fp module', () => {
 
   describe('has a reduce method', () => {
     it('should exist on fp', () => {
-      const result: (a: number) => ((a: number, b: number) => number) => (
-        x: number[]
-      ) => number = fp.reduce;
+      const result: (
+        a: number
+      ) => ((a: number, b: number) => number) => (x: number[]) => number =
+        fp.reduce;
       expect(result).toEqual(jasmine.any(Function));
     });
 
@@ -79,9 +80,8 @@ describe('the fp module', () => {
 
   describe('has a find method', () => {
     it('should exist on fp', () => {
-      const result: ((x: number) => boolean) => (
-        a: number[]
-      ) => Maybe<number> = fp.find;
+      const result: ((x: number) => boolean) => (a: number[]) => Maybe<number> =
+        fp.find;
       expect(result).toEqual(jasmine.any(Function));
     });
 
@@ -106,16 +106,20 @@ describe('the fp module', () => {
 
   describe('has a pluck method', () => {
     it('should exist on fp', () => {
-      const result: (key: string | number) => (
-        a: { foo: 'string' }[]
-      ) => string[] = fp.pluck;
+      const result: (
+        key: string | number
+      ) => (a: { foo: 'string' }[]) => string[] =
+        fp.pluck;
       expect(result).toEqual(jasmine.any(Function));
     });
 
     it('should pluck from a collection', () => {
-      const plucked: Fn1<{
-        foo: string
-      }[], string[]> = fp.pluck('foo');
+      const plucked: Fn1<
+        {
+          foo: string
+        }[],
+        string[]
+      > = fp.pluck('foo');
       const result: string[] = plucked([{ foo: 'bar' }, { foo: 'baz' }]);
 
       expect(result).toEqual(['bar', 'baz']);
@@ -141,11 +145,10 @@ describe('the fp module', () => {
 
   describe('has an always method', () => {
     it('should exist on fp', () => {
-      const result: (x: string) => (
-        a: number,
-        b: boolean,
-        c: string
-      ) => string = fp.always;
+      const result: (
+        x: string
+      ) => (a: number, b: boolean, c: string) => string =
+        fp.always;
       expect(result).toEqual(jasmine.any(Function));
     });
 
@@ -200,9 +203,8 @@ describe('the fp module', () => {
 
   describe('has a compose method', () => {
     it('should exist on fp', () => {
-      const result: (
-        fn: Fn1<string, number>
-      ) => Fn1<string, number> = fp.compose;
+      const result: (fn: Fn1<string, number>) => Fn1<string, number> =
+        fp.compose;
       expect(result).toEqual(jasmine.any(Function));
     });
 
@@ -221,9 +223,8 @@ describe('the fp module', () => {
 
   describe('has a difference method', () => {
     it('should exist on fp', () => {
-      const result: (xs: number[]) => (
-        xs: number[]
-      ) => number[] = fp.difference;
+      const result: (xs: number[]) => (xs: number[]) => number[] =
+        fp.difference;
       expect(result).toEqual(jasmine.any(Function));
     });
 
@@ -264,11 +265,16 @@ describe('the fp module', () => {
     });
 
     it('should exist on fp', () => {
-      const result: ((x: { id: number }) => number) => ({ id: number }[]) => (
+      const result: (
+        (x: { id: number }) => number
+      ) => (
+        { id: number }[]
+      ) => (
         { id: number }[]
       ) => {
         id: number
-      }[] = fp.differenceBy;
+      }[] =
+        fp.differenceBy;
       expect(result).toEqual(jasmine.any(Function));
     });
 
@@ -304,9 +310,10 @@ describe('the fp module', () => {
     });
 
     it('should exist on fp', () => {
-      const result: (a: ({ id: number }) => number) => (a: idArrayT) => (
-        a: idArrayT
-      ) => idArrayT = fp.intersectionBy;
+      const result: (
+        a: ({ id: number }) => number
+      ) => (a: idArrayT) => (a: idArrayT) => idArrayT =
+        fp.intersectionBy;
       expect(result).toEqual(jasmine.any(Function));
     });
 
@@ -345,13 +352,10 @@ describe('the fp module', () => {
           const keys = Object.keys(xs);
           const container = Array.isArray(xs) ? [] : {};
 
-          const out = keys.reduce(
-            (container, key) => {
-              container[key] = xs[key];
-              return container;
-            },
-            container
-          );
+          const out = keys.reduce((container, key) => {
+            container[key] = xs[key];
+            return container;
+          }, container);
 
           if (typeof prop === 'string') prop = prop.toString();
 
@@ -495,15 +499,18 @@ describe('the fp module', () => {
         const result: {
           toJS: () => {
             'name': 'Richie Richard!',
-            'addresses': [{
-              'street': '123 Fake Street',
-              'city': 'Albuquerque',
-              'state': 'NM'
-            }, {
-              'street': '23 East Colonial Drive',
-              'city': 'Orlando',
-              'state': 'Fl'
-            }]
+            'addresses': [
+              {
+                'street': '123 Fake Street',
+                'city': 'Albuquerque',
+                'state': 'NM'
+              },
+              {
+                'street': '23 East Colonial Drive',
+                'city': 'Orlando',
+                'state': 'Fl'
+              }
+            ]
           }
         } = fp.over(immutablePropLens('name'))(name => name + 'ard!')(
           fromJS(data)
@@ -530,15 +537,18 @@ describe('the fp module', () => {
         const result: {
           toJS: () => {
             name: 'Richie Rich',
-            addresses: [{
-              street: '123 Fake Street',
-              city: 'Albuquerque',
-              state: 'NM'
-            }, {
-              street: 'evirD lainoloC tsaE 32',
-              city: 'Orlando',
-              state: 'Fl'
-            }]
+            addresses: [
+              {
+                street: '123 Fake Street',
+                city: 'Albuquerque',
+                state: 'NM'
+              },
+              {
+                street: 'evirD lainoloC tsaE 32',
+                city: 'Orlando',
+                state: 'Fl'
+              }
+            ]
           }
         } = fp.over(
           fp.flow(
@@ -783,7 +793,8 @@ describe('the fp module', () => {
     it('should exist on fp', () => {
       const result: (
         ...conditions: [Fn1<number, boolean>, Fn1<number, string>][]
-      ) => (x: number) => string = fp.cond;
+      ) => (x: number) => string =
+        fp.cond;
       expect(result).toEqual(jasmine.any(Function));
     });
     it('should freeze at 0', () => {
@@ -858,9 +869,8 @@ describe('the fp module', () => {
       spy = jasmine.createSpy('spy').and.returnValue(7);
     });
     it('should exist on fp', () => {
-      const result: ((...rest: mixed) => number) => (
-        x: string
-      ) => number = fp.invoke;
+      const result: ((...rest: mixed) => number) => (x: string) => number =
+        fp.invoke;
       expect(result).toEqual(jasmine.any(Function));
     });
     it('should invoke the function with an array of items', () => {
@@ -987,16 +997,13 @@ describe('the fp module', () => {
       const result: Function = fp.invokeMethod('foo');
       expect(result).toEqual(jasmine.any(Function));
     });
-    it(
-      'should return a function that is bound and invoke that function',
-      () => {
-        const indexOfB: (str: string) => number = (fp.invokeMethod('indexOf')([
-          'b'
-        ]): (str: string) => number);
-        const result: number = indexOfB('abc');
-        expect(result).toBe(1);
-      }
-    );
+    it('should return a function that is bound and invoke that function', () => {
+      const indexOfB: (str: string) => number = (fp.invokeMethod('indexOf')([
+        'b'
+      ]): (str: string) => number);
+      const result: number = indexOfB('abc');
+      expect(result).toBe(1);
+    });
   });
   describe('zipObject', () => {
     it('should exist on fp', () => {
@@ -1419,21 +1426,24 @@ describe('the fp module', () => {
       });
       describe('with fewer left than right', () => {
         it('should return the result of the first two', () => {
-          const result: Array<string> = fp.zipBy((
-            a: (x: string) => string,
-            b: string
-          ) =>
-            a(b))([spy1, spy2])(['dee', 'doo', 'da']);
+          const result: Array<
+            string
+          > = fp.zipBy((a: (x: string) => string, b: string) => a(b))([
+            spy1,
+            spy2
+          ])(['dee', 'doo', 'da']);
           expect(result).toEqual(['dee', 'doo']);
         });
       });
       describe('with fewer right than left', () => {
         it('should return the result of the first two', () => {
-          const result: Array<string> = fp.zipBy((
-            a: (x: string) => string,
-            b: string
-          ) =>
-            a(b))([spy1, spy2, spy3])(['dee', 'doo']);
+          const result: Array<
+            string
+          > = fp.zipBy((a: (x: string) => string, b: string) => a(b))([
+            spy1,
+            spy2,
+            spy3
+          ])(['dee', 'doo']);
           expect(result).toEqual(['dee', 'doo']);
         });
       });
@@ -1604,9 +1614,9 @@ describe('the fp module', () => {
         expect(r).toEqual('foo');
       });
       it('should return an instance of ClassType1', () => {
-        const r: boolean = fp.match([class1RClass1, class2RString])(
-          new ClassType1()
-        ) instanceof ClassType1;
+        const r: boolean =
+          fp.match([class1RClass1, class2RString])(new ClassType1()) instanceof
+          ClassType1;
         expect(r).toBe(true);
       });
       it('should return "bar"', () => {
@@ -1616,9 +1626,9 @@ describe('the fp module', () => {
         expect(r).toEqual('bar');
       });
       it('should return an instance of ClassType2', () => {
-        const r: boolean = fp.match([class1RString, class2RClass2])(
-          new ClassType2()
-        ) instanceof ClassType2;
+        const r: boolean =
+          fp.match([class1RString, class2RClass2])(new ClassType2()) instanceof
+          ClassType2;
         expect(r).toBe(true);
       });
       it('should work with a primitive as the matcher', () => {
@@ -1662,11 +1672,10 @@ describe('the fp module', () => {
         expect(r).toEqual('baz');
       });
       it('should return an instance of ClassType3', () => {
-        const r: boolean = fp.match([
-          class1RString,
-          class2RString,
-          class3RClass3
-        ])(new ClassType3()) instanceof ClassType3;
+        const r: boolean =
+          fp.match([class1RString, class2RString, class3RClass3])(
+            new ClassType3()
+          ) instanceof ClassType3;
         expect(r).toBe(true);
       });
       it('should work with a primitive as the matcher', () => {
@@ -1724,12 +1733,13 @@ describe('the fp module', () => {
         expect(r).toEqual('bam');
       });
       it('should return an instance of ClassType4', () => {
-        const r: boolean = fp.match([
-          class1RString,
-          class2RString,
-          class3RString,
-          class4RClass4
-        ])(new ClassType4()) instanceof ClassType4;
+        const r: boolean =
+          fp.match([
+            class1RString,
+            class2RString,
+            class3RString,
+            class4RClass4
+          ])(new ClassType4()) instanceof ClassType4;
         expect(r).toBe(true);
       });
       it('should work with a primitive as the matcher', () => {
@@ -1803,13 +1813,14 @@ describe('the fp module', () => {
         expect(r).toEqual('jam');
       });
       it('should return an instance of ClassType5', () => {
-        const r: boolean = fp.match([
-          class1RString,
-          class2RString,
-          class3RString,
-          class4RClass4,
-          class5RClass5
-        ])(new ClassType5()) instanceof ClassType5;
+        const r: boolean =
+          fp.match([
+            class1RString,
+            class2RString,
+            class3RString,
+            class4RClass4,
+            class5RClass5
+          ])(new ClassType5()) instanceof ClassType5;
         expect(r).toBe(true);
       });
       it('should work with a primitive as the matcher', () => {

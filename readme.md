@@ -378,7 +378,8 @@ console.log(menu.veggieburger());
 
 Still delicious.
 
-These functions and more can be found in an internal IML developed library called [fp](https://github.com/intel-hpdd/fp)
+These functions and more can be found in an internal MFL developed library called [fp](https://github.com/intel-hpdd/fp)
+
 
 ## References
 
