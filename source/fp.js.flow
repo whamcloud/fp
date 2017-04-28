@@ -346,6 +346,16 @@ declare export function compose<A, B, C, D, E, F, G>(
   ab: Fn1<A, B>,
   ...rest: empty[]
 ): Fn1<A, G>;
+declare export function compose<A, B, C, D, E, F, G, H>(
+  gh: Fn1<G, H>,
+  fg: Fn1<F, G>,
+  ef: Fn1<E, F>,
+  de: Fn1<D, E>,
+  cd: Fn1<C, D>,
+  bc: Fn1<B, C>,
+  ab: Fn1<A, B>,
+  ...rest: empty[]
+): Fn1<A, H>;
 
 declare export function eq<A, B>(
   a: A,
