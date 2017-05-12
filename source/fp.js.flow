@@ -222,7 +222,7 @@ declare export function arrayWrap<A>(
 declare export function once(
   fn: Function,
   ...rest: empty[]
-): () => void;
+): (...rest:any[]) => void;
 
 declare export function lens(
   Function
