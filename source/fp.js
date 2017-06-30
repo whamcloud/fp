@@ -3,7 +3,7 @@
 // Use of this source code is governed by a MIT-style
 // license that can be found in the LICENSE file.
 
-import * as maybe from '@mfl/maybe';
+import * as maybe from '@iml/maybe';
 
 export const unary = fn => x => fn(x);
 

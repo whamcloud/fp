@@ -2,7 +2,7 @@
 
 import * as fp from '../source/fp.js';
 
-import type { Maybe } from '@mfl/maybe';
+import type { Maybe } from '@iml/maybe';
 
 import type { Fn1 } from '../source/fp.js';
 
