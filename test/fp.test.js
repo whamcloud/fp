@@ -1,11 +1,11 @@
 // @flow
 
-import '@mfl/jasmine-n-matchers';
+import '@iml/jasmine-n-matchers';
 
 import * as fp from '../source/fp.js';
-import * as maybe from '@mfl/maybe';
+import * as maybe from '@iml/maybe';
 
-import type { Maybe } from '@mfl/maybe';
+import type { Maybe } from '@iml/maybe';
 import type { Fn1 } from '../source/fp.js';
 
 import { describe, beforeEach, it, expect, jasmine } from './jasmine';
