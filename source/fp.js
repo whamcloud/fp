@@ -126,7 +126,7 @@ export const cond = (...args) => x => {
 export const not = x => !x;
 
 export const eq = a => b =>
-  (a && typeof a.equals === 'function' ? a.equals(b) : a === b);
+  a && typeof a.equals === 'function' ? a.equals(b) : a === b;
 
 export const eqFn = fnA => fnB => a => b => eq(fnA(a))(fnB(b));
 

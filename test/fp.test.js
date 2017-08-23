@@ -624,9 +624,9 @@ describe('the fp module', () => {
       });
 
       it('should set a shallow immutable property', () => {
-        const result: dataT = fp
-          .set(immutablePropLens('name'))("Dude Mc' Rude")(fromJS(data))
-          .toJS();
+        const result: dataT = fp.set(immutablePropLens('name'))(
+          "Dude Mc' Rude"
+        )(fromJS(data)).toJS();
         expect(result).toEqual({
           name: "Dude Mc' Rude",
           addresses: [
@@ -645,15 +645,13 @@ describe('the fp module', () => {
       });
 
       it('should set a deep immutable property', () => {
-        const result: dataT = fp
-          .set(
-            fp.flow(
-              immutablePropLens('street'),
-              immutablePropLens('0'),
-              immutablePropLens('addresses')
-            )
-          )('456 Some Place')(fromJS(data))
-          .toJS();
+        const result: dataT = fp.set(
+          fp.flow(
+            immutablePropLens('street'),
+            immutablePropLens('0'),
+            immutablePropLens('addresses')
+          )
+        )('456 Some Place')(fromJS(data)).toJS();
 
         expect(result).toEqual({
           name: 'Richie Rich',
