@@ -39,7 +39,7 @@
   "devDependencies": {
     "@iml/flow-jasmine": "1.6.1",
     "@iml/jasmine-n-matchers": "2.1.1",
-    "babel-eslint": "7.2.3",
+    "babel-eslint": "8.0.0",
     "babel-plugin-transform-flow-strip-types": "6.22.0",
     "babel-preset-env": "^1.1.9",
     "eslint": "^4.5.0",
