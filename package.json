@@ -1,6 +1,6 @@
 {
   "name": "@iml/fp",
-  "version": "8.0.3",
+  "version": "8.0.4",
   "description": "A Functional Programming Lib.",
   "main": "source/fp.js",
   "scripts": {
@@ -38,18 +38,16 @@
   },
   "devDependencies": {
     "@iml/flow-jasmine": "1.6.1",
-    "@iml/jasmine-n-matchers": "2.1.1",
-    "babel-eslint": "8.0.0",
+    "babel-eslint": "^10.0.1",
     "babel-plugin-transform-flow-strip-types": "6.22.0",
     "babel-preset-env": "^1.1.9",
-    "eslint": "^4.5.0",
-    "eslint-config-prettier": "^2.3.0",
-    "eslint-plugin-flowtype": "^2.35.0",
+    "eslint": "^5.7.0",
+    "eslint-config-prettier": "^3.1.0",
+    "eslint-plugin-flowtype": "^3.0.0",
     "eslint-plugin-import": "^2.7.0",
-    "eslint-plugin-prettier": "^2.2.0",
-    "flow-bin": "0.45.0",
-    "immutable": "3.8.1",
-    "jest": "^19.0.2",
+    "eslint-plugin-prettier": "^3.0.0",
+    "flow-bin": "^0.83.0",
+    "jest": "^23.6.0",
     "pre-commit": "1.2.2",
     "prettier": "^1.5.3"
   }
