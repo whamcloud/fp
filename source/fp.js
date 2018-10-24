@@ -3,7 +3,7 @@
 // Use of this source code is governed by a MIT-style
 // license that can be found in the LICENSE file.
 
-import * as maybe from '@iml/maybe';
+import * as maybe from "@iml/maybe";
 
 export const unary = fn => x => fn(x);
 
@@ -18,9 +18,7 @@ export const tap = fn => xs => {
 };
 
 export const reduce = accum => f => xs => {
-  return Array.isArray(xs)
-    ? xs.reduce((x, y) => f(x, y), accum)
-    : xs.reduce(accum, (x, y) => f(x, y));
+  return Array.isArray(xs) ? xs.reduce((x, y) => f(x, y), accum) : xs.reduce(accum, (x, y) => f(x, y));
 };
 
 export const some = fn => xs => xs.some(unary(fn));
@@ -82,14 +80,21 @@ const getIdentity = x => ({
   }
 });
 
-export const over = lens => fn => xs =>
-  lens(ys => getIdentity(fn(ys)))(xs).value;
+export const over = lens => fn => xs => lens(ys => getIdentity(fn(ys)))(xs).value;
 
 export const set = lens => value => xs => over(lens)(always(value))(xs);
 
 const getValue = x => x.value;
 
-export const mapped = fn => x => getIdentity(map(flow(fn, getValue))(x));
+export const mapped = fn => x =>
+  getIdentity(
+    map(
+      flow(
+        fn,
+        getValue
+      )
+    )(x)
+  );
 
 export const lensProp = prop =>
   lens(xs => xs[prop])((v, xs) => {
@@ -125,8 +130,7 @@ export const cond = (...args) => x => {
 
 export const not = x => !x;
 
-export const eq = a => b =>
-  a && typeof a.equals === 'function' ? a.equals(b) : a === b;
+export const eq = a => b => (a && typeof a.equals === "function" ? a.equals(b) : a === b);
 
 export const eqFn = fnA => fnB => a => b => eq(fnA(a))(fnB(b));
 
@@ -134,11 +138,9 @@ export const invoke = fn => args => fn.apply(null, args);
 
 export const noop = () => {};
 
-export const and = predicates => val =>
-  predicates.reduce((curr, predicate) => curr && predicate(val), true);
+export const and = predicates => val => predicates.reduce((curr, predicate) => curr && predicate(val), true);
 
-export const or = predicates => val =>
-  predicates.reduce((curr, predicate) => curr || predicate(val), false);
+export const or = predicates => val => predicates.reduce((curr, predicate) => curr || predicate(val), false);
 
 export const bindMethod = meth => obj => obj[meth].bind(obj);
 
@@ -207,8 +209,7 @@ export const memoize = fn => {
     let result;
 
     const match = cache.some(xs => {
-      const cacheHit =
-        args.length === xs.length - 1 && args.every((x, idx) => x === xs[idx]);
+      const cacheHit = args.length === xs.length - 1 && args.every((x, idx) => x === xs[idx]);
 
       if (cacheHit) {
         result = xs.slice(xs.length - 1).pop();
@@ -257,16 +258,12 @@ export const times = fn => num => {
 };
 
 function isClass(x: mixed) {
-  return typeof x === 'function' && x.toString().indexOf('class') > -1;
+  return typeof x === "function" && x.toString().indexOf("class") > -1;
 }
 
 export const match = xs => x => {
   const result = xs.find(([k]) => {
-    return (
-      (isClass(k) && x instanceof k) ||
-      (typeof k === 'function' && !isClass(k) && k() === x) ||
-      x === k
-    );
+    return (isClass(k) && x instanceof k) || (typeof k === "function" && !isClass(k) && k() === x) || x === k;
   });
 
   if (result) return result[1](x);

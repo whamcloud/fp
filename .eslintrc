@@ -20,6 +20,13 @@
       2,
       "unix"
     ],
+    "no-multiple-empty-lines": [
+      2,
+      {
+        "max": 2,
+        "maxEOF": 1
+      }
+    ],
     "curly": [
       2,
       "multi",
@@ -33,9 +40,7 @@
       }
     ],
     "prettier/prettier": [
-      "error", {
-        "singleQuote": true
-      }
+      "error"
     ]
   },
   "env": {
