@@ -1,36 +1,34 @@
-## Functional Programming
+# Functional Programming
 
-[![Build Status](https://travis-ci.org/intel-hpdd/fp.svg?branch=master)](https://travis-ci.org/intel-hpdd/fp)
+[![Build Status](https://travis-ci.org/whamcloud/fp.svg?branch=master)](https://travis-ci.org/whamcloud/fp)
 
-[![Greenkeeper badge](https://badges.greenkeeper.io/intel-hpdd/fp.svg)](https://greenkeeper.io/)
+## Functional Composition, starting à la carte.
 
-#### Functional Composition, starting à la carte.
-
-A core concept of functional programming is composition. [Wikipedia](https://en.wikipedia.org/wiki/Function_composition_(computer_science)) defines function composition as follows:
+A core concept of functional programming is composition. [Wikipedia](<https://en.wikipedia.org/wiki/Function_composition_(computer_science)>) defines function composition as follows:
 
 > In computer science, function composition (not to be confused with object composition) is an act or mechanism to combine simple functions to build more complicated ones.
-Like the usual composition of functions in mathematics, the result of each function is passed as the argument of the next, and the result of the last one is the result of the whole.
+> Like the usual composition of functions in mathematics, the result of each function is passed as the argument of the next, and the result of the last one is the result of the whole.
 
 So, composition is a mechanism to assemble simple reusable behaviors into more complex ones via functions. Let's examine this with an example:
 
-```
-function add1 (x) {
+```js
+function add1(x) {
   return x + 1;
 }
 
-function times2 (x) {
+function times2(x) {
   return x * 2;
 }
 
-function minus3 (x) {
+function minus3(x) {
   return x - 3;
 }
 ```
 
 Here we have just defined 3 unary functions. Being unary (only taking one argument) is a key concept of functional composition. We can now assemble these functions to create mathematical expressions using `+`, `*`, and `-`:
 
-```
-  add1(times2(minus3(4))) // 3
+```js
+add1(times2(minus3(4))); // 3
 ```
 
 This expression is the same as doing `(((4 - 3) * 2) + 1)`. Notice how the parenthesis mirror the function calls as we work our way inside-out.
@@ -46,11 +44,9 @@ That is, if were to expand the code example above to mirror our code structure w
 
 Since left to right expressions feel more natural to us who read left to right, we can build a construct that does roughly the same. More on that later.
 
-
-
 Let's try another one:
 
-```
+```js
   minus3(times2(add1(4)); // 7
 ```
 
@@ -58,14 +54,14 @@ This expression is the same as `(((4 + 1) * 2) - 3)`. Parenthesis here serve as 
 
 So far we have demonstrated that we can define simple functions and use something called function composition to combine them into slightly more complex expressions.
 
-*However*, this approach comes with lots of baggage. Whenever we want to `add1`, `times2`, or `minus3`, we have to carry around all our small functions and assemble them into a custom expression whenever we get to our call site.
+_However_, this approach comes with lots of baggage. Whenever we want to `add1`, `times2`, or `minus3`, we have to carry around all our small functions and assemble them into a custom expression whenever we get to our call site.
 
-This is a bit like ordering a hamburger from *Insert Fast-Food Chain Here* and getting a pile of ingredients on a tray.
+This is a bit like ordering a hamburger from _Insert Fast-Food Chain Here_ and getting a pile of ingredients on a tray.
 We know that we want a hamburger, and we know how to assemble one, we just wish someone had done it for us and put it in a nice wrapper.
 
 Let's see if there is anything we can do to assemble our functions before hand and save ourselves from a messy tray.
 
-#### Functional Composition, wrapping it up.
+## Functional Composition, wrapping it up.
 
 Building on our hamburger example, let's say we have a composition we use quite a bit. We need to build an ascii art hamburger for people.
 Lot's of people. It would be great if we could just have a function called `hambuger()` that we invoke whenever we need a new one.
@@ -97,8 +93,8 @@ When we want to create a hamburger, we have to go to the customer's table with a
 
 What if we could wrap up hambuger creation? Let's start by defining a function:
 
-```
-function hamburger (x) {
+```js
+function hamburger(x) {
   return bottomBun(beefPatty(topBun(x)));
 }
 ```
@@ -113,7 +109,7 @@ When someone wants a hamburger, we provide them the whole thing in a nice wrappe
 However, inside that wrapper, we are still doing the same right to left composition, which is verbose and could be confusing to some.
 We also have to create a new wrapper function. Since composition is a key pillar of functional programming, we should have a simple way to express it.
 
-##### Introducting flow
+## Introducting flow
 
 Instead of composing the hamburger inside the wrapper function, what if we simply listed the ingredients and expected a hamburger back? We can introduce a function `flow` that does exactly that. Here's how it looks:
 
@@ -121,16 +117,16 @@ Instead of composing the hamburger inside the wrapper function, what if we simpl
 
 `flow` can be roughly defined like:
 
-```
-function flow () {
-    const args = Array.from(arguments);
+```js
+function flow() {
+  const args = Array.from(arguments);
 
-    return function flowInner (xs) {
-      return args.reduce(function reducer (xs, fn) {
-        return fn(xs);
-      }, xs);
-    };
-  }
+  return function flowInner(xs) {
+    return args.reduce(function reducer(xs, fn) {
+      return fn(xs);
+    }, xs);
+  };
+}
 ```
 
 Now whenever we want a hamburger we do:
@@ -140,14 +136,18 @@ Now whenever we want a hamburger we do:
 Same as before, but the specification of how to make a hamburger is much more consice; we simply describe our intent with minimal boilerplate.
 Let's compare the flow definition to the function definition from before.
 
-```
-function hamburger () {
+```js
+function hamburger() {
   return bottomBun(beefPatty(topBun()));
 }
 
 //vs
 
-const hamburgerFlow = flow(topBun, beefPatty, bottomBun);
+const hamburgerFlow = flow(
+  topBun,
+  beefPatty,
+  bottomBun
+);
 ```
 
 What are the differences? The most immediate thing is `hamburgerFlow` is one line of code, while `hamburger` is three.
@@ -177,12 +177,12 @@ Our menu is a simple object literal. After all, at our humble fast food restaura
 
 Let's add our items. We'll start by doing so in a pointful style:
 
-```
+```js
 const menu = {
-  hamburger: function hamburger () {
+  hamburger: function hamburger() {
     return bottomBun(beefPatty(topBun()));
   },
-  veggieburger: function veggieburger () {
+  veggieburger: function veggieburger() {
     return bottomBun(veggiePatty(topBun()));
   }
 };
@@ -190,17 +190,25 @@ const menu = {
 
 not bad, but could be more compact. Let's try points-free:
 
-```
+```js
 const menu = {
-  hamburger: flow(topBun, burger, bottomBun),
-  veggieburger: flow(topBun, veggie, bottomBun)
+  hamburger: flow(
+    topBun,
+    burger,
+    bottomBun
+  ),
+  veggieburger: flow(
+    topBun,
+    veggie,
+    bottomBun
+  )
 };
 ```
 
 That looks better, but is still not great. We have two assembly lines to create mostly the same product. Also, grilling a `beefPatty` and `veggiePatty` are mostly the same.
 Why do we need two different functions to represent them? Is there a way to regain operational efficiency while expanding our menu?
 
-##### A side of curry
+## A side of curry
 
 Functional composition relies on unary functions, each one passing it's result into the next. Sometimes though, we need to customize our functions.
 
@@ -228,13 +236,21 @@ console.log(grillPatty(beef, ''));
 
 Let's try to use these patties in our menu:
 
-```
-const beef = '▩';
-const veggieMix = '▥';
+```js
+const beef = "▩";
+const veggieMix = "▥";
 
 const menu = {
-  hamburger: flow(topBun, grillPatty(beef, ''), bottomBun),
-  veggieburger: flow(topBun, grillPatty(veggieMix, ''), bottomBun)
+  hamburger: flow(
+    topBun,
+    grillPatty(beef, ""),
+    bottomBun
+  ),
+  veggieburger: flow(
+    topBun,
+    grillPatty(veggieMix, ""),
+    bottomBun
+  )
 };
 
 hamburger(); //Throws: Uncaught TypeError: fn is not a function
@@ -253,24 +269,24 @@ To do this, we can use a function called `curry`.
 [Wikipedia](https://en.wikipedia.org/wiki/Currying) defines curry as follows:
 
 > In mathematics and computer science, currying is the technique of translating the evaluation of a function that takes multiple arguments (or a tuple of arguments)
-into evaluating a sequence of functions, each with a single argument. It was introduced by Moses Schönfinkel and later developed by Haskell Curry.
+> into evaluating a sequence of functions, each with a single argument. It was introduced by Moses Schönfinkel and later developed by Haskell Curry.
 
 In other words, `curry` takes a function and the number of arguments in that function. It returns back a function that
 is not called until all arguments have been provided. Let's look at an example using `grillPatty`:
 
-```
-const grillPatty = curry(2, (ingredients, x) => x + ingredients.repeat(36) + '\n' + ingredients.repeat(36));
+```js
+const grillPatty = curry(2, (ingredients, x) => x + ingredients.repeat(36) + "\n" + ingredients.repeat(36));
 ```
 
 We have now curried the `grillPatty` function. The original function will not be called until it has recieved two arguments.
 `curry` is special in that it remembers all arguments that have been provided to it. The arguments can be provided at
 different points in time, and `curry` will keep track. Let's see how we can create our patty types using the curried `grillPatty`:
 
-```
-const veggieMix = '▥';
+```js
+const veggieMix = "▥";
 const veggiePatty = grillPatty(veggieMix);
 
-const beef = '▩';
+const beef = "▩";
 const beefPatty = grillPatty(beef);
 ```
 
@@ -278,11 +294,11 @@ Because `curry` was expecting two args in this case, it returns back a function 
 This allows us to save our grilling recipes to variables and delay invocation until an order comes through the assembly line.
 Not only does `curry` remember how many args it needs, it also will keep returning a function and not grill the patty until it gets all of it's args:
 
-```
-typeof veggiePatty() === 'function'; //true
-typeof veggiePatty() === 'function'; //true
-typeof veggiePatty() === 'function'; //true
-typeof veggiePatty() === 'function'; //true
+```js
+typeof veggiePatty() === "function"; //true
+typeof veggiePatty() === "function"; //true
+typeof veggiePatty() === "function"; //true
+typeof veggiePatty() === "function"; //true
 ```
 
 It doesn't matter how many times it gets called, just that it's called with one more arg. This concept is very powerful.
@@ -329,17 +345,16 @@ Delicious.
 We are now sharing the same grill, but we still have two assembly lines to create the items.
 Since we're using the same buns, why not share the whole line? We can with `curry`. Let's try it:
 
-```
-const beef = '▩';
-const veggieMix = '▥';
-const grillPatty = curry(2, (ingredients, x) => x + ingredients.repeat(36) + '\n' + ingredients.repeat(36));
+```js
+const beef = "▩";
+const veggieMix = "▥";
+const grillPatty = curry(2, (ingredients, x) => x + ingredients.repeat(36) + "\n" + ingredients.repeat(36));
 const assembleBurger = curry(3, flow)(topBun, __, bottomBun);
 
 const menu = {
   hamburger: assembleBurger(grillPatty(beef)),
   veggieburger: assembleBurger(grillPatty(veggieMix))
 };
-
 ```
 
 We added a new function `assembleBurger`, which itself is curried over `flow`. This means we are expecting a composition with 3 arguments.
@@ -380,11 +395,10 @@ console.log(menu.veggieburger());
 
 Still delicious.
 
-These functions and more can be found in an internal IML developed library called [fp](https://github.com/intel-hpdd/fp)
-
+These functions and more can be found in an internal IML developed library called [fp](https://github.com/whamcloud/fp)
 
 ## References
 
 [Mostly Adequeate Guide (Quite good till it goes to Fantasy Land)](https://drboolean.gitbooks.io/mostly-adequate-guide/content/)
 
-[fp (Our in-house JavaScript functional programming library)](https://github.com/intel-hpdd/fp)
+[fp (Our in-house JavaScript functional programming library)](https://github.com/whamcloud/fp)
