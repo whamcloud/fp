@@ -1,6 +1,6 @@
 {
   "name": "@iml/fp",
-  "version": "8.0.4",
+  "version": "8.0.5",
   "description": "A Functional Programming Lib.",
   "main": "source/fp.js",
   "scripts": {
