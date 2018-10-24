@@ -1,11 +1,11 @@
 sudo: required
 language: node_js
-node_js:
-  - 6
-  - 10
 jobs:
   include:
     - stage: test
+      node_js:
+        - 6
+        - 10
       name: "Lint & Test"
       script:
         - npm run flow
